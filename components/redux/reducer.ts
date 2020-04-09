@@ -11,6 +11,7 @@ const initialState = {
   countryTimeType: TimeType.DAILY,
   allCountriesDataType: DataType.TOTAL_CASES,
   regionDataType: DataType.TOTAL_CASES,
+  allCountriesSelected: []
 };
 
 const setState = (state: ReduxReducerState, key: keyof ReduxReducerState, value: any) => ({

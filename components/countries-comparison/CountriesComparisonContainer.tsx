@@ -10,7 +10,7 @@ import AreaChart from '../components/AreaChart';
 import { setAllCountriesDataType, setAllCountriesSelected } from '../redux/actions';
 import { getAllCountriesDataType, getAllCountriesSelected } from '../redux/selectors';
 import { ChartsData } from '../services/ChartSerializer';
-import { DataType, ReduxReducerState } from '../types';
+import { DataType } from '../types';
 import PivotTable from './PivotTable';
 
 interface CountriesComparisonContainerProps {
@@ -91,10 +91,11 @@ export default ({ chartsData, countries, pivotData }: CountriesComparisonContain
     dispatch(setAllCountriesDataType(value));
   }, [dispatch]);
 
-  const countriesSelected = useSelector((state: ReduxReducerState) => {
-    const result = getAllCountriesSelected(state);
-    return result || getTopTenCountries(chartsData).map((country) => ({ label: country, value: country }));
-  });
+  // const countriesSelected = useSelector((state: ReduxReducerState) => {
+  //   const result = getAllCountriesSelected(state);
+  //   return result || getTopTenCountries(chartsData).map((country) => ({ label: country, value: country }));
+  // });
+  const countriesSelected = useSelector(getAllCountriesSelected);
   const setCountriesSelected = useCallback((value: any) => {
     dispatch(setAllCountriesSelected(value));
   }, [dispatch]);
@@ -186,6 +187,13 @@ export default ({ chartsData, countries, pivotData }: CountriesComparisonContain
     const allCountriesCharSeries = parseChartsDataToHighchartsFormat(chartsData, dataType);
     setAllCountriesChartSeries(allCountriesCharSeries);
   }, [chartAllCountries, chartsData, dataType]);
+
+  useEffect(()=>{
+    if(!countriesSelected || !countriesSelected.length){
+      const countriesSelected = getTopTenCountries(chartsData).map((country) => ({ label: country, value: country }));
+      setCountriesSelected(countriesSelected);
+    }
+  },[])
 
   return (
     <Container fluid>
