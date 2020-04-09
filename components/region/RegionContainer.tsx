@@ -5,7 +5,7 @@ import AreaChart from '../components/AreaChart';
 import { DataType } from '../types';
 import { ChartsData } from '../services/ChartSerializer';
 
-import { parseChartsDataToHighchartsFormat } from '../countries-comparison/CountriesComparisonContainer'
+import { parseChartsDataToHighchartsFormat } from '../countries-comparison/CountriesComparisonContainer';
 import { getRegionDataType } from '../redux/selectors';
 import { setRegionDataType } from '../redux/actions';
 
@@ -14,13 +14,12 @@ interface RegionContainer {
 }
 
 export default ({ data }: RegionContainer) => {
-
   const dispatch = useDispatch();
 
   const dataType = useSelector(getRegionDataType);
   const setDataType = useCallback((value: DataType) => {
     dispatch(setRegionDataType(value));
-  }, [dispatch])
+  }, [dispatch]);
 
   const [series, setSeries] = useState<any>();
 
@@ -28,8 +27,9 @@ export default ({ data }: RegionContainer) => {
     () => {
       const series = parseChartsDataToHighchartsFormat(data, dataType);
       setSeries(series);
-    }
-    , [data, dataType])
+    },
+    [data, dataType],
+  );
 
   return (
     <div>
@@ -39,7 +39,7 @@ export default ({ data }: RegionContainer) => {
             type="radio"
             value={DataType.TOTAL_CASES}
             checked={dataType === DataType.TOTAL_CASES}
-            onChange={e => setDataType(DataType.TOTAL_CASES)}
+            onChange={() => setDataType(DataType.TOTAL_CASES)}
           />
           Total Cases
         </label>
@@ -50,17 +50,19 @@ export default ({ data }: RegionContainer) => {
             type="radio"
             value={DataType.TOTAL_DEATHS}
             checked={dataType === DataType.TOTAL_DEATHS}
-            onChange={e => setDataType(DataType.TOTAL_DEATHS)}
+            onChange={() => setDataType(DataType.TOTAL_DEATHS)}
           />
           Total Deaths
         </label>
       </div>
       {
-        series &&
+        series
+        && (
         <AreaChart
           series={series}
         />
+        )
       }
     </div>
-  )
-}
+  );
+};

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 
 export default ({ children, className = '', offset = 0 }: any) => {
-  const [affix, setAffix] = useState(false)
+  const [affix, setAffix] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -14,13 +14,13 @@ export default ({ children, className = '', offset = 0 }: any) => {
       if (affix && scrollTop < offset) {
         setAffix(false);
       }
-    }
+    };
 
     window.addEventListener('scroll', handleScroll);
 
     return () => {
       window.removeEventListener('scroll', handleScroll);
-    }
+    };
   });
 
   return (
@@ -28,4 +28,4 @@ export default ({ children, className = '', offset = 0 }: any) => {
       {children}
     </div>
   );
-}
+};

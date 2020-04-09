@@ -1,9 +1,9 @@
-var mongoose = require('mongoose');
+const mongoose = require('mongoose');
 
-console.log('mongo uri', process.env.MONGO_URI)
+console.log('mongo uri', process.env.MONGO_URI);
 if (mongoose.connection.readyState === 0) {
   mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true })
-    .catch(err => { throw err })
+    .catch((err) => { throw err; });
 }
 
 export default {
@@ -16,7 +16,5 @@ export default {
 
     return mongooseModel;
   },
-  get: (model: string) => {
-    return mongoose.connection.models[model];
-  }
-}
+  get: (model: string) => mongoose.connection.models[model],
+};

@@ -35,17 +35,17 @@
     "react-ga": "^2.7.0",
     "react-pivottable": "^0.9.0",
     "react-redux": "^7.2.0",
-    "react-scripts": "3.4.1",
     "react-select": "^3.1.0",
     "redux": "^4.0.5",
     "swr": "^0.2.0",
     "typescript": "^3.7.5"
   },
   "scripts": {
-    "test": "react-scripts test",
+    "test": "jest",
     "dev": "next",
     "build": "next build",
-    "start": "next start -p $PORT"
+    "start": "next start -p $PORT",
+    "lint": "eslint  . --ext .js,.jsx,.ts,.tsx --fix"
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -61,5 +61,21 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "@babel/core": "^7.9.0",
+    "@babel/preset-env": "^7.9.5",
+    "@babel/preset-react": "^7.9.4",
+    "@babel/preset-typescript": "^7.9.0",
+    "@typescript-eslint/eslint-plugin": "^2.27.0",
+    "@typescript-eslint/parser": "^2.27.0",
+    "babel-jest": "^25.3.0",
+    "eslint": "^6.8.0",
+    "eslint-config-airbnb": "^18.1.0",
+    "eslint-plugin-import": "^2.20.2",
+    "eslint-plugin-jsx-a11y": "^6.2.3",
+    "eslint-plugin-react": "^7.19.0",
+    "eslint-plugin-react-hooks": "^2.5.1",
+    "jest": "^25.3.0"
   }
 }

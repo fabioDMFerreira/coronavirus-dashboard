@@ -1,14 +1,15 @@
 import db from '../db';
 
-var mongoose = require('mongoose');
-var Schema = mongoose.Schema;
+const mongoose = require('mongoose');
 
-var stateSchema = new Schema({
+const { Schema } = mongoose;
+
+const stateSchema = new Schema({
   hash: String,
   state: Schema.Types.Mixed,
-  createdAt: { type: Date, default: Date.now }
+  createdAt: { type: Date, default: Date.now },
 });
 
-let model = db.register('State', stateSchema)
+const model = db.register('State', stateSchema);
 
 export default model;

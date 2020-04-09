@@ -8,10 +8,10 @@ export default async (req, res) => {
       await Subscription.findOneAndUpdate(
         { email: req.body.email },
         { createdAt: new Date() },
-        { upsert: true }
+        { upsert: true },
       );
     }
   }
 
   res.end();
-}
+};

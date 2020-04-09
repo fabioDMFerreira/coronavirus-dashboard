@@ -1,40 +1,42 @@
-import { DataType, TimeType, ReduxReducerState } from "../types";
-import { SET_COUNTRY_FILTER, SET_COUNTRY_DATA_TYPE, SET_COUNTRY_TIME_TYPE, RESET_STATE, SET_ALL_COUNTRIES_DATA_TYPE, SET_ALL_COUNTRIES_SELECTED, SET_REGION_DATA_TYPE } from "./types";
+import { DataType, TimeType, ReduxReducerState } from '../types';
+import {
+  SET_COUNTRY_FILTER, SET_COUNTRY_DATA_TYPE, SET_COUNTRY_TIME_TYPE, RESET_STATE, SET_ALL_COUNTRIES_DATA_TYPE, SET_ALL_COUNTRIES_SELECTED, SET_REGION_DATA_TYPE,
+} from './types';
 
 export const setCountryFilter = (payload: { label: string, value: string }) => ({
   type: SET_COUNTRY_FILTER,
-  payload
-})
+  payload,
+});
 
 export const setCountryDataType = (payload: DataType) => ({
   type: SET_COUNTRY_DATA_TYPE,
-  payload
-})
+  payload,
+});
 
 export const setCountryTimeType = (payload: TimeType) => ({
   type: SET_COUNTRY_TIME_TYPE,
-  payload
-})
+  payload,
+});
 
 export const resetState = (payload: ReduxReducerState) => ({
   type: RESET_STATE,
-  payload
-})
+  payload,
+});
 
 export const setAllCountriesDataType = (payload: DataType) => ({
   type: SET_ALL_COUNTRIES_DATA_TYPE,
-  payload
-})
+  payload,
+});
 
 export const setAllCountriesSelected = (payload: any) => ({
   type: SET_ALL_COUNTRIES_SELECTED,
-  payload
-})
+  payload,
+});
 
 export const setRegionDataType = (payload: DataType) => ({
   type: SET_REGION_DATA_TYPE,
-  payload
-})
+  payload,
+});
 
 type actions =
   ReturnType<typeof setCountryFilter> |

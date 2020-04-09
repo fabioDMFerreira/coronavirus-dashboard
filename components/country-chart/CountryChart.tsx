@@ -1,37 +1,37 @@
 import React from 'react';
 import * as Highcharts from 'highcharts';
-import HighchartsReact from 'highcharts-react-official'
+import HighchartsReact from 'highcharts-react-official';
 
 interface ChartProps {
   series: any,
   title: string,
 }
 
-export default ({ series, title }: ChartProps) => {
-  return <HighchartsReact
+export default ({ series, title }: ChartProps) => (
+  <HighchartsReact
     highcharts={Highcharts}
     options={
       {
         title: {
-          text: ''
+          text: '',
         },
         chart: {
           backgroundColor: null,
           zoomType: 'x',
-          type: 'column'
+          type: 'column',
         },
         series,
         tooltip: {
-          shared: true
+          shared: true,
         },
         plotOptions: {
           column: {
-            stacking: 'normal'
-          }
+            stacking: 'normal',
+          },
         },
         xAxis: {
           type: 'datetime',
-          plotLines: []
+          plotLines: [],
         },
         yAxis: [{ // Primary yAxis
           labels: {
@@ -40,8 +40,8 @@ export default ({ series, title }: ChartProps) => {
             // }
           },
           title: {
-            text: title
-          }
+            text: title,
+          },
         }, { // Secondary yAxis
           title: {
             text: '',
@@ -50,12 +50,12 @@ export default ({ series, title }: ChartProps) => {
           labels: {
             format: '{value} %',
           },
-          opposite: true
+          opposite: true,
         }],
       }
     }
-    allowChartUpdate={true}
+    allowChartUpdate
     immutable={false}
     updateArgs={[true, true, true]}
   />
-}
+);

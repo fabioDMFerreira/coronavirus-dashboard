@@ -1,6 +1,6 @@
 import React from 'react';
 import * as Highcharts from 'highcharts';
-import HighchartsReact from 'highcharts-react-official'
+import HighchartsReact from 'highcharts-react-official';
 import tooltipFormatter from '../countries-comparison/tooltipFormatter';
 
 interface ChartProps {
@@ -12,42 +12,44 @@ interface ChartProps {
   options?: { legend?: boolean }
 }
 
-export default ({ series, chartCallback, onSerieShow, onSerieHide, options }: ChartProps) => {
-  return <HighchartsReact
+export default ({
+  series, chartCallback, onSerieShow, onSerieHide, options,
+}: ChartProps) => (
+  <HighchartsReact
     highcharts={Highcharts}
     callback={chartCallback}
     options={
       {
         legend: {
-          enabled: options && 'legend' in options ? options.legend : true
+          enabled: options && 'legend' in options ? options.legend : true,
         },
         title: {
-          text: ''
+          text: '',
         },
         chart: {
           backgroundColor: null,
           zoomType: 'x',
-          type: 'area'
+          type: 'area',
         },
         series,
         plotOptions: {
           series: {
             events: {
-              show: function (e: any) {
+              show(e: any) {
                 if (onSerieShow) {
-                  onSerieShow(e.target.name)
+                  onSerieShow(e.target.name);
                 }
               },
-              hide: function (e: any) {
+              hide(e: any) {
                 if (onSerieHide) {
                   onSerieHide(e.target.name);
                 }
-              }
+              },
             },
           },
           column: {
-            stacking: 'normal'
-          }
+            stacking: 'normal',
+          },
         },
         xAxis: {
           type: 'datetime',
@@ -66,12 +68,12 @@ export default ({ series, chartCallback, onSerieShow, onSerieHide, options }: Ch
           useHTML: true,
           shared: true,
           split: false,
-          formatter: tooltipFormatter
-        }
+          formatter: tooltipFormatter,
+        },
       }
     }
-    allowChartUpdate={true}
+    allowChartUpdate
     immutable={false}
     updateArgs={[true, true, true]}
   />
-}
+);

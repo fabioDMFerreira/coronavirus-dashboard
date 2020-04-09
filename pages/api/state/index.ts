@@ -1,18 +1,19 @@
+import hash from '../hash';
+
 import State from './State.model';
 
-const crypto = require('crypto');
 
 export default async (req, res) => {
   if (req.method === 'POST') {
     if (!req.body.state) {
       res.status(400);
     } else {
-      const hash = crypto.createHash('md5').update(JSON.stringify(req.body.state)).digest('hex');
+      const secret = hash(JSON.stringify(req.body.state));
 
       await State.findOneAndUpdate(
-        { hash },
+        { hash: secret },
         { state: req.body.state, createdAt: new Date() },
-        { upsert: true }
+        { upsert: true },
       );
 
       res.write(hash);
@@ -32,4 +33,4 @@ export default async (req, res) => {
   }
 
   res.end();
-}
+};

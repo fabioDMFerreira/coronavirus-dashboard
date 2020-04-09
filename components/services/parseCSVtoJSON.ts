@@ -1,4 +1,4 @@
-import { buildSheetFromCSV } from "./csvUtils";
+import { buildSheetFromCSV } from './csvUtils';
 
 export default (csv: string, formatter?: { [key: string]: (value: any) => any }) => {
   const sheet = buildSheetFromCSV(csv);
@@ -8,7 +8,7 @@ export default (csv: string, formatter?: { [key: string]: (value: any) => any })
   return sheet
     .slice(1)
     .reduce(
-      (json, row, ) => {
+      (json, row) => {
         const obj: any = {};
 
         let l = row.length;
@@ -20,6 +20,6 @@ export default (csv: string, formatter?: { [key: string]: (value: any) => any })
         json.push(obj);
 
         return json;
-      }, []
-    )
-}
+      }, [],
+    );
+};

@@ -1,5 +1,5 @@
 import Papa from 'papaparse';
-import { buildSheetFromCSV } from "./csvUtils";
+import { buildSheetFromCSV } from './csvUtils';
 
 interface EventsMap {
   [key: string]: Array<[number, number]>
@@ -27,20 +27,19 @@ export function calculateSerieGrowthRate(serie: Array<number>) {
     const actual = serie[i];
     const prev = serie[i - 1];
 
-    growthRate.push(calculateGrowthRate(prev, actual))
+    growthRate.push(calculateGrowthRate(prev, actual));
   }
 
-  return growthRate
+  return growthRate;
 }
 
 export function parseOurWorldInData(csv: string) {
-
   const sheet = buildSheetFromCSV(csv);
 
   const totalCases: EventsMap = {};
   const totalDeaths: EventsMap = {};
 
-  sheet.slice(1).forEach(row => {
+  sheet.slice(1).forEach((row) => {
     if (!row) {
       return;
     }
@@ -56,23 +55,23 @@ export function parseOurWorldInData(csv: string) {
       totalDeaths[location] = [];
     }
 
-    const dateMs = new Date(date).getTime()
+    const dateMs = new Date(date).getTime();
 
     totalCases[location].push([dateMs, +total_cases]);
     totalDeaths[location].push([dateMs, +total_deaths]);
-  })
+  });
 
   return {
     totalCases,
     totalDeaths,
-  }
+  };
 }
 
 export function getUtcDate(date: string): number {
   const match = /(\d*)\/(\d*)\/(\d*)/.exec(date);
 
   if (match) {
-    return Date.UTC(+('20' + match[3]), +match[1] - 1, +match[2])
+    return Date.UTC(+(`20${match[3]}`), +match[1] - 1, +match[2]);
   }
 
   return 0;
@@ -82,9 +81,8 @@ const parseCSSEGISheetToJSON = (headerDates: string[], sheet: string[][]): [Even
   const countriesWithGlobalCounters: any = {};
   const stateRecords: any = {};
 
-  let [chartsData] = sheet.reduce(
+  const [chartsData] = sheet.reduce(
     ([total]: [EventsMap], row: string[]): [EventsMap] => {
-
       if (row) {
         const [state, country, , , ...datesOccurences]: string[] = row;
 
@@ -92,7 +90,7 @@ const parseCSSEGISheetToJSON = (headerDates: string[], sheet: string[][]): [Even
           if (
             !(country in total)
           ) {
-            total[country] = []
+            total[country] = [];
           }
 
           if (!state) {
@@ -100,30 +98,30 @@ const parseCSSEGISheetToJSON = (headerDates: string[], sheet: string[][]): [Even
               const date = getUtcDate(headerDates[index]);
 
               if (!date) {
-                return
+                return;
               }
 
-              total[country].push([date, +occurrences])
-            })
+              total[country].push([date, +occurrences]);
+            });
           } else {
             const occurrences = datesOccurences.map((occurrences, index) => {
               const date = getUtcDate(headerDates[index]);
 
-              return [date, +occurrences]
-            })
+              return [date, +occurrences];
+            });
 
             if (!stateRecords[country]) {
-              stateRecords[country] = [{ state, occurrences }]
+              stateRecords[country] = [{ state, occurrences }];
             } else {
-              stateRecords[country].push({ state, occurrences })
+              stateRecords[country].push({ state, occurrences });
             }
           }
         }
       }
 
       return [total];
-
-    }, [{}]);
+    }, [{}],
+  );
 
   Object.keys(stateRecords).forEach((country: string) => {
     const recordsGroup = stateRecords[country];
@@ -131,24 +129,19 @@ const parseCSSEGISheetToJSON = (headerDates: string[], sheet: string[][]): [Even
     if (countriesWithGlobalCounters[country]) {
       recordsGroup.forEach((record: any) => {
         chartsData[record.state] = record.occurrences;
-      })
+      });
     } else {
-      let emptyArray = headerDates.map((time) => ([getUtcDate(time), 0]));
+      const emptyArray = headerDates.map((time) => ([getUtcDate(time), 0]));
 
       chartsData[country] = recordsGroup.slice(0).reduce(
-        (total: any, recordGroup: any) => {
-
-          return total.map(([time, value]: any, index: number) => {
-            return [time, value + recordGroup.occurrences[index][1]]
-          })
-        }, emptyArray
-      )
+        (total: any, recordGroup: any) => total.map(([time, value]: any, index: number) => [time, value + recordGroup.occurrences[index][1]]), emptyArray,
+      );
     }
   });
 
 
   return [chartsData];
-}
+};
 
 export function parseCSSEGIData(totalCasesCsv: string, totalDeathsCsv: string): [ChartsData] {
   const totalCasesSheet = buildSheetFromCSV(totalCasesCsv);
@@ -157,21 +150,21 @@ export function parseCSSEGIData(totalCasesCsv: string, totalDeathsCsv: string): 
   const tcHeaderDates = totalCasesSheet[0].slice(4);
   const tdHeaderDates = totalDeathsSheet[0].slice(4);
 
-  const [totalCases]: [EventsMap] = parseCSSEGISheetToJSON(tcHeaderDates, totalCasesSheet.slice(1))
-  const [totalDeaths]: [EventsMap] = parseCSSEGISheetToJSON(tdHeaderDates, totalDeathsSheet.slice(1))
+  const [totalCases]: [EventsMap] = parseCSSEGISheetToJSON(tcHeaderDates, totalCasesSheet.slice(1));
+  const [totalDeaths]: [EventsMap] = parseCSSEGISheetToJSON(tdHeaderDates, totalDeathsSheet.slice(1));
 
   return [{
     totalCases,
     totalDeaths,
     newCases: Object.keys(totalCases).reduce((final: EventsMap, country) => {
       final[country] = serializeGrowthArray(totalCases[country]);
-      return final
+      return final;
     }, {}),
     newDeaths: Object.keys(totalDeaths).reduce((final: EventsMap, country) => {
       final[country] = serializeGrowthArray(totalDeaths[country]);
-      return final
+      return final;
     }, {}),
-  }]
+  }];
 }
 
 export function serializeGrowthArray(arr: [number, number][]) {
@@ -202,46 +195,38 @@ export function serializeCumulativeArray(arr: [number, number][]) {
   return result;
 }
 
-const serializeOccurrencesData = (headers: string[], values: string[]): [number, number][] => {
-  return headers.map((date, index) => ([getUtcDate(date), +values[index]]))
-}
+const serializeOccurrencesData = (headers: string[], values: string[]): [number, number][] => headers.map((date, index) => ([getUtcDate(date), +values[index]]));
 
-export const serializeStatesData = async (csv: string, datesCursor=11) => {
-  return new Promise((accept, reject) => {
-    Papa.parse(csv.trim(), {
-      complete: (parsed) => {
-        const balanceSheet = parsed.data;
+export const serializeStatesData = async (csv: string, datesCursor = 11) => new Promise((accept, reject) => {
+  Papa.parse(csv.trim(), {
+    complete: (parsed) => {
+      const balanceSheet = parsed.data;
 
-        if (!balanceSheet || !balanceSheet.length) {
-          return accept();
-        }
-
-        const datesHeaders = balanceSheet[0].slice(datesCursor);
-
-
-        const json =
-          balanceSheet
-            .slice(1)
-            .reduce((final: { [key: string]: [number, number][] }, actual) => {
-              const [, , , , , state, region,] = actual;
-
-              const occurrences = actual.slice(datesCursor);
-
-              if (!final[region]) {
-                final[region] = serializeOccurrencesData(datesHeaders, occurrences)
-              } else if (state) {
-                const actualValues = serializeOccurrencesData(datesHeaders, occurrences);
-                final[region] = final[region].map(([time, value]: [number, number], index: number) => {
-                  return [time, value + actualValues[index][1]]
-                })
-              }
-
-              return final;
-            }, {})
-
-        accept(json)
+      if (!balanceSheet || !balanceSheet.length) {
+        return accept();
       }
-    });
-  })
-}
 
+      const datesHeaders = balanceSheet[0].slice(datesCursor);
+
+
+      const json = balanceSheet
+        .slice(1)
+        .reduce((final: { [key: string]: [number, number][] }, actual) => {
+          const [, , , , , state, region] = actual;
+
+          const occurrences = actual.slice(datesCursor);
+
+          if (!final[region]) {
+            final[region] = serializeOccurrencesData(datesHeaders, occurrences);
+          } else if (state) {
+            const actualValues = serializeOccurrencesData(datesHeaders, occurrences);
+            final[region] = final[region].map(([time, value]: [number, number], index: number) => [time, value + actualValues[index][1]]);
+          }
+
+          return final;
+        }, {});
+
+      accept(json);
+    },
+  });
+});

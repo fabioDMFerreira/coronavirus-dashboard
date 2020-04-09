@@ -1,5 +1,5 @@
-import { buildSheetFromCSV } from "./csvUtils";
-import { PackedBubbleData, BubbleData } from "../types";
+import { buildSheetFromCSV } from './csvUtils';
+import { PackedBubbleData, BubbleData } from '../types';
 
 interface EventsMap {
   [key: string]: Array<[number, number]>
@@ -31,20 +31,19 @@ export function calculateSerieGrowthRate(serie: Array<number>) {
     const actual = serie[i];
     const prev = serie[i - 1];
 
-    growthRate.push(calculateGrowthRate(prev, actual))
+    growthRate.push(calculateGrowthRate(prev, actual));
   }
 
-  return growthRate
+  return growthRate;
 }
 
 export function parseOurWorldInData(csv: string) {
-
   const sheet = buildSheetFromCSV(csv);
 
   const totalCases: EventsMap = {};
   const totalDeaths: EventsMap = {};
 
-  sheet.slice(1).forEach(row => {
+  sheet.slice(1).forEach((row) => {
     if (!row) {
       return;
     }
@@ -60,23 +59,23 @@ export function parseOurWorldInData(csv: string) {
       totalDeaths[location] = [];
     }
 
-    const dateMs = new Date(date).getTime()
+    const dateMs = new Date(date).getTime();
 
     totalCases[location].push([dateMs, +total_cases]);
     totalDeaths[location].push([dateMs, +total_deaths]);
-  })
+  });
 
   return {
     totalCases,
     totalDeaths,
-  }
+  };
 }
 
 export function getUtcDate(date: string): number {
   const match = /(\d*)\/(\d*)\/(\d*)/.exec(date);
 
   if (match) {
-    return Date.UTC(+('20' + match[3]), +match[1] - 1, +match[2])
+    return Date.UTC(+(`20${match[3]}`), +match[1] - 1, +match[2]);
   }
 
   return 0;
@@ -87,9 +86,8 @@ const parseCSSEGISheetToJSON = (headerDates: string[], sheet: string[][]): [Even
   const countriesWithGlobalCounters: any = {};
   const stateRecords: any = {};
 
-  let [chartsData, packedBubbleData] = sheet.reduce(
+  const [chartsData, packedBubbleData] = sheet.reduce(
     ([total, packedStates]: [EventsMap, PackedBubbleDataHelper], row: string[]): [EventsMap, PackedBubbleDataHelper] => {
-
       if (row) {
         const [state, country, , , ...datesOccurences]: string[] = row;
 
@@ -97,14 +95,14 @@ const parseCSSEGISheetToJSON = (headerDates: string[], sheet: string[][]): [Even
           if (
             !(country in total)
           ) {
-            total[country] = []
+            total[country] = [];
           }
 
           if (state && packedStates) {
             countriesWithState[country] = true;
 
             if (!(country in packedStates) || !packedStates[country].data) {
-              packedStates[country] = { name: country, value: 0, data: [] }
+              packedStates[country] = { name: country, value: 0, data: [] };
             }
             if (packedStates[country]) {
               const actualValue = +datesOccurences[datesOccurences.length - 1];
@@ -113,8 +111,8 @@ const parseCSSEGISheetToJSON = (headerDates: string[], sheet: string[][]): [Even
                 value: (packedStates[country].value || 0) + actualValue,
                 data: packedStates[country].data?.concat({
                   name: state,
-                  value: actualValue
-                })
+                  value: actualValue,
+                }),
               };
             }
           }
@@ -129,30 +127,30 @@ const parseCSSEGISheetToJSON = (headerDates: string[], sheet: string[][]): [Even
               const date = getUtcDate(headerDates[index]);
 
               if (!date) {
-                return
+                return;
               }
 
-              total[country].push([date, +occurrences])
-            })
+              total[country].push([date, +occurrences]);
+            });
           } else {
             const occurrences = datesOccurences.map((occurrences, index) => {
               const date = getUtcDate(headerDates[index]);
 
-              return [date, +occurrences]
-            })
+              return [date, +occurrences];
+            });
 
             if (!stateRecords[country]) {
-              stateRecords[country] = [{ state, occurrences }]
+              stateRecords[country] = [{ state, occurrences }];
             } else {
-              stateRecords[country].push({ state, occurrences })
+              stateRecords[country].push({ state, occurrences });
             }
           }
         }
       }
 
       return [total, packedStates];
-
-    }, [{}, {}]);
+    }, [{}, {}],
+  );
 
   Object.keys(stateRecords).forEach((country: string) => {
     const recordsGroup = stateRecords[country];
@@ -160,24 +158,19 @@ const parseCSSEGISheetToJSON = (headerDates: string[], sheet: string[][]): [Even
     if (countriesWithGlobalCounters[country]) {
       recordsGroup.forEach((record: any) => {
         chartsData[record.state] = record.occurrences;
-      })
+      });
     } else {
-      let emptyArray = headerDates.map((time) => ([getUtcDate(time), 0]));
+      const emptyArray = headerDates.map((time) => ([getUtcDate(time), 0]));
 
       chartsData[country] = recordsGroup.slice(0).reduce(
-        (total: any, recordGroup: any) => {
-
-          return total.map(([time, value]: any, index: number) => {
-            return [time, value + recordGroup.occurrences[index][1]]
-          })
-        }, emptyArray
-      )
+        (total: any, recordGroup: any) => total.map(([time, value]: any, index: number) => [time, value + recordGroup.occurrences[index][1]]), emptyArray,
+      );
     }
   });
 
 
   return [chartsData, packedBubbleData];
-}
+};
 
 export function parseCSSEGIData(totalCasesCsv: string, totalDeathsCsv: string): [ChartsData, BubbleData] {
   const totalCasesSheet = buildSheetFromCSV(totalCasesCsv);
@@ -186,24 +179,24 @@ export function parseCSSEGIData(totalCasesCsv: string, totalDeathsCsv: string): 
   const tcHeaderDates = totalCasesSheet[0].slice(4);
   const tdHeaderDates = totalDeathsSheet[0].slice(4);
 
-  const [totalCases, regionTotalCases]: [EventsMap, PackedBubbleDataHelper] = parseCSSEGISheetToJSON(tcHeaderDates, totalCasesSheet.slice(1))
-  const [totalDeaths, regionDeathCases]: [EventsMap, PackedBubbleDataHelper] = parseCSSEGISheetToJSON(tdHeaderDates, totalDeathsSheet.slice(1))
+  const [totalCases, regionTotalCases]: [EventsMap, PackedBubbleDataHelper] = parseCSSEGISheetToJSON(tcHeaderDates, totalCasesSheet.slice(1));
+  const [totalDeaths, regionDeathCases]: [EventsMap, PackedBubbleDataHelper] = parseCSSEGISheetToJSON(tdHeaderDates, totalDeathsSheet.slice(1));
 
   return [{
     totalCases,
     totalDeaths,
     newCases: Object.keys(totalCases).reduce((final: EventsMap, country) => {
       final[country] = serializeGrowthArray(totalCases[country]);
-      return final
+      return final;
     }, {}),
     newDeaths: Object.keys(totalDeaths).reduce((final: EventsMap, country) => {
       final[country] = serializeGrowthArray(totalDeaths[country]);
-      return final
+      return final;
     }, {}),
   }, {
     totalCases: Object.values(regionTotalCases),
-    totalDeaths: Object.values(regionDeathCases)
-  }]
+    totalDeaths: Object.values(regionDeathCases),
+  }];
 }
 
 export function serializeGrowthArray(arr: [number, number][]) {

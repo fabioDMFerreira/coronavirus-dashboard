@@ -1,9 +1,11 @@
 import Papa from 'papaparse';
 
-import { parseOurWorldInData, parseCSSEGIData, ChartsData, serializeCumulativeArray } from "./ChartSerializer";
+import {
+  parseOurWorldInData, parseCSSEGIData, ChartsData, serializeCumulativeArray,
+} from './ChartSerializer';
 
-export const OUR_WORLD_IN_DATA = 'OUR_WORLD_IN_DATA'
-export const CSSEGI = 'CSSEGI'
+export const OUR_WORLD_IN_DATA = 'OUR_WORLD_IN_DATA';
+export const CSSEGI = 'CSSEGI';
 
 
 type DataSourceType = 'OUR_WORLD_IN_DATA' | 'CSSEGI';
@@ -12,8 +14,8 @@ export default (dataSource: DataSourceType): any => {
   switch (dataSource) {
     case OUR_WORLD_IN_DATA:
       return fetch('https://covid.ourworldindata.org/data/ecdc/full_data.csv')
-        .then(res => res.text())
-        .then(async data => {
+        .then((res) => res.text())
+        .then(async (data) => {
           let chartsData;
           let pivotData;
 
@@ -23,12 +25,12 @@ export default (dataSource: DataSourceType): any => {
             pivotData = await new Promise((accept) => {
               Papa.parse(data.trim(), {
                 complete: (parsed) => {
-                  parsed.data[0] = ['Date', 'Location', 'New Cases', 'New Deaths', 'Total Cases', 'Total Deaths']
-                  parsed.data = parsed.data.filter(row => row[1] !== 'World')
+                  parsed.data[0] = ['Date', 'Location', 'New Cases', 'New Deaths', 'Total Cases', 'Total Deaths'];
+                  parsed.data = parsed.data.filter((row) => row[1] !== 'World');
                   accept(parsed.data);
-                }
+                },
               });
-            })
+            });
           }
 
           return [chartsData, pivotData, []];
@@ -36,19 +38,15 @@ export default (dataSource: DataSourceType): any => {
     case CSSEGI:
       return Promise.all([
         fetch('https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_global.csv')
-          .then(res => res.text())
-          .then(res =>
-            res
-              .replace("\"Korea, South\"", 'South Korea')
-              .replace("\"Bonaire, Sint Eustatius and Saba\"", "Bonaire and Sint Eustatius and Saba")
-          ),
+          .then((res) => res.text())
+          .then((res) => res
+            .replace('"Korea, South"', 'South Korea')
+            .replace('"Bonaire, Sint Eustatius and Saba"', 'Bonaire and Sint Eustatius and Saba')),
         fetch('https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_global.csv')
-          .then(res => res.text())
-          .then(res =>
-            res
-              .replace("\"Korea, South\"", 'South Korea')
-              .replace("\"Bonaire, Sint Eustatius and Saba\"", "Bonaire and Sint Eustatius and Saba")
-          ),
+          .then((res) => res.text())
+          .then((res) => res
+            .replace('"Korea, South"', 'South Korea')
+            .replace('"Bonaire, Sint Eustatius and Saba"', 'Bonaire and Sint Eustatius and Saba')),
       ]).then(([totalDeathsCsv, totalCasesCsv]) => {
         let chartsData: ChartsData = { totalCases: {}, totalDeaths: {} };
         let pivotData = [['Date', 'Location', 'New Cases', 'New Deaths', 'Total Cases', 'Total Deaths']];
@@ -57,12 +55,14 @@ export default (dataSource: DataSourceType): any => {
           [chartsData] = parseCSSEGIData(totalCasesCsv, totalDeathsCsv);
 
           if (chartsData && chartsData.newCases && chartsData.newDeaths) {
-            const World: any = { totalCases: {}, totalDeaths: {}, newCases: {}, newDeaths: {} };
+            const World: any = {
+              totalCases: {}, totalDeaths: {}, newCases: {}, newDeaths: {},
+            };
 
             Object.keys(chartsData.newCases)
               .forEach((country) => {
                 const countryNewCases = chartsData.newCases && chartsData.newCases[country] ? chartsData.newCases[country] : [];
-                const countryNewCasesSize = countryNewCases.length - 1
+                const countryNewCasesSize = countryNewCases.length - 1;
 
                 const countryNewDeaths = chartsData.newDeaths && chartsData.newDeaths[country] ? chartsData.newDeaths[country] : [];
                 const countryNewDeathsSize = countryNewDeaths.length - 1;
@@ -75,7 +75,7 @@ export default (dataSource: DataSourceType): any => {
                     new Date(date),
                     country,
                     newCases,
-                    newDeaths
+                    newDeaths,
                   ];
 
                   pivotData.push(entry);
@@ -94,13 +94,12 @@ export default (dataSource: DataSourceType): any => {
             chartsData.newDeaths.World = World.newDeaths;
             chartsData.totalCases.World = serializeCumulativeArray(World.newCases);
             chartsData.totalDeaths.World = serializeCumulativeArray(World.newDeaths);
-
           }
         }
 
         return [chartsData, pivotData];
-      })
+      });
   }
 
-  return Promise.resolve([{ totalCases: {}, totalDeaths: {} }, [], { totalCases: {}, totalDeaths: {} }])
-}
+  return Promise.resolve([{ totalCases: {}, totalDeaths: {} }, [], { totalCases: {}, totalDeaths: {} }]);
+};

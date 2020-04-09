@@ -3,4 +3,4 @@ export default
 Curacao,Netherlands,12.1696,-68.99,1,1,1,1
 Sint Maarten,Netherlands,18.0425,-63.0548,0,0,2,2,
 ,Netherlands,52.1326,5.2913,1,3,7,10,
-`
+`;
