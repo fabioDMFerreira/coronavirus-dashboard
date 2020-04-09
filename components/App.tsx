@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import Button from 'react-bootstrap/Button';
 import Container from 'react-bootstrap/Container';
 import Form from 'react-bootstrap/Form';
+import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import Spinner from 'react-bootstrap/Spinner';
 import { Provider } from 'react-redux';
@@ -24,6 +25,7 @@ function App() {
   const { data: regionData } = useSWR('/api/covid/usa', (api) => fetch(api).then((res) => res.json()));
 
   const [subscribeModal, setSubscribeModal] = useState(false);
+  const [tab, setTab] = useState("country");
 
   let chartsData;
   let pivotData;
@@ -61,6 +63,17 @@ function App() {
           <Navbar bg="dark" variant="dark">
             <Container fluid>
               <Navbar.Brand href="#home">Covid-19 Growth</Navbar.Brand>
+              <Navbar.Collapse>
+                <Nav.Item>
+                  <Button variant="link" className={tab === "country" ? 'active' : ''} onClick={() => setTab("country")}>Country</Button>
+                </Nav.Item>
+                <Nav.Item>
+                  <Button variant="link" className={tab === "allCountries" ? 'active' : ''} onClick={() => setTab("allCountries")}>All countries</Button>
+                </Nav.Item>
+                <Nav.Item>
+                  <Button variant="link" className={tab === "usa" ? 'active' : ''} onClick={() => setTab("usa")}>USA</Button>
+                </Nav.Item>
+              </Navbar.Collapse>
               <Form inline>
                 <Button className="mr-2" variant="primary" onClick={tweet}>
                   <TwitterIcon />
@@ -77,7 +90,7 @@ function App() {
           </Navbar>
         </AffixWrapper>
         {
-          chartsData
+          chartsData && tab === 'country'
           && (
             <div className="mt-4 mb-5">
               <CountryChartContainer chartsData={chartsData} countries={countries} />
@@ -85,7 +98,7 @@ function App() {
           )
         }
         {
-          chartsData
+          chartsData && tab === 'allCountries'
           && (
             <div className="mt-4 mb-5">
               <CountriesComparisonContainer chartsData={chartsData} countries={countries} pivotData={pivotData} />
@@ -93,7 +106,7 @@ function App() {
           )
         }
         {
-          regionData
+          regionData && tab === 'usa'
           && (
             <div className="mt-4 mb-5">
               <RegionContainer data={{ totalCases: regionData[0], totalDeaths: regionData[1] }} />

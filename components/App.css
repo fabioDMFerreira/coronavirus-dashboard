@@ -16,14 +16,41 @@
   margin: 0px 20px;
 }
 
-.radio input{
+.radio input {
   margin-right: 5px;
 }
 
-.pvtAxisContainer.pvtUnused.pvtHorizList, .pvtDropdownValue,.pvtAxisContainer.pvtVertList.pvtRows,.pvtAxisContainer.pvtHorizList.pvtCols,.pvtVals{
-  display:none
+.pvtAxisContainer.pvtUnused.pvtHorizList,
+.pvtDropdownValue,
+.pvtAxisContainer.pvtVertList.pvtRows,
+.pvtAxisContainer.pvtHorizList.pvtCols,
+.pvtVals {
+  display: none
 }
 
 small {
   color: #888;
+}
+
+.nav-item button {
+  color: rgba(255, 255, 255, 0.3);
+}
+
+.nav-item button:hover,
+.nav-item button.active {
+  color: #fff;
+  text-decoration: none;
+}
+
+.btn-link.vote-up,
+.btn-link.vote-down {
+  text-decoration: none;
+}
+
+.btn-link.vote-up {
+  color: green
+}
+
+.btn-link.vote-down {
+  color: red
 }

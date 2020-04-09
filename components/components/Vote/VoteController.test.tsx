@@ -1,9 +1,9 @@
 import { fireEvent, render, screen } from '@testing-library/react';
 import React from 'react';
 
-import Vote, { VoteProps } from './Vote';
+import Vote, { COMPLETED_MESSAGE, VoteControllerProps } from './VoteController';
 
-const stubProps: VoteProps = {
+const stubProps: VoteControllerProps = {
   voteUp: jest.fn(),
   voteDown: jest.fn(),
   completed: false
@@ -49,11 +49,11 @@ describe('Vote', () => {
   })
 
   it('should hide vote buttons and display thank you message if vote is already made', () => {
-    render(<Vote {...stubProps} completed />)
+    const { queryByTestId } = render(<Vote {...stubProps} completed />)
 
-    expect(getTestElement(TEST_IDS.voteUp)).toBeFalsy();
-    expect(getTestElement(TEST_IDS.voteDown)).toBeFalsy();
+    expect(queryByTestId(TEST_IDS.voteUp)).toBeFalsy();
+    expect(queryByTestId(TEST_IDS.voteDown)).toBeFalsy();
 
-    expect(getTestElement(TEST_IDS.completedMessage)).toBeTruthy();
+    expect(queryByTestId(TEST_IDS.completedMessage)?.innerHTML).toBe(COMPLETED_MESSAGE);
   })
 });

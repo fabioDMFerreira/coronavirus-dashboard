@@ -1,3 +1,5 @@
+import Vote from 'components/components/Vote';
+import fetch from 'isomorphic-unfetch';
 import React, { useCallback, useEffect, useState } from 'react';
 import Col from 'react-bootstrap/Col';
 import Container from 'react-bootstrap/Container';
@@ -10,6 +12,7 @@ import { getCountry, getCountryDataType, getCountryTimeType } from '../redux/sel
 import { calculateGrowthRate, ChartsData } from '../services/ChartSerializer';
 import { ColumnSerie, DataType, TimeType } from '../types';
 import CountryChart from './CountryChart';
+import predictVelocity from './predictVelocity';
 
 interface CountryChartContainerProps {
   chartsData: ChartsData;
@@ -99,12 +102,31 @@ const getCountryChartSeries = (chartsData: ChartsData, dataType: DataType, count
     .slice(1)
     .reduce(lineGrowthReducer, []);
 
+  const lastFiveResults = columnSerie.data.slice(-5).map(([, value]) => value)
+
+  const lastFiveVelocities =
+    lastFiveResults
+      .slice(1)
+      .reduce((final: number[], value: number, index) => {
+        return [
+          ...final,
+          value - lastFiveResults[index]
+        ]
+      }, []);
+
+  const nextVelocity = predictVelocity(lastFiveVelocities);
+
+  const actualValue = columnSerie.data[columnSerie.data.length - 1][1]
+  const nextPredictedValue = actualValue + Math.ceil(nextVelocity);
+
   return {
     series: [
       columnSerie,
       growthSerie,
     ],
     warningMessage,
+    actualValue,
+    nextPredictedValue
   };
 };
 
@@ -124,6 +146,9 @@ export default ({ chartsData, countries }: CountryChartContainerProps) => {
 
   const [countryChartSeries, setCountryChartSeries] = useState<any>([]);
   const [countryChartWarningMessage, setCountryChartWarningMessage] = useState('');
+  const [actualValue, setActualValue] = useState<number>();
+  const [nextPredictedValue, setNextPredictedValue] = useState<number>();
+  const [voteCompleted, setVoteCompleted] = useState(false);
 
   useEffect(() => {
     if (!chartsData) {
@@ -134,10 +159,46 @@ export default ({ chartsData, countries }: CountryChartContainerProps) => {
       return;
     }
 
-    const { series: countryChartSeries, warningMessage: countryChartWarningMessage } = getCountryChartSeries(chartsData, dataType, country.value, { timeType });
+    const { series: countryChartSeries, warningMessage: countryChartWarningMessage, actualValue, nextPredictedValue } = getCountryChartSeries(chartsData, dataType, country.value, { timeType });
     setCountryChartSeries(countryChartSeries);
     setCountryChartWarningMessage(countryChartWarningMessage);
+    setActualValue(actualValue);
+    setNextPredictedValue(nextPredictedValue);
   }, [chartsData, country, dataType, timeType]);
+
+  const vote = async (type: boolean) => {
+    await fetch('/api/votes', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        type,
+        state: {
+          timeType,
+          dataType,
+          country: country.value
+        }
+      }),
+    })
+      .then((res) => {
+        if (res.status === 200) {
+          setVoteCompleted(true);
+        }
+      })
+      .catch(_err => {
+        // TODO:
+      })
+
+  }
+
+  const voteUp = () => {
+    vote(true);
+  }
+
+  const voteDown = () => {
+    vote(false);
+  }
 
   return (
     <Container fluid>
@@ -222,10 +283,22 @@ export default ({ chartsData, countries }: CountryChartContainerProps) => {
         </Col>
       </Row>
       <Row>
-        <Col xs={12}>
+        <Col xs={12} md={9}>
           <CountryChart series={countryChartSeries} title={countryChartSeries && countryChartSeries.length ? countryChartSeries[0].name : ''} />
           <small>{countryChartWarningMessage}</small>
         </Col>
+        {
+          actualValue && nextPredictedValue &&
+          <Col xs={12} md={3}>
+            <Vote
+              actualValue={actualValue}
+              nextPredictedValue={nextPredictedValue}
+              voteUp={voteUp}
+              voteDown={voteDown}
+              completed={voteCompleted}
+            />
+          </Col>
+        }
       </Row>
     </Container>
   );

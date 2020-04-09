@@ -52,7 +52,7 @@ const getTopTenCountries = (chartsData: ChartsData) => Object.entries(chartsData
   .map(([country, data]) => ([country, data[data.length - 1][1]]))
   .filter(([country]) => country !== 'World')
   .sort((a: any, b: any) => b[1] - a[1])
-  .slice(0, 20)
+  .slice(0, 10)
   .map((a) => a[0]);
 
 
@@ -189,7 +189,7 @@ export default ({ chartsData, countries, pivotData }: CountriesComparisonContain
 
   return (
     <Container fluid>
-      <div style={{ backgroundColor: '#eee' }} className="pt-3 pb-3">
+      <div className="pt-3 pb-3">
         <div className="mb-3">
           <div className="radio">
             <label>

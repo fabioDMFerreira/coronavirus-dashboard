@@ -1,0 +1,15 @@
+{
+  "watch": [
+    "server /**/*.ts",
+    "pages /**/*.ts",
+    "components /**/*.ts",
+    "middlewares /**/*.ts"
+  ],
+  "ignore": [
+    "server /**/*.test.ts",
+    "pages /**/*.test.ts",
+    "components /**/*.test.ts",
+    "middlewares /**/*.test.ts"
+  ],
+  "exec": "ts-node -r tsconfig-paths/register ./server/index.ts"
+}
