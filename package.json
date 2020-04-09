@@ -2,7 +2,7 @@
   "name": "corona-growth",
   "version": "0.1.0",
   "engines": {
-    "node": "v12.16.2"
+    "node": "12.16.x"
   },
   "private": true,
   "dependencies": {
