@@ -1,0 +1,61 @@
+import React from 'react';
+import * as Highcharts from 'highcharts';
+import HighchartsReact from 'highcharts-react-official'
+
+interface ChartProps {
+  series: any,
+  title: string,
+}
+
+export default ({ series, title }: ChartProps) => {
+  return <HighchartsReact
+    highcharts={Highcharts}
+    options={
+      {
+        title: {
+          text: ''
+        },
+        chart: {
+          backgroundColor: null,
+          zoomType: 'x',
+          type: 'column'
+        },
+        series,
+        tooltip: {
+          shared: true
+        },
+        plotOptions: {
+          column: {
+            stacking: 'normal'
+          }
+        },
+        xAxis: {
+          type: 'datetime',
+          plotLines: []
+        },
+        yAxis: [{ // Primary yAxis
+          labels: {
+            // formatter: function () {
+            //   return this.value
+            // }
+          },
+          title: {
+            text: title
+          }
+        }, { // Secondary yAxis
+          title: {
+            text: '',
+          },
+          visible: false,
+          labels: {
+            format: '{value} %',
+          },
+          opposite: true
+        }],
+      }
+    }
+    allowChartUpdate={true}
+    immutable={false}
+    updateArgs={[true, true, true]}
+  />
+}
