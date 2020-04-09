@@ -1,15 +1,15 @@
 import fetch from 'isomorphic-unfetch';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import Button from 'react-bootstrap/Button';
 import Container from 'react-bootstrap/Container';
 import Form from 'react-bootstrap/Form';
 import Navbar from 'react-bootstrap/Navbar';
 import Spinner from 'react-bootstrap/Spinner';
-import ReactGA from 'react-ga';
 import { Provider } from 'react-redux';
 import useSWR from 'swr';
 
 import AffixWrapper from './components/AffixWrapper';
+import GoogleAnalyticsTracker from './components/GoogleAnalyticsTracker';
 import SubscribeModal from './components/SubscribeModal';
 import UrlHandler from './components/UrlHandler';
 import CountriesComparisonContainer from './countries-comparison/CountriesComparisonContainer';
@@ -30,26 +30,28 @@ function App() {
   let countries;
 
   if (countriesData) {
-    [chartsData, pivotData, countries] = countriesData;
+    [
+      chartsData,
+      pivotData,
+      countries] = countriesData;
   }
 
   const tweet = async () => {
-    const hash = await fetch('/api/state', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ state: store.getState() }),
-    }).then((res) => res.text());
+    try {
+      const hash = await fetch('/api/state', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ state: store.getState() }),
+      }).then((res) => res.text());
 
-    const url = `${window.location.protocol}//${window.location.host}?view=${hash}`;
-    window.location.href = `https://twitter.com/intent/tweet?text=Check here the coronavirus growth&url=${url}`;
+      const url = `${window.location.protocol}//${window.location.host}?view=${hash}`;
+      window.location.href = `https://twitter.com/intent/tweet?text=Check here the coronavirus growth&url=${url}`;
+    } catch (err) {
+
+    }
   };
-
-  useEffect(() => {
-    ReactGA.initialize('UA-127455597-4');
-    ReactGA.pageview(window.location.pathname + window.location.search);
-  }, []);
 
 
   return (
@@ -109,6 +111,7 @@ function App() {
         }
 
         <UrlHandler />
+        <GoogleAnalyticsTracker />
       </div>
     </Provider>
   );

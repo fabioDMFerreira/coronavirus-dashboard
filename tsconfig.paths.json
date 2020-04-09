@@ -1,0 +1,16 @@
+{
+  "compilerOptions": {
+    "baseUrl": "./",
+    "paths": {
+      "@middlewares/*": [
+        "./middlewares/*"
+      ],
+      "@components/*":[
+        "./components/*"
+      ],
+      "node_modules/*": [
+        "./node_modules/*"
+      ]
+    }
+  }
+}
