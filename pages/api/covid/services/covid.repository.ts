@@ -1,7 +1,7 @@
 import fetch from 'isomorphic-unfetch';
 
 import {
-  parseCSSEGIData, ChartsData, serializeCumulativeArray, serializeStatesData,
+  ChartsData,   parseCSSEGIData, serializeCumulativeArray, serializeStatesData,
 } from './chartSerializer';
 
 export default {

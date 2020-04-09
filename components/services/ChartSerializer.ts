@@ -1,19 +1,19 @@
+import { BubbleData,PackedBubbleData } from '../types';
 import { buildSheetFromCSV } from './csvUtils';
-import { PackedBubbleData, BubbleData } from '../types';
 
 interface EventsMap {
-  [key: string]: Array<[number, number]>
+  [key: string]: Array<[number, number]>;
 }
 
 interface PackedBubbleDataHelper {
-  [key: string]: PackedBubbleData
+  [key: string]: PackedBubbleData;
 }
 
 export interface ChartsData {
-  totalCases: EventsMap,
-  totalDeaths: EventsMap,
-  newCases?: EventsMap,
-  newDeaths?: EventsMap,
+  totalCases: EventsMap;
+  totalDeaths: EventsMap;
+  newCases?: EventsMap;
+  newDeaths?: EventsMap;
 }
 
 export function calculateGrowthRate(prev: number, actual: number) {
@@ -80,6 +80,36 @@ export function getUtcDate(date: string): number {
 
   return 0;
 }
+
+
+export function serializeGrowthArray(arr: [number, number][]) {
+  if (!arr.length) {
+    return [];
+  }
+
+  const result = [arr[0]];
+
+  for (let i = 1; i < arr.length; i++) {
+    result.push([arr[i][0], arr[i][1] - arr[i - 1][1]]);
+  }
+
+  return result;
+}
+
+export function serializeCumulativeArray(arr: [number, number][]) {
+  if (!arr.length) {
+    return [];
+  }
+
+  const result = [arr[0]];
+
+  for (let i = 1; i < arr.length; i++) {
+    result.push([arr[i][0], arr[i][1] + result[i - 1][1]]);
+  }
+
+  return result;
+}
+
 
 const parseCSSEGISheetToJSON = (headerDates: string[], sheet: string[][]): [EventsMap, PackedBubbleDataHelper] => {
   const countriesWithState: any = {};
@@ -197,32 +227,4 @@ export function parseCSSEGIData(totalCasesCsv: string, totalDeathsCsv: string): 
     totalCases: Object.values(regionTotalCases),
     totalDeaths: Object.values(regionDeathCases),
   }];
-}
-
-export function serializeGrowthArray(arr: [number, number][]) {
-  if (!arr.length) {
-    return [];
-  }
-
-  const result = [arr[0]];
-
-  for (let i = 1; i < arr.length; i++) {
-    result.push([arr[i][0], arr[i][1] - arr[i - 1][1]]);
-  }
-
-  return result;
-}
-
-export function serializeCumulativeArray(arr: [number, number][]) {
-  if (!arr.length) {
-    return [];
-  }
-
-  const result = [arr[0]];
-
-  for (let i = 1; i < arr.length; i++) {
-    result.push([arr[i][0], arr[i][1] + result[i - 1][1]]);
-  }
-
-  return result;
 }

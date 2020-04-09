@@ -1,10 +1,10 @@
-import React from 'react';
 import * as Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
+import React from 'react';
 
 interface ChartProps {
-  series: any,
-  title: string,
+  series: any;
+  title: string;
 }
 
 export default ({ series, title }: ChartProps) => (

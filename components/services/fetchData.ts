@@ -1,7 +1,7 @@
 import Papa from 'papaparse';
 
 import {
-  parseOurWorldInData, parseCSSEGIData, ChartsData, serializeCumulativeArray,
+  ChartsData, parseCSSEGIData,   parseOurWorldInData, serializeCumulativeArray,
 } from './ChartSerializer';
 
 export const OUR_WORLD_IN_DATA = 'OUR_WORLD_IN_DATA';

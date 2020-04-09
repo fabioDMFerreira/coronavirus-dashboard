@@ -1,15 +1,44 @@
 import Papa from 'papaparse';
+
 import { buildSheetFromCSV } from './csvUtils';
 
 interface EventsMap {
-  [key: string]: Array<[number, number]>
+  [key: string]: Array<[number, number]>;
+}
+
+export function serializeGrowthArray(arr: [number, number][]) {
+  if (!arr.length) {
+    return [];
+  }
+
+  const result = [arr[0]];
+
+  for (let i = 1; i < arr.length; i++) {
+    result.push([arr[i][0], arr[i][1] - arr[i - 1][1]]);
+  }
+
+  return result;
+}
+
+export function serializeCumulativeArray(arr: [number, number][]) {
+  if (!arr.length) {
+    return [];
+  }
+
+  const result = [arr[0]];
+
+  for (let i = 1; i < arr.length; i++) {
+    result.push([arr[i][0], arr[i][1] + result[i - 1][1]]);
+  }
+
+  return result;
 }
 
 export interface ChartsData {
-  totalCases: EventsMap,
-  totalDeaths: EventsMap,
-  newCases?: EventsMap,
-  newDeaths?: EventsMap,
+  totalCases: EventsMap;
+  totalDeaths: EventsMap;
+  newCases?: EventsMap;
+  newDeaths?: EventsMap;
 }
 
 export function calculateGrowthRate(prev: number, actual: number) {
@@ -167,37 +196,10 @@ export function parseCSSEGIData(totalCasesCsv: string, totalDeathsCsv: string): 
   }];
 }
 
-export function serializeGrowthArray(arr: [number, number][]) {
-  if (!arr.length) {
-    return [];
-  }
-
-  const result = [arr[0]];
-
-  for (let i = 1; i < arr.length; i++) {
-    result.push([arr[i][0], arr[i][1] - arr[i - 1][1]]);
-  }
-
-  return result;
-}
-
-export function serializeCumulativeArray(arr: [number, number][]) {
-  if (!arr.length) {
-    return [];
-  }
-
-  const result = [arr[0]];
-
-  for (let i = 1; i < arr.length; i++) {
-    result.push([arr[i][0], arr[i][1] + result[i - 1][1]]);
-  }
-
-  return result;
-}
 
 const serializeOccurrencesData = (headers: string[], values: string[]): [number, number][] => headers.map((date, index) => ([getUtcDate(date), +values[index]]));
 
-export const serializeStatesData = async (csv: string, datesCursor = 11) => new Promise((accept, reject) => {
+export const serializeStatesData = async (csv: string, datesCursor = 11) => new Promise((accept) => {
   Papa.parse(csv.trim(), {
     complete: (parsed) => {
       const balanceSheet = parsed.data;

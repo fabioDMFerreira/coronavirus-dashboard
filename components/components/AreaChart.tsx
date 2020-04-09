@@ -1,15 +1,16 @@
-import React from 'react';
 import * as Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
+import React from 'react';
+
 import tooltipFormatter from '../countries-comparison/tooltipFormatter';
 
 interface ChartProps {
-  series: any,
-  title?: string,
-  chartCallback?: any
-  onSerieShow?: (country: string) => void
-  onSerieHide?: (country: string) => void
-  options?: { legend?: boolean }
+  series: any;
+  title?: string;
+  chartCallback?: any;
+  onSerieShow?: (country: string) => void;
+  onSerieHide?: (country: string) => void;
+  options?: { legend?: boolean };
 }
 
 export default ({

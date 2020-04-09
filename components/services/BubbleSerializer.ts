@@ -4,7 +4,7 @@ import { getUtcDate } from './ChartSerializer';
 
 const serializeOccurrencesData = (headers: string[], values: string[]): [number, number][] => headers.map((date, index) => ([getUtcDate(date), +values[index]]));
 
-export const serializeBubbleData = async (csv: string, datesCursor = 11) => new Promise((accept, reject) => {
+export const serializeBubbleData = async (csv: string, datesCursor = 11) => new Promise((accept) => {
   Papa.parse(csv.trim(), {
     complete: (parsed) => {
       const balanceSheet = parsed.data;

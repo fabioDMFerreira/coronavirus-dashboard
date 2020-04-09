@@ -1,7 +1,8 @@
 import React, { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
-import { ReduxReducerState } from '../types';
+
 import { resetState } from '../redux/actions';
+import { ReduxReducerState } from '../types';
 
 export default () => {
   const dispatch = useDispatch();

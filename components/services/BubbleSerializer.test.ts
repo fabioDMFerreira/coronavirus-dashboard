@@ -1,6 +1,5 @@
-import { serializeBubbleData } from './BubbleSerializer';
-
 import usTotalCases from '../fixtures/usTotalCases';
+import { serializeBubbleData } from './BubbleSerializer';
 
 describe('BubbleSerializer', () => {
   it('should return bubble data', async () => {

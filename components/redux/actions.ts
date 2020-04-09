@@ -1,9 +1,9 @@
-import { DataType, TimeType, ReduxReducerState } from '../types';
+import { DataType, ReduxReducerState,TimeType } from '../types';
 import {
-  SET_COUNTRY_FILTER, SET_COUNTRY_DATA_TYPE, SET_COUNTRY_TIME_TYPE, RESET_STATE, SET_ALL_COUNTRIES_DATA_TYPE, SET_ALL_COUNTRIES_SELECTED, SET_REGION_DATA_TYPE,
+  RESET_STATE, SET_ALL_COUNTRIES_DATA_TYPE, SET_ALL_COUNTRIES_SELECTED, SET_COUNTRY_DATA_TYPE,   SET_COUNTRY_FILTER, SET_COUNTRY_TIME_TYPE, SET_REGION_DATA_TYPE,
 } from './types';
 
-export const setCountryFilter = (payload: { label: string, value: string }) => ({
+export const setCountryFilter = (payload: { label: string; value: string }) => ({
   type: SET_COUNTRY_FILTER,
   payload,
 });

@@ -1,6 +1,6 @@
 import Subscription from './Subscription.model';
 
-export default async (req, res) => {
+export default async (req: any, res: any) => {
   if (req.method === 'POST') {
     if (!req.body.email) {
       res.status(400);

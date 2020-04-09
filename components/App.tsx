@@ -1,24 +1,23 @@
-import React, { useEffect, useState } from 'react';
 import fetch from 'isomorphic-unfetch';
+import React, { useEffect, useState } from 'react';
+import Button from 'react-bootstrap/Button';
+import Container from 'react-bootstrap/Container';
+import Form from 'react-bootstrap/Form';
 import Navbar from 'react-bootstrap/Navbar';
 import Spinner from 'react-bootstrap/Spinner';
-import Container from 'react-bootstrap/Container';
-import Button from 'react-bootstrap/Button';
-import Form from 'react-bootstrap/Form';
-import useSWR from 'swr';
 import ReactGA from 'react-ga';
 import { Provider } from 'react-redux';
+import useSWR from 'swr';
 
-import CountryChartContainer from './country-chart/CountryChartContainer';
-import CountriesComparisonContainer from './countries-comparison/CountriesComparisonContainer';
-
-import RegionContainer from './region/RegionContainer';
 import AffixWrapper from './components/AffixWrapper';
+import SubscribeModal from './components/SubscribeModal';
+import UrlHandler from './components/UrlHandler';
+import CountriesComparisonContainer from './countries-comparison/CountriesComparisonContainer';
+import CountryChartContainer from './country-chart/CountryChartContainer';
 import BellIcon from './icons/BellIcon';
 import TwitterIcon from './icons/TwitterIcon';
-import SubscribeModal from './components/SubscribeModal';
 import store from './redux/store';
-import UrlHandler from './components/UrlHandler';
+import RegionContainer from './region/RegionContainer';
 
 function App() {
   const { data: countriesData } = useSWR('/api/covid/countries', (api) => fetch(api).then((res) => res.json()));
@@ -78,25 +77,25 @@ function App() {
         {
           chartsData
           && (
-          <div className="mt-4 mb-5">
-            <CountryChartContainer chartsData={chartsData} countries={countries} />
-          </div>
+            <div className="mt-4 mb-5">
+              <CountryChartContainer chartsData={chartsData} countries={countries} />
+            </div>
           )
         }
         {
           chartsData
           && (
-          <div className="mt-4 mb-5">
-            <CountriesComparisonContainer chartsData={chartsData} countries={countries} pivotData={pivotData} />
-          </div>
+            <div className="mt-4 mb-5">
+              <CountriesComparisonContainer chartsData={chartsData} countries={countries} pivotData={pivotData} />
+            </div>
           )
         }
         {
           regionData
           && (
-          <div className="mt-4 mb-5">
-            <RegionContainer data={{ totalCases: regionData[0], totalDeaths: regionData[1] }} />
-          </div>
+            <div className="mt-4 mb-5">
+              <RegionContainer data={{ totalCases: regionData[0], totalDeaths: regionData[1] }} />
+            </div>
           )
         }
         {

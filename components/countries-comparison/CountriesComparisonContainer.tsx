@@ -1,22 +1,22 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import Select from 'react-select';
+import React, { useCallback,useEffect, useState } from 'react';
+import Button from 'react-bootstrap/Button';
+import Col from 'react-bootstrap/Col';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
-import Col from 'react-bootstrap/Col';
-import Button from 'react-bootstrap/Button';
-import { useSelector, useDispatch } from 'react-redux';
+import { useDispatch,useSelector } from 'react-redux';
+import Select from 'react-select';
 
 import AreaChart from '../components/AreaChart';
-import { ChartsData } from '../services/ChartSerializer';
-import PivotTable from './PivotTable';
-import { DataType, ReduxReducerState } from '../types';
-import { getAllCountriesDataType, getAllCountriesSelected } from '../redux/selectors';
 import { setAllCountriesDataType, setAllCountriesSelected } from '../redux/actions';
+import { getAllCountriesDataType, getAllCountriesSelected } from '../redux/selectors';
+import { ChartsData } from '../services/ChartSerializer';
+import { DataType, ReduxReducerState } from '../types';
+import PivotTable from './PivotTable';
 
 interface CountriesComparisonContainerProps {
-  chartsData: ChartsData,
-  countries: string[],
-  pivotData: any
+  chartsData: ChartsData;
+  countries: string[];
+  pivotData: any;
 }
 
 export const parseChartsDataToHighchartsFormat = (chartsData: ChartsData, dataType: DataType) => {
@@ -247,14 +247,14 @@ export default ({ chartsData, countries, pivotData }: CountriesComparisonContain
         {
           pivotData
           && (
-          <div style={{ minHeight: 250 }} className="mb-5">
-            <PivotTable
-              vals={dataType === DataType.TOTAL_CASES ? ['New Cases'] : ['New Deaths']}
-              onChangeFilter={setAllCountriesFilter}
-              filter={allCountriesFilter}
-              data={pivotData}
-            />
-          </div>
+            <div style={{ minHeight: 250 }} className="mb-5">
+              <PivotTable
+                vals={dataType === DataType.TOTAL_CASES ? ['New Cases'] : ['New Deaths']}
+                onChangeFilter={setAllCountriesFilter}
+                filter={allCountriesFilter}
+                data={pivotData}
+              />
+            </div>
           )
         }
       </div>

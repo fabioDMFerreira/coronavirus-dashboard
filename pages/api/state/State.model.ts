@@ -1,6 +1,6 @@
-import db from '../db';
+import * as mongoose from 'mongoose';
 
-const mongoose = require('mongoose');
+import db from '../db';
 
 const { Schema } = mongoose;
 

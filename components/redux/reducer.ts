@@ -1,8 +1,8 @@
+import { DataType, ReduxReducerState,TimeType } from '../types';
 import actions from './actions';
 import {
-  SET_COUNTRY_FILTER, SET_COUNTRY_DATA_TYPE, SET_COUNTRY_TIME_TYPE, RESET_STATE, SET_ALL_COUNTRIES_DATA_TYPE, SET_ALL_COUNTRIES_SELECTED, SET_REGION_DATA_TYPE,
+  RESET_STATE, SET_ALL_COUNTRIES_DATA_TYPE, SET_ALL_COUNTRIES_SELECTED, SET_COUNTRY_DATA_TYPE,   SET_COUNTRY_FILTER, SET_COUNTRY_TIME_TYPE, SET_REGION_DATA_TYPE,
 } from './types';
-import { DataType, TimeType, ReduxReducerState } from '../types';
 
 
 const initialState = {
@@ -12,6 +12,11 @@ const initialState = {
   allCountriesDataType: DataType.TOTAL_CASES,
   regionDataType: DataType.TOTAL_CASES,
 };
+
+const setState = (state: ReduxReducerState, key: keyof ReduxReducerState, value: any) => ({
+  ...state,
+  [key]: value,
+});
 
 export default (state: any = initialState, action: actions) => {
   switch (action.type) {
@@ -41,7 +46,3 @@ export default (state: any = initialState, action: actions) => {
   return state;
 };
 
-const setState = (state: ReduxReducerState, key: keyof ReduxReducerState, value: any) => ({
-  ...state,
-  [key]: value,
-});

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect,useState } from 'react';
 
 export default ({ children, className = '', offset = 0 }: any) => {
   const [affix, setAffix] = useState(false);

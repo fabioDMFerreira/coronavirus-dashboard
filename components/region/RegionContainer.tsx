@@ -2,15 +2,14 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import AreaChart from '../components/AreaChart';
-import { DataType } from '../types';
-import { ChartsData } from '../services/ChartSerializer';
-
 import { parseChartsDataToHighchartsFormat } from '../countries-comparison/CountriesComparisonContainer';
-import { getRegionDataType } from '../redux/selectors';
 import { setRegionDataType } from '../redux/actions';
+import { getRegionDataType } from '../redux/selectors';
+import { ChartsData } from '../services/ChartSerializer';
+import { DataType } from '../types';
 
 interface RegionContainer {
-  data: ChartsData
+  data: ChartsData;
 }
 
 export default ({ data }: RegionContainer) => {
@@ -58,9 +57,9 @@ export default ({ data }: RegionContainer) => {
       {
         series
         && (
-        <AreaChart
-          series={series}
-        />
+          <AreaChart
+            series={series}
+          />
         )
       }
     </div>

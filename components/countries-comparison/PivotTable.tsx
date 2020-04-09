@@ -1,13 +1,12 @@
 import React, { useState } from 'react';
-
 import PivotTableUI from 'react-pivottable/PivotTableUI';
 import { derivers } from 'react-pivottable/Utilities';
 
 interface PivotTableProps {
-  data: any,
-  filter: any,
-  onChangeFilter?: any
-  vals?: string[]
+  data: any;
+  filter: any;
+  onChangeFilter?: any;
+  vals?: string[];
 }
 
 function getWeekNumber(d: any) {

@@ -1,12 +1,11 @@
-import {
-  parseOurWorldInData, calculateSerieGrowthRate, parseCSSEGIData, serializeGrowthArray, serializeCumulativeArray, getUtcDate,
-} from './ChartSerializer';
-
-import ourWorldInData from '../fixtures/ourWorldInData';
 import CSSEGITotalCasesData from '../fixtures/CSSEGITotalCasesData';
-import CSSEGITotalDeathsData from '../fixtures/CSSEGITotalDeathsData';
 import CSSEGITotalCasesDataWithStates from '../fixtures/CSSEGITotalCasesData-with-states';
+import CSSEGITotalDeathsData from '../fixtures/CSSEGITotalDeathsData';
 import CSSEGITotalDeathsDataWithStates from '../fixtures/CSSEGITotalDeathsData-with-states';
+import ourWorldInData from '../fixtures/ourWorldInData';
+import {
+  calculateSerieGrowthRate, getUtcDate,
+  parseCSSEGIData,   parseOurWorldInData, serializeCumulativeArray, serializeGrowthArray, } from './ChartSerializer';
 
 describe('ChartSerializer', () => {
   describe('parseOurWorldInData', () => {
