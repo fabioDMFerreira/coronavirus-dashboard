@@ -146,8 +146,8 @@ export default ({ chartsData, countries }: CountryChartContainerProps) => {
 
   const [countryChartSeries, setCountryChartSeries] = useState<any>([]);
   const [countryChartWarningMessage, setCountryChartWarningMessage] = useState('');
-  const [actualValue, setActualValue] = useState<number>();
-  const [nextPredictedValue, setNextPredictedValue] = useState<number>();
+  const [actualValue, setActualValue] = useState<number>(0);
+  const [nextPredictedValue, setNextPredictedValue] = useState<number>(0);
   const [voteCompleted, setVoteCompleted] = useState(false);
 
   useEffect(() => {
@@ -164,6 +164,7 @@ export default ({ chartsData, countries }: CountryChartContainerProps) => {
     setCountryChartWarningMessage(countryChartWarningMessage);
     setActualValue(actualValue);
     setNextPredictedValue(nextPredictedValue);
+    setVoteCompleted(false);
   }, [chartsData, country, dataType, timeType]);
 
   const vote = async (type: boolean) => {
@@ -288,7 +289,7 @@ export default ({ chartsData, countries }: CountryChartContainerProps) => {
           <small>{countryChartWarningMessage}</small>
         </Col>
         {
-          actualValue && nextPredictedValue &&
+          actualValue > 0 && nextPredictedValue > 0 &&
           <Col xs={12} md={3}>
             <Vote
               actualValue={actualValue}

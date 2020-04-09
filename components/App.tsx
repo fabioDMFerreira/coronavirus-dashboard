@@ -7,6 +7,7 @@ import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import Spinner from 'react-bootstrap/Spinner';
 import { Provider } from 'react-redux';
+import { PersistGate } from 'redux-persist/integration/react'
 import useSWR from 'swr';
 
 import AffixWrapper from './components/AffixWrapper';
@@ -17,7 +18,7 @@ import CountriesComparisonContainer from './countries-comparison/CountriesCompar
 import CountryChartContainer from './country-chart/CountryChartContainer';
 import BellIcon from './icons/BellIcon';
 import TwitterIcon from './icons/TwitterIcon';
-import store from './redux/store';
+import { persistor, store } from './redux/store';
 import RegionContainer from './region/RegionContainer';
 
 function App() {
@@ -58,74 +59,76 @@ function App() {
 
   return (
     <Provider store={store}>
-      <div className="App">
-        <AffixWrapper offset={40} className="fixed-top">
-          <Navbar bg="dark" variant="dark">
-            <Container fluid>
-              <Navbar.Brand href="#home">Covid-19 Growth</Navbar.Brand>
-              <Navbar.Collapse>
-                <Nav.Item>
-                  <Button variant="link" className={tab === "country" ? 'active' : ''} onClick={() => setTab("country")}>Country</Button>
-                </Nav.Item>
-                <Nav.Item>
-                  <Button variant="link" className={tab === "allCountries" ? 'active' : ''} onClick={() => setTab("allCountries")}>All countries</Button>
-                </Nav.Item>
-                <Nav.Item>
-                  <Button variant="link" className={tab === "usa" ? 'active' : ''} onClick={() => setTab("usa")}>USA</Button>
-                </Nav.Item>
-              </Navbar.Collapse>
-              <Form inline>
-                <Button className="mr-2" variant="primary" onClick={tweet}>
-                  <TwitterIcon />
-                  {' '}
+      <PersistGate loading={null} persistor={persistor}>
+        <div className="App">
+          <AffixWrapper offset={40} className="fixed-top">
+            <Navbar bg="dark" variant="dark">
+              <Container fluid>
+                <Navbar.Brand href="#home">Covid-19 Growth</Navbar.Brand>
+                <Navbar.Collapse>
+                  <Nav.Item>
+                    <Button variant="link" className={tab === "country" ? 'active' : ''} onClick={() => setTab("country")}>Country</Button>
+                  </Nav.Item>
+                  <Nav.Item>
+                    <Button variant="link" className={tab === "allCountries" ? 'active' : ''} onClick={() => setTab("allCountries")}>All countries</Button>
+                  </Nav.Item>
+                  <Nav.Item>
+                    <Button variant="link" className={tab === "usa" ? 'active' : ''} onClick={() => setTab("usa")}>USA</Button>
+                  </Nav.Item>
+                </Navbar.Collapse>
+                <Form inline>
+                  <Button className="mr-2" variant="primary" onClick={tweet}>
+                    <TwitterIcon />
+                    {' '}
                   Tweet
-                </Button>
-                <Button variant="warning" onClick={() => setSubscribeModal(true)}>
-                  <BellIcon />
-                  {' '}
+                  </Button>
+                  <Button variant="warning" onClick={() => setSubscribeModal(true)}>
+                    <BellIcon />
+                    {' '}
                   Subscribe
-                </Button>
-              </Form>
-            </Container>
-          </Navbar>
-        </AffixWrapper>
-        {
-          chartsData && tab === 'country'
+                  </Button>
+                </Form>
+              </Container>
+            </Navbar>
+          </AffixWrapper>
+          {
+            chartsData && tab === 'country'
           && (
             <div className="mt-4 mb-5">
               <CountryChartContainer chartsData={chartsData} countries={countries} />
             </div>
           )
-        }
-        {
-          chartsData && tab === 'allCountries'
+          }
+          {
+            chartsData && tab === 'allCountries'
           && (
             <div className="mt-4 mb-5">
               <CountriesComparisonContainer chartsData={chartsData} countries={countries} pivotData={pivotData} />
             </div>
           )
-        }
-        {
-          regionData && tab === 'usa'
+          }
+          {
+            regionData && tab === 'usa'
           && (
             <div className="mt-4 mb-5">
               <RegionContainer data={{ totalCases: regionData[0], totalDeaths: regionData[1] }} />
             </div>
           )
-        }
-        {
-          !chartsData
+          }
+          {
+            !chartsData
           && <Spinner animation="grow" />
-        }
+          }
 
-        {
-          subscribeModal
+          {
+            subscribeModal
           && <SubscribeModal onClose={() => setSubscribeModal(false)} />
-        }
+          }
 
-        <UrlHandler />
-        <GoogleAnalyticsTracker />
-      </div>
+          <UrlHandler />
+          <GoogleAnalyticsTracker />
+        </div>
+      </PersistGate>
     </Provider>
   );
 }

@@ -8,8 +8,13 @@ export default withErrorHandler(async (req: NextApiRequest, res: NextApiResponse
     if (!req.body.state) {
       res.status(400);
     } else {
-      console.log(req.headers);
-      await Vote.create({ type: !!req.body.type, state: req.body.state });
+      const ip = req.headers['x-forwarded-for'] || '';
+
+      const vote = await Vote.findOne({ ip, state: req.body.state })
+
+      if (!vote) {
+        await Vote.create({ type: !!req.body.type, state: req.body.state, ip });
+      }
     }
   }
 
