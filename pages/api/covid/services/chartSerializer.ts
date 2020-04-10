@@ -88,6 +88,8 @@ const parseCSSEGISheetToJSON = (headerDates: string[], sheet: string[][]): [Even
           }
 
           if (!state) {
+            countriesWithGlobalCounters[country] = true;
+
             datesOccurences.forEach((occurrences, index) => {
               const date = getUtcDate(headerDates[index]);
 

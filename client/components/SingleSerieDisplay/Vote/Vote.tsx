@@ -26,6 +26,8 @@ const Vote = ({
 }: VoteProps) => {
 
 
+  const predictedGrowthRate = ((nextPredictedValue - actualValue) / actualValue) * 100;
+
   return (
     <div>
       <Table bordered>
@@ -38,7 +40,10 @@ const Vote = ({
           </tr>
           <tr>
             <th>{serieName}, {DataTypeLabels[dataType]} prediction for {timeType === TimeType.DAILY ? 'tomorrow' : 'next week'}</th>
-            <td>{new Intl.NumberFormat().format(nextPredictedValue)}</td>
+            <td>
+              {new Intl.NumberFormat().format(nextPredictedValue)}<br />
+              <small style={{ color: predictedGrowthRate >= 0 ? 'green' : 'red' }}>{predictedGrowthRate >= 0 ? '+' : ''}{predictedGrowthRate.toFixed(2)}%</small>
+            </td>
           </tr>
           <tr>
             <th>Do you think the value will go higher or lower?</th>
