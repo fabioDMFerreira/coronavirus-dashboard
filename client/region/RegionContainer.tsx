@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import AreaChart from '../components/AreaChart';
-import { parseChartsDataToHighchartsFormat } from '../countries-comparison/CountriesComparisonContainer';
+import { parseChartsDataToHighchartsFormat } from '../containers/CountryMulipleSerieContainer';
 import { setRegionDataType } from '../redux/actions';
 import { getRegionDataType } from '../redux/selectors';
 import { ChartsData } from '../services/ChartSerializer';

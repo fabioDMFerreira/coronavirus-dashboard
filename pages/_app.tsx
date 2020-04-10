@@ -1,7 +1,7 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'react-pivottable/pivottable.css';
-import '../components/App.css';
+import '../client/App.css';
 
-import App from '../components/App';
+import App from '../client';
 
 export default App;

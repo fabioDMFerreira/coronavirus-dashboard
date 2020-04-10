@@ -1,1 +1,12 @@
-export const buildSheetFromCSV = (csv: string) => csv.split('\n').map((row) => row.split(','));
+import Papa from 'papaparse';
+
+export const buildSheetFromCSV = (csv: string): Promise<string[][]> =>
+  new Promise(
+    (accept) => {
+      Papa.parse(csv.trim(), {
+        complete: (parsed) => {
+          return accept(parsed.data)
+        }
+      })
+    }
+  )

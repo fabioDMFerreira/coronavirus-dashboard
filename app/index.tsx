@@ -1,5 +1,5 @@
-import 'bootstrap/dist/css/bootstrap.min.css';
-import 'react-pivottable/pivottable.css';
+import './node_modules/bootstrap/dist/css/bootstrap.min.css';
+import './node_modules/react-pivottable/pivottable.css';
 import './App.css';
 import './index.css';
 

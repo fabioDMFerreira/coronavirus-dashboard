@@ -1,39 +1,38 @@
-import Vote from 'components/components/Vote';
+import Vote from 'client/components/SingleSerieDisplay/Vote';
+import { calculateGrowthRate, ChartsData } from 'client/services/ChartSerializer';
+import { ColumnSerie, DataType, TimeType } from 'client/types';
 import fetch from 'isomorphic-unfetch';
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Col from 'react-bootstrap/Col';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
-import { useDispatch, useSelector } from 'react-redux';
-import Select from 'react-select';
+import Select, { ValueType } from 'react-select';
 
-import { setCountryDataType, setCountryFilter, setCountryTimeType } from '../redux/actions';
-import { getCountry, getCountryDataType, getCountryTimeType } from '../redux/selectors';
-import { calculateGrowthRate, ChartsData } from '../services/ChartSerializer';
-import { ColumnSerie, DataType, TimeType } from '../types';
-import CountryChart from './CountryChart';
+import CountryChart from './ColumnChart';
 import predictVelocity from './predictVelocity';
 
-interface CountryChartContainerProps {
-  chartsData: ChartsData;
-  countries: string[];
-}
 
-function formatNumber(num: number) {
-  return num.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,');
-}
+// function formatNumber(num: number) {
+//   return num.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,');
+// }
 
-const serializeWarningMessage = (occurenceType: string, lowerLimit: number) => `* The growth rate is tracked after the number of ${occurenceType} reaches ${formatNumber(lowerLimit)}.`;
+// const serializeWarningMessage = (occurenceType: string, lowerLimit: number) => `* The growth rate is tracked after the number of ${occurenceType} reaches ${formatNumber(lowerLimit)}.`;
 
 const serializeWeeklyFilter = (weekDay: number) => ([time]: [number, number]) => new Date(time).getUTCDay() === weekDay;
 
-const serializeGrowthRateReducer = (lowerLimit: number, serie: Array<[number, number]>) => (growthRates: Array<[number, number]>, [time, value]: [number, number], index: number) => {
-  if (value >= lowerLimit) {
-    const prev = serie[index][1];
-    growthRates.push([time, calculateGrowthRate(prev, value)]);
-  }
-  return growthRates;
-};
+const serializeGrowthRateReducer =
+  (lowerLimit: number, serie: Array<[number, number]>) =>
+    (
+      growthRates: Array<[number, number]>,
+      [time, value]: [number, number],
+      index: number
+    ) => {
+      if (value >= lowerLimit) {
+        const prev = serie[index][1];
+        growthRates.push([time, calculateGrowthRate(prev, value)]);
+      }
+      return growthRates;
+    };
 
 
 const getCountryChartSeries = (chartsData: ChartsData, dataType: DataType, country: string, { timeType }: { timeType: TimeType }) => {
@@ -54,7 +53,7 @@ const getCountryChartSeries = (chartsData: ChartsData, dataType: DataType, count
       valueDecimals: 2,
     },
   };
-  let warningMessage = '';
+  const warningMessage = '';
 
   if (dataType === DataType.TOTAL_DEATHS) {
     columnSerie.data = chartsData.totalDeaths[country].slice();
@@ -81,26 +80,44 @@ const getCountryChartSeries = (chartsData: ChartsData, dataType: DataType, count
     columnSerie.data = columnSerie.data.filter(timeFilter);
   }
 
-  let lineGrowthReducer;
+  const growthTimeLimit = timeType === TimeType.WEEKLY ? 8 : 20
 
-  if (country === 'World' && dataType === DataType.TOTAL_CASES) {
-    lineGrowthReducer = serializeGrowthRateReducer(100000, columnSerie.data);
-    warningMessage = serializeWarningMessage('total cases', 100000);
-  } else if (country === 'World' && dataType === DataType.TOTAL_DEATHS) {
-    lineGrowthReducer = serializeGrowthRateReducer(1000, columnSerie.data);
-    warningMessage = serializeWarningMessage('total deaths', 1000);
-  } else if (dataType === DataType.TOTAL_CASES) {
-    lineGrowthReducer = serializeGrowthRateReducer(1000, columnSerie.data);
-    warningMessage = serializeWarningMessage('total cases', 1000);
-  } else {
-    lineGrowthReducer = serializeGrowthRateReducer(100, columnSerie.data);
-    warningMessage = serializeWarningMessage('total deaths', 100);
-  }
+  const lineGrowthReducer = serializeGrowthRateReducer(0, columnSerie.data.slice(-growthTimeLimit));
+
+  // if (country === 'World' && dataType === DataType.TOTAL_CASES) {
+  //   lineGrowthReducer = serializeGrowthRateReducer(100000, columnSerie.data);
+  //   warningMessage = serializeWarningMessage('total cases', 100000);
+  // } else if (country === 'World' && dataType === DataType.TOTAL_DEATHS) {
+  //   lineGrowthReducer = serializeGrowthRateReducer(1000, columnSerie.data);
+  //   warningMessage = serializeWarningMessage('total deaths', 1000);
+  // } else if (dataType === DataType.TOTAL_CASES) {
+  //   lineGrowthReducer = serializeGrowthRateReducer(1000, columnSerie.data);
+  //   warningMessage = serializeWarningMessage('total cases', 1000);
+  // } else {
+  //   lineGrowthReducer = serializeGrowthRateReducer(100, columnSerie.data);
+  //   warningMessage = serializeWarningMessage('total deaths', 100);
+  // }
 
   growthSerie.data = columnSerie
     .data
-    .slice(1)
+    .slice(-growthTimeLimit + 1)
     .reduce(lineGrowthReducer, []);
+
+  if (timeType === TimeType.DAILY) {
+    let indexToCut = -1;
+    for (let i = 0; i < growthSerie.data.length; i++) {
+      const index = growthSerie.data.length - i - 1;
+
+      if (growthSerie.data[index][1] > 200) {
+        indexToCut = index + 1;
+        break;
+      }
+    }
+
+    if (indexToCut >= 0) {
+      growthSerie.data = growthSerie.data.slice(indexToCut)
+    }
+  }
 
   const lastFiveResults = columnSerie.data.slice(-5).map(([, value]) => value)
 
@@ -131,21 +148,44 @@ const getCountryChartSeries = (chartsData: ChartsData, dataType: DataType, count
 };
 
 
-export default ({ chartsData, countries }: CountryChartContainerProps) => {
-  const dispatch = useDispatch();
+interface SelectOption {
+  label: string;
+  value: string;
+}
 
+export interface SingleSerieChartProps {
+  selectedSerie: SelectOption;
+  changeSelectedSerie: (value: ValueType<SelectOption>) => void;
+  seriesOptions: string[];
 
-  const country = useSelector(getCountry);
-  const setCountry = useCallback((value: any) => { dispatch(setCountryFilter(value)); }, [dispatch]);
+  dataType: DataType;
+  changeDataType: (value: DataType) => void;
 
-  const dataType = useSelector(getCountryDataType);
-  const setDataType = useCallback((value: any) => { dispatch(setCountryDataType(value)); }, [dispatch]);
+  timeType: TimeType;
+  changeTimeType: (value: TimeType) => void;
 
-  const timeType = useSelector(getCountryTimeType);
-  const setTimeType = useCallback((value: any) => { dispatch(setCountryTimeType(value)); }, [dispatch]);
+  chartsData: ChartsData;
+}
+
+export default ({
+  selectedSerie,
+  changeSelectedSerie,
+  seriesOptions,
+
+  dataType,
+  changeDataType,
+
+  timeType,
+  changeTimeType,
+
+  chartsData
+}: SingleSerieChartProps) => {
 
   const [countryChartSeries, setCountryChartSeries] = useState<any>([]);
-  const [countryChartWarningMessage, setCountryChartWarningMessage] = useState('');
+  // const [
+  //   countryChartWarningMessage,
+  //   setCountryChartWarningMessage
+  // ] = useState('');
   const [actualValue, setActualValue] = useState<number>(0);
   const [nextPredictedValue, setNextPredictedValue] = useState<number>(0);
   const [voteCompleted, setVoteCompleted] = useState(false);
@@ -155,17 +195,17 @@ export default ({ chartsData, countries }: CountryChartContainerProps) => {
       return;
     }
 
-    if (!country || !country.value || !chartsData.totalDeaths[country.value] || !chartsData.totalCases[country.value]) {
+    if (!selectedSerie || !selectedSerie.value || !chartsData.totalDeaths[selectedSerie.value] || !chartsData.totalCases[selectedSerie.value]) {
       return;
     }
 
-    const { series: countryChartSeries, warningMessage: countryChartWarningMessage, actualValue, nextPredictedValue } = getCountryChartSeries(chartsData, dataType, country.value, { timeType });
+    const { series: countryChartSeries, actualValue, nextPredictedValue } = getCountryChartSeries(chartsData, dataType, selectedSerie.value, { timeType });
     setCountryChartSeries(countryChartSeries);
-    setCountryChartWarningMessage(countryChartWarningMessage);
+    // setCountryChartWarningMessage(countryChartWarningMessage);
     setActualValue(actualValue);
     setNextPredictedValue(nextPredictedValue);
     setVoteCompleted(false);
-  }, [chartsData, country, dataType, timeType]);
+  }, [chartsData, selectedSerie, dataType, timeType]);
 
   const vote = async (type: boolean) => {
     await fetch('/api/votes', {
@@ -178,7 +218,7 @@ export default ({ chartsData, countries }: CountryChartContainerProps) => {
         state: {
           timeType,
           dataType,
-          country: country.value
+          country: selectedSerie.value
         }
       }),
     })
@@ -201,15 +241,16 @@ export default ({ chartsData, countries }: CountryChartContainerProps) => {
     vote(false);
   }
 
+
   return (
     <Container fluid>
       <Row className="pb-3">
         <Col xs={5}>
           <Select
-            value={country}
-            options={countries.map((option) => ({ label: option, value: option }))}
+            value={selectedSerie}
+            options={seriesOptions.map((option) => ({ label: option, value: option }))}
             placeholder="Choose a Country"
-            onChange={(value: any) => setCountry(value)}
+            onChange={changeSelectedSerie}
           />
         </Col>
         <Col xs={5}>
@@ -219,7 +260,7 @@ export default ({ chartsData, countries }: CountryChartContainerProps) => {
                 type="radio"
                 value={DataType.TOTAL_CASES}
                 checked={dataType === DataType.TOTAL_CASES}
-                onChange={() => setDataType(DataType.TOTAL_CASES)}
+                onChange={() => changeDataType(DataType.TOTAL_CASES)}
               />
               Total Cases
             </label>
@@ -230,7 +271,7 @@ export default ({ chartsData, countries }: CountryChartContainerProps) => {
                 type="radio"
                 value={DataType.TOTAL_DEATHS}
                 checked={dataType === DataType.TOTAL_DEATHS}
-                onChange={() => setDataType(DataType.TOTAL_DEATHS)}
+                onChange={() => changeDataType(DataType.TOTAL_DEATHS)}
               />
               Total Deaths
             </label>
@@ -241,7 +282,7 @@ export default ({ chartsData, countries }: CountryChartContainerProps) => {
                 type="radio"
                 value={DataType.NEW_CASES}
                 checked={dataType === DataType.NEW_CASES}
-                onChange={() => setDataType(DataType.NEW_CASES)}
+                onChange={() => changeDataType(DataType.NEW_CASES)}
               />
               New Cases
             </label>
@@ -252,7 +293,7 @@ export default ({ chartsData, countries }: CountryChartContainerProps) => {
                 type="radio"
                 value={DataType.NEW_DEATHS}
                 checked={dataType === DataType.NEW_DEATHS}
-                onChange={() => setDataType(DataType.NEW_DEATHS)}
+                onChange={() => changeDataType(DataType.NEW_DEATHS)}
               />
               New Deaths
             </label>
@@ -265,7 +306,7 @@ export default ({ chartsData, countries }: CountryChartContainerProps) => {
                 type="radio"
                 value={TimeType.DAILY}
                 checked={timeType === TimeType.DAILY}
-                onChange={() => setTimeType(TimeType.DAILY)}
+                onChange={() => changeTimeType(TimeType.DAILY)}
               />
               Daily
             </label>
@@ -276,7 +317,7 @@ export default ({ chartsData, countries }: CountryChartContainerProps) => {
                 type="radio"
                 value={TimeType.WEEKLY}
                 checked={timeType === TimeType.WEEKLY}
-                onChange={() => setTimeType(TimeType.WEEKLY)}
+                onChange={() => changeTimeType(TimeType.WEEKLY)}
               />
               Weekly
             </label>
@@ -286,7 +327,7 @@ export default ({ chartsData, countries }: CountryChartContainerProps) => {
       <Row>
         <Col xs={12} md={9}>
           <CountryChart series={countryChartSeries} title={countryChartSeries && countryChartSeries.length ? countryChartSeries[0].name : ''} />
-          <small>{countryChartWarningMessage}</small>
+          {/* <small>* The growth rate is tracked after two weeks ago from now.</small> */}
         </Col>
         {
           actualValue > 0 && nextPredictedValue > 0 &&
@@ -297,10 +338,14 @@ export default ({ chartsData, countries }: CountryChartContainerProps) => {
               voteUp={voteUp}
               voteDown={voteDown}
               completed={voteCompleted}
+
+              dataType={dataType}
+              timeType={timeType}
+              serieName={selectedSerie.value}
             />
           </Col>
         }
       </Row>
     </Container>
   );
-};
+}

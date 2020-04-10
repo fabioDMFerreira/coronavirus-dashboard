@@ -6,7 +6,7 @@
         "./middlewares/*"
       ],
       "@components/*":[
-        "./components/*"
+        "./client/components/*"
       ],
       "node_modules/*": [
         "./node_modules/*"

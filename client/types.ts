@@ -10,6 +10,18 @@ export enum TimeType {
   WEEKLY
 }
 
+export const DataTypeLabels = {
+  [DataType.TOTAL_CASES]: 'Total Cases',
+  [DataType.TOTAL_DEATHS]: 'Total Deaths',
+  [DataType.NEW_CASES]: 'New Cases',
+  [DataType.NEW_DEATHS]: 'New Deaths',
+}
+
+export const TimeTypeLabels = {
+  [TimeType.DAILY]: 'Daily',
+  [TimeType.WEEKLY]: 'Weekly',
+}
+
 export interface ColumnSerie {
   type: 'column';
   name?: string;
@@ -35,5 +47,12 @@ export interface ReduxReducerState {
   countryTimeType: TimeType;
   allCountriesDataType: DataType;
   allCountriesSelected: any;
+
+  region: { label: string; value: string };
   regionDataType: DataType;
+  regionTimeType: TimeType;
+  allRegionsDataType: DataType;
+  allRegionsSelected: any;
+
+  tab: 'country' | 'usa';
 }

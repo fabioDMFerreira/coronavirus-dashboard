@@ -2,7 +2,7 @@ import * as Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
 import React from 'react';
 
-import tooltipFormatter from '../countries-comparison/tooltipFormatter';
+import tooltipFormatter from './MultipleSeriesDisplay/tooltipFormatter';
 
 interface ChartProps {
   series: any;

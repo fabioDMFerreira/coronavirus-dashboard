@@ -1,12 +1,10 @@
-import Papa from 'papaparse';
-
 import { buildSheetFromCSV } from './csvUtils';
 
-interface EventsMap {
+export interface EventsMap {
   [key: string]: Array<[number, number]>;
 }
 
-export function serializeGrowthArray(arr: [number, number][]) {
+export function mapGrowth(arr: [number, number][]) {
   if (!arr.length) {
     return [];
   }
@@ -20,7 +18,7 @@ export function serializeGrowthArray(arr: [number, number][]) {
   return result;
 }
 
-export function serializeCumulativeArray(arr: [number, number][]) {
+export function makeCumulativeArray(arr: [number, number][]) {
   if (!arr.length) {
     return [];
   }
@@ -62,39 +60,6 @@ export function calculateSerieGrowthRate(serie: Array<number>) {
   return growthRate;
 }
 
-export function parseOurWorldInData(csv: string) {
-  const sheet = buildSheetFromCSV(csv);
-
-  const totalCases: EventsMap = {};
-  const totalDeaths: EventsMap = {};
-
-  sheet.slice(1).forEach((row) => {
-    if (!row) {
-      return;
-    }
-
-    const [date, location, , , total_cases, total_deaths]: string[] = row;
-
-    if (!location || !+total_cases) {
-      return;
-    }
-
-    if (location && !(location in totalCases)) {
-      totalCases[location] = [];
-      totalDeaths[location] = [];
-    }
-
-    const dateMs = new Date(date).getTime();
-
-    totalCases[location].push([dateMs, +total_cases]);
-    totalDeaths[location].push([dateMs, +total_deaths]);
-  });
-
-  return {
-    totalCases,
-    totalDeaths,
-  };
-}
 
 export function getUtcDate(date: string): number {
   const match = /(\d*)\/(\d*)\/(\d*)/.exec(date);
@@ -172,9 +137,9 @@ const parseCSSEGISheetToJSON = (headerDates: string[], sheet: string[][]): [Even
   return [chartsData];
 };
 
-export function parseCSSEGIData(totalCasesCsv: string, totalDeathsCsv: string): [ChartsData] {
-  const totalCasesSheet = buildSheetFromCSV(totalCasesCsv);
-  const totalDeathsSheet = buildSheetFromCSV(totalDeathsCsv);
+export async function parseCSSEGIData(totalCasesCsv: string, totalDeathsCsv: string): Promise<[ChartsData]> {
+  const totalCasesSheet = await buildSheetFromCSV(totalCasesCsv);
+  const totalDeathsSheet = await buildSheetFromCSV(totalDeathsCsv);
 
   const tcHeaderDates = totalCasesSheet[0].slice(4);
   const tdHeaderDates = totalDeathsSheet[0].slice(4);
@@ -186,49 +151,12 @@ export function parseCSSEGIData(totalCasesCsv: string, totalDeathsCsv: string): 
     totalCases,
     totalDeaths,
     newCases: Object.keys(totalCases).reduce((final: EventsMap, country) => {
-      final[country] = serializeGrowthArray(totalCases[country]);
+      final[country] = mapGrowth(totalCases[country]);
       return final;
     }, {}),
     newDeaths: Object.keys(totalDeaths).reduce((final: EventsMap, country) => {
-      final[country] = serializeGrowthArray(totalDeaths[country]);
+      final[country] = mapGrowth(totalDeaths[country]);
       return final;
     }, {}),
   }];
 }
-
-
-const serializeOccurrencesData = (headers: string[], values: string[]): [number, number][] => headers.map((date, index) => ([getUtcDate(date), +values[index]]));
-
-export const serializeStatesData = async (csv: string, datesCursor = 11) => new Promise((accept) => {
-  Papa.parse(csv.trim(), {
-    complete: (parsed) => {
-      const balanceSheet = parsed.data;
-
-      if (!balanceSheet || !balanceSheet.length) {
-        return accept();
-      }
-
-      const datesHeaders = balanceSheet[0].slice(datesCursor);
-
-
-      const json = balanceSheet
-        .slice(1)
-        .reduce((final: { [key: string]: [number, number][] }, actual) => {
-          const [, , , , , state, region] = actual;
-
-          const occurrences = actual.slice(datesCursor);
-
-          if (!final[region]) {
-            final[region] = serializeOccurrencesData(datesHeaders, occurrences);
-          } else if (state) {
-            const actualValues = serializeOccurrencesData(datesHeaders, occurrences);
-            final[region] = final[region].map(([time, value]: [number, number], index: number) => [time, value + actualValues[index][1]]);
-          }
-
-          return final;
-        }, {});
-
-      accept(json);
-    },
-  });
-});

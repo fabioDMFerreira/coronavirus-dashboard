@@ -1,25 +1,16 @@
-import React, { useCallback,useEffect, useState } from 'react';
+import { ChartsData } from 'client/services/ChartSerializer';
+import { DataType } from 'client/types';
+import React, { useEffect, useState } from 'react';
 import Button from 'react-bootstrap/Button';
 import Col from 'react-bootstrap/Col';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
-import { useDispatch,useSelector } from 'react-redux';
 import Select from 'react-select';
 
-import AreaChart from '../components/AreaChart';
-import { setAllCountriesDataType, setAllCountriesSelected } from '../redux/actions';
-import { getAllCountriesDataType, getAllCountriesSelected } from '../redux/selectors';
-import { ChartsData } from '../services/ChartSerializer';
-import { DataType } from '../types';
+import AreaChart from '../AreaChart';
 import PivotTable from './PivotTable';
 
-interface CountriesComparisonContainerProps {
-  chartsData: ChartsData;
-  countries: string[];
-  pivotData: any;
-}
-
-export const parseChartsDataToHighchartsFormat = (chartsData: ChartsData, dataType: DataType) => {
+export const parseChartsDataToHighchartsFormat = (chartsData: ChartsData, dataType: DataType, groupSerie: string) => {
   let data: any = {};
 
   switch (dataType) {
@@ -39,7 +30,7 @@ export const parseChartsDataToHighchartsFormat = (chartsData: ChartsData, dataTy
 
   const series = Object
     .entries(data)
-    .filter(([country]) => country !== 'World')
+    .filter(([country]) => country !== groupSerie)
     .map(([country, values]: any) => ({
       name: country,
       data: values.slice(),
@@ -48,11 +39,11 @@ export const parseChartsDataToHighchartsFormat = (chartsData: ChartsData, dataTy
   return series;
 };
 
-const getTopTenCountries = (chartsData: ChartsData) => Object.entries(chartsData.totalCases)
+const getTopCountries = (chartsData: ChartsData, nSeries = 10, groupSerie: string) => Object.entries(chartsData.totalCases)
   .map(([country, data]) => ([country, data[data.length - 1][1]]))
-  .filter(([country]) => country !== 'World')
+  .filter(([country]) => country !== groupSerie)
   .sort((a: any, b: any) => b[1] - a[1])
-  .slice(0, 10)
+  .slice(0, nSeries)
   .map((a) => a[0]);
 
 
@@ -81,52 +72,41 @@ const getInitialFilters = (() => {
   };
 })();
 
-export default ({ chartsData, countries, pivotData }: CountriesComparisonContainerProps) => {
-  const dispatch = useDispatch();
+interface MultipleSeriesDisplayProps {
+  dataType: DataType;
+  changeDataType: (dataType: DataType) => void;
+
+  chartsData: ChartsData;
+  seriesOptions: string[];
+  pivotData: any;
+
+  seriesSelected: any;
+  selectSeries: (value: any) => void;
+
+  groupSerie: 'World' | 'USA';
+  seriesType: 'Countries' | 'Regions';
+}
+
+export default ({
+  dataType,
+  changeDataType,
+  chartsData,
+  pivotData,
+  seriesOptions,
+  seriesSelected,
+  selectSeries,
+  groupSerie,
+  seriesType,
+}: MultipleSeriesDisplayProps) => {
 
   const [chartAllCountries, setChartAllCountries] = useState<any>(null);
-
-  const dataType = useSelector(getAllCountriesDataType);
-  const setDataType = useCallback((value: DataType) => {
-    dispatch(setAllCountriesDataType(value));
-  }, [dispatch]);
-
-  // const countriesSelected = useSelector((state: ReduxReducerState) => {
-  //   const result = getAllCountriesSelected(state);
-  //   return result || getTopTenCountries(chartsData).map((country) => ({ label: country, value: country }));
-  // });
-  const countriesSelected = useSelector(getAllCountriesSelected);
-  const setCountriesSelected = useCallback((value: any) => {
-    dispatch(setAllCountriesSelected(value));
-  }, [dispatch]);
 
   const [allCountriesCharSeries, setAllCountriesChartSeries] = useState<any>([]);
   const [allCountriesFilter, setAllCountriesFilter] = useState<any>(getInitialFilters(chartsData));
 
-  const chartAllCountriesSerieShow = function (country: string) {
-    const filters = { ...allCountriesFilter };
-    delete filters[country];
-
-    setAllCountriesFilter(filters);
-  };
-
-  const chartAllCountriesSerieHide = function (country: string) {
-    const filters = { [country]: true, ...allCountriesFilter };
-
-    setAllCountriesFilter(filters);
-  };
-
-  const showAllCountries = () => {
-    setCountriesSelected(Object.keys(chartsData.totalCases).map((country) => ({ label: country, value: country })));
-  };
-
-  const hideAllCountries = () => {
-    setCountriesSelected([]);
-  };
-
   useEffect(() => {
-    if (countriesSelected) {
-      const allVisibleCountries = countriesSelected.reduce((final: any, option: any) => {
+    if (seriesSelected) {
+      const allVisibleCountries = seriesSelected.reduce((final: any, option: any) => {
         final[option.value] = true;
 
         return final;
@@ -180,20 +160,37 @@ export default ({ chartsData, countries, pivotData }: CountriesComparisonContain
         chartAllCountries.redraw();
       }
     }
-  }, [chartAllCountries, chartsData.totalCases, countriesSelected]);
-
+  }, [chartAllCountries, chartsData.totalCases, seriesSelected]);
 
   useEffect(() => {
-    const allCountriesCharSeries = parseChartsDataToHighchartsFormat(chartsData, dataType);
+    const allCountriesCharSeries = parseChartsDataToHighchartsFormat(chartsData, dataType, groupSerie);
     setAllCountriesChartSeries(allCountriesCharSeries);
   }, [chartAllCountries, chartsData, dataType]);
 
-  useEffect(()=>{
-    if(!countriesSelected || !countriesSelected.length){
-      const countriesSelected = getTopTenCountries(chartsData).map((country) => ({ label: country, value: country }));
-      setCountriesSelected(countriesSelected);
+  useEffect(() => {
+    if (!seriesSelected || !seriesSelected.length) {
+      const seriesSelected = getTopCountries(chartsData, 10, groupSerie).map((country) => ({ label: country, value: country }));
+      selectSeries(seriesSelected);
     }
-  },[])
+  }, [])
+
+  const showTopTenSeries = () => {
+    const seriesSelected = getTopCountries(chartsData, 10, groupSerie).map((country) => ({ label: country, value: country }))
+    selectSeries(seriesSelected);
+  };
+
+  const showTopTwentySeries = () => {
+    const seriesSelected = getTopCountries(chartsData, 20, groupSerie).map((country) => ({ label: country, value: country }))
+    selectSeries(seriesSelected);
+  }
+
+  const showAllSeries = () => {
+    selectSeries(Object.keys(chartsData.totalCases).map((country) => ({ label: country, value: country })));
+  };
+
+  const hideAllSeries = () => {
+    selectSeries([]);
+  };
 
   return (
     <Container fluid>
@@ -205,9 +202,9 @@ export default ({ chartsData, countries, pivotData }: CountriesComparisonContain
                 type="radio"
                 value={DataType.TOTAL_CASES}
                 checked={dataType === DataType.TOTAL_CASES}
-                onChange={() => setDataType(DataType.TOTAL_CASES)}
+                onChange={() => changeDataType(DataType.TOTAL_CASES)}
               />
-              Cases
+            Cases
             </label>
           </div>
           <div className="radio">
@@ -216,9 +213,9 @@ export default ({ chartsData, countries, pivotData }: CountriesComparisonContain
                 type="radio"
                 value={DataType.TOTAL_DEATHS}
                 checked={dataType === DataType.TOTAL_DEATHS}
-                onChange={() => setDataType(DataType.TOTAL_DEATHS)}
+                onChange={() => changeDataType(DataType.TOTAL_DEATHS)}
               />
-              Deaths
+            Deaths
             </label>
           </div>
         </div>
@@ -227,30 +224,31 @@ export default ({ chartsData, countries, pivotData }: CountriesComparisonContain
             <AreaChart
               chartCallback={setChartAllCountries}
               series={allCountriesCharSeries}
-              onSerieShow={chartAllCountriesSerieShow}
-              onSerieHide={chartAllCountriesSerieHide}
               options={{ legend: false }}
             />
           </Col>
         </Row>
         <div className="mb-3">
           <Select
-            value={countriesSelected}
-            options={countries.map((option) => ({ label: option, value: option })).filter(({ value }) => value !== 'World')}
+            value={seriesSelected}
+            options={seriesOptions.map((option) => ({ label: option, value: option })).filter(({ value }) => value !== groupSerie)}
             placeholder="Choose a Country"
-            onChange={(value: any) => setCountriesSelected(value)}
+            onChange={(value: any) => selectSeries(value)}
             isMulti
           />
         </div>
         <Row>
-          <Col xs={3}>
+          <Col xs={12}>
             <div className="mb-3">
-              <Button size="sm" onClick={showAllCountries}>Show all countries</Button>
+              <Button size="sm" onClick={showTopTenSeries}>Show Top Ten {seriesType}</Button>
               {' '}
-              <Button size="sm" onClick={hideAllCountries}>Hide all countries</Button>
+              <Button size="sm" onClick={showTopTwentySeries}>Show Top Twenty {seriesType}</Button>
+              {' '}
+              <Button size="sm" onClick={showAllSeries}>Show All {seriesType}</Button>
+              {' '}
+              <Button size="sm" onClick={hideAllSeries}>Hide all {seriesType}</Button>
             </div>
           </Col>
-          <Col xs={4} />
         </Row>
         {
           pivotData
@@ -267,5 +265,5 @@ export default ({ chartsData, countries, pivotData }: CountriesComparisonContain
         }
       </div>
     </Container>
-  );
-};
+  )
+}
