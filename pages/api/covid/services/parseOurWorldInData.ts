@@ -1,8 +1,8 @@
 import { EventsMap } from './chartSerializer';
 import { buildSheetFromCSV } from "./csvUtils";
 
-export default (csv: string) => {
-  const sheet = buildSheetFromCSV(csv);
+export default async (csv: string) => {
+  const sheet = await buildSheetFromCSV(csv);
 
   const totalCases: EventsMap = {};
   const totalDeaths: EventsMap = {};
