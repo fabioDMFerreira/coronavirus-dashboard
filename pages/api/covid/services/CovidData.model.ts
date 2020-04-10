@@ -5,7 +5,8 @@ import db from '../../db';
 const { Schema } = mongoose;
 
 const CovidDataSchema = new Schema({
-  date: String,
+  name: String,
+  data: Schema.Types.Mixed,
   createdAt: { type: Date, default: Date.now },
 });
 
