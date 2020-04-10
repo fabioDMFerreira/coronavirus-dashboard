@@ -1,5 +1,5 @@
-import * as Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
+import * as Highcharts from 'highcharts/highstock';
 import React from 'react';
 
 import tooltipFormatter from './MultipleSeriesDisplay/tooltipFormatter';
@@ -51,6 +51,39 @@ export default ({
           column: {
             stacking: 'normal',
           },
+        },
+        rangeSelector: {
+          enabled: true,
+          inputEnabled: true,
+          buttons: [{
+            type: 'week',
+            count: 1,
+            text: '1w'
+          },
+          {
+            type: 'week',
+            count: 2,
+            text: '2w'
+          },
+          {
+            type: 'week',
+            count: 3,
+            text: '3w'
+          },
+          {
+            type: 'month',
+            count: 1,
+            text: '1m'
+          },
+          {
+            type: 'month',
+            count: 2,
+            text: '2m'
+          },
+          {
+            type: 'all',
+            text: 'All'
+          }]
         },
         xAxis: {
           type: 'datetime',
