@@ -5,6 +5,7 @@ if (mongoose.connection.readyState === 0) {
 }
 
 export default {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   register: (model: string, schema: any) => {
     let mongooseModel = mongoose.connection.models[model];
 

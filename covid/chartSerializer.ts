@@ -1,8 +1,9 @@
-import { buildSheetFromCSV } from './csvUtils';
+import getUtcDate from '@utils/getUtcDate';
+import calculateGrowthRate from '@utils/calculateGrowthRate';
+import { EventsMap, ChartsData } from '@common/types';
+import buildSheetFromCSV from '@utils/buildSheetFromCSV';
 
-export interface EventsMap {
-  [key: string]: Array<[number, number]>;
-}
+
 
 export function mapGrowth(arr: [number, number][]) {
   if (!arr.length) {
@@ -32,16 +33,8 @@ export function makeCumulativeArray(arr: [number, number][]) {
   return result;
 }
 
-export interface ChartsData {
-  totalCases: EventsMap;
-  totalDeaths: EventsMap;
-  newCases?: EventsMap;
-  newDeaths?: EventsMap;
-}
 
-export function calculateGrowthRate(prev: number, actual: number) {
-  return (actual - prev) / prev * 100;
-}
+
 
 export function calculateSerieGrowthRate(serie: Array<number>) {
   if (serie.length <= 1) {
@@ -61,15 +54,7 @@ export function calculateSerieGrowthRate(serie: Array<number>) {
 }
 
 
-export function getUtcDate(date: string): number {
-  const match = /(\d*)\/(\d*)\/(\d*)/.exec(date);
-
-  if (match) {
-    return Date.UTC(+(`20${match[3]}`), +match[1] - 1, +match[2]);
-  }
-
-  return 0;
-}
+export
 
 const parseCSSEGISheetToJSON = (headerDates: string[], sheet: string[][]): [EventsMap] => {
   const countriesWithGlobalCounters: any = {};

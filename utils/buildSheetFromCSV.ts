@@ -1,6 +1,6 @@
 import Papa from 'papaparse';
 
-export const buildSheetFromCSV = (csv: string): Promise<string[][]> =>
+export default (csv: string): Promise<string[][]> =>
   new Promise(
     (accept) => {
       Papa.parse(csv.trim(), {

@@ -1,6 +1,8 @@
 import {
-  ChartsData, makeCumulativeArray,
-  parseCSSEGIData} from './chartSerializer';
+  makeCumulativeArray,
+  parseCSSEGIData
+} from './chartSerializer';
+import { ChartsData } from '@common/types';
 
 export default async ([totalDeathsCsv, totalCasesCsv]: any) => {
   let chartsData: ChartsData = { totalCases: {}, totalDeaths: {} };

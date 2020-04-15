@@ -1,11 +1,10 @@
 import {
-  ChartsData,
-  EventsMap,
-  getUtcDate,
   makeCumulativeArray,
   mapGrowth,
 } from './chartSerializer';
-import { buildSheetFromCSV } from './csvUtils';
+import getUtcDate from '@utils/getUtcDate';
+import { EventsMap, ChartsData } from '@common/types';
+import buildSheetFromCSV from '@utils/buildSheetFromCSV';
 
 
 const serializeOccurrencesData =
@@ -47,10 +46,12 @@ export const serializeChartsData = async (totalCasesCsv: string, totalDeathsCsv:
   const totalDeaths: EventsMap = parseSheetToJSON(tdHeaderDates, totalDeathsSheet.slice(1), 12);
 
   // Ignore New Jersey odd values
-  const startDate = Date.UTC(2020, 3, 1);
-  totalDeaths["New Jersey"]
-    = totalDeaths["New Jersey"]
-      .map(([date, value]) => date > startDate ? [date, value] : [date, 0])
+  if ("new Jersey" in totalDeaths) {
+    const startDate = Date.UTC(2020, 3, 1);
+    totalDeaths["New Jersey"]
+      = totalDeaths["New Jersey"]
+        .map(([date, value]) => date > startDate ? [date, value] : [date, 0])
+  }
 
   return {
     totalCases,
@@ -85,6 +86,7 @@ export default async ([totalCasesCsv, totalDeathsCsv]: [string, string]): Promis
 
           const countryNewDeaths = chartsData.newDeaths && chartsData.newDeaths[country] ? chartsData.newDeaths[country] : [];
 
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           const datesMapper: any = {};
 
           for (let i = 0; i < countryNewCases.length; i++) {
@@ -108,7 +110,9 @@ export default async ([totalCasesCsv, totalDeathsCsv]: [string, string]): Promis
 
       pivotData = [pivotData[0], ...pivotData.slice(1)];
 
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       USA.newCases = Object.entries(USA.newCases).map(([time, value]) => ([+time, value])).sort((a: any, b: any) => a[0] - b[0]);
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       USA.newDeaths = Object.entries(USA.newDeaths).map(([time, value]) => ([+time, value])).sort((a: any, b: any) => a[0] - b[0]);
 
       chartsData.newCases.USA = USA.newCases;

@@ -1,44 +1,46 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+This dashboard displays the evolution of total cases, new cases, total deaths and new deaths in every country and every USA region.
 
-## Available Scripts
+[Demo](https://coronavirus-growth.herokuapp.com/)
 
-In the project directory, you can run:
+<img src="assets/oneCountry.png">
+<img src="assets/multipleCountries.png">
+<img src="assets/pivotTable.png">
 
-### `npm start`
 
-Runs the app in the development mode.<br />
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+## Install
 
-The page will reload if you make edits.<br />
-You will also see any lint errors in the console.
+### Docker
 
-### `npm test`
+* [Docker](https://docs.docker.com/get-docker/)
 
-Launches the test runner in the interactive watch mode.<br />
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+1. Create `docker.env`
+```
+MONGO_URI=mongodb://root:password@mongodb:27017/coronavirus
+```
 
-### `npm run build`
+2. Start server
+```
+docker-compose up
+```
 
-Builds the app for production to the `build` folder.<br />
-It correctly bundles React in production mode and optimizes the build for the best performance.
+###  Run in your machine
 
-The build is minified and the filenames include the hashes.<br />
-Your app is ready to be deployed!
+* [nodejs](https://nodejs.org) >= 12.16.x
+* [npm](https://www.npmjs.com/get-npm)
+* [mongoDB](https://docs.mongodb.com/manual/installation/)
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+1. Initialize your mongoDB server
 
-### `npm run eject`
+2. Create `.env`
+```
+MONGO_URI=mongodb://root:password@localhost:27017/coronavirus
+```
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+3. Start server
+```
+npm run dev
+```
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+## Data Source
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
+[2019 Novel Coronavirus COVID-19 (2019-nCoV) Data Repository by Johns Hopkins CSSE](https://github.com/CSSEGISandData/COVID-19)

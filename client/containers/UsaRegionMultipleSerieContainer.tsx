@@ -4,8 +4,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import MultipleSeriesDisplay from '../components/MultipleSeriesDisplay/MultipleSeriesDisplay';
 import { setAllRegionsDataType, setAllRegionsSelected } from '../redux/actions';
 import { getAllRegionsDataType, getAllRegionsSelected } from '../redux/selectors';
-import { ChartsData } from '../services/ChartSerializer';
 import { DataType } from '../types';
+import { ChartsData } from '@common/types';
 
 interface CountriesComparisonContainerProps {
   chartsData: ChartsData;

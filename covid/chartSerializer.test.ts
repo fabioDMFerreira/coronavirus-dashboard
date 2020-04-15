@@ -1,34 +1,21 @@
-import CSSEGITotalCasesData from '../fixtures/CSSEGITotalCasesData';
-import CSSEGITotalCasesDataWithStates from '../fixtures/CSSEGITotalCasesData-with-states';
-import CSSEGITotalDeathsData from '../fixtures/CSSEGITotalDeathsData';
-import CSSEGITotalDeathsDataWithStates from '../fixtures/CSSEGITotalDeathsData-with-states';
-import ourWorldInData from '../fixtures/ourWorldInData';
+import CSSEGITotalCasesData from './fixtures/CSSEGITotalCasesData';
+import CSSEGITotalCasesDataWithStates from './fixtures/CSSEGITotalCasesData-with-states';
+import CSSEGITotalDeathsData from './fixtures/CSSEGITotalDeathsData';
+import CSSEGITotalDeathsDataWithStates from './fixtures/CSSEGITotalDeathsData-with-states';
 import {
-  calculateSerieGrowthRate, getUtcDate,
-  parseCSSEGIData,   parseOurWorldInData, serializeCumulativeArray, serializeGrowthArray, } from './ChartSerializer';
+  calculateSerieGrowthRate,
+  parseCSSEGIData,
+  makeCumulativeArray,
+  mapGrowth,
+} from './chartSerializer';
+import getUtcDate from '@utils/getUtcDate';
 
 describe('ChartSerializer', () => {
-  describe('parseOurWorldInData', () => {
-    it('should return csv parsed to a object', () => {
-      const actual = parseOurWorldInData(ourWorldInData);
 
-      expect(actual).toBeTruthy();
-
-      if (actual) {
-        expect(Object.keys(actual)).toEqual([
-          'totalCases',
-          'totalDeaths',
-        ]);
-
-        expect(Object.keys(actual.totalCases)).toEqual(['Portugal', 'Italy']);
-        expect(Object.keys(actual.totalDeaths)).toEqual(['Portugal', 'Italy']);
-      }
-    });
-  });
 
   describe('parseCSSIGEData', () => {
-    it('should return csv parsed to a object', () => {
-      const [actual] = parseCSSEGIData(CSSEGITotalCasesData, CSSEGITotalDeathsData);
+    it('should return csv parsed to a object', async () => {
+      const [actual] = await parseCSSEGIData(CSSEGITotalCasesData, CSSEGITotalDeathsData);
 
       expect(actual).toBeTruthy();
 
@@ -45,8 +32,8 @@ describe('ChartSerializer', () => {
       }
     });
 
-    it('should add state rows if there is a country global counter', () => {
-      const [actual] = parseCSSEGIData(CSSEGITotalCasesDataWithStates, CSSEGITotalDeathsDataWithStates);
+    it('should add state rows if there is a country global counter', async () => {
+      const [actual] = await parseCSSEGIData(CSSEGITotalCasesDataWithStates, CSSEGITotalDeathsDataWithStates);
 
       expect(actual).toBeTruthy();
 
@@ -60,8 +47,8 @@ describe('ChartSerializer', () => {
       ]);
     });
 
-    it('should sum all states values if there is no global counter for that country', () => {
-      const [actual] = parseCSSEGIData(CSSEGITotalCasesDataWithStates, CSSEGITotalDeathsDataWithStates);
+    it('should sum all states values if there is no global counter for that country', async () => {
+      const [actual] = await parseCSSEGIData(CSSEGITotalCasesDataWithStates, CSSEGITotalDeathsDataWithStates);
 
       expect(actual).toBeTruthy();
 
@@ -100,15 +87,15 @@ describe('ChartSerializer', () => {
     });
   });
 
-  describe('serializeGrowthArray', () => {
+  describe('mapGrowth', () => {
     it('should return growth array', () => {
-      expect(serializeGrowthArray([[0, 1], [1, 3], [2, 7]])).toEqual([[0, 1], [1, 2], [2, 4]]);
+      expect(mapGrowth([[0, 1], [1, 3], [2, 7]])).toEqual([[0, 1], [1, 2], [2, 4]]);
     });
   });
 
-  describe('serializeCumulativeArray', () => {
+  describe('makeCumulativeArray', () => {
     it('should return cumulative array', () => {
-      expect(serializeCumulativeArray([[0, 1], [1, 3], [2, 7]])).toEqual([[0, 1], [1, 4], [2, 11]]);
+      expect(makeCumulativeArray([[0, 1], [1, 3], [2, 7]])).toEqual([[0, 1], [1, 4], [2, 11]]);
     });
   });
 });

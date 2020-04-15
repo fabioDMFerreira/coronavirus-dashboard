@@ -1,7 +1,8 @@
+import React from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'react-pivottable/pivottable.css';
-import '../client/App.css';
+import 'client/App.css';
 
-import App from '../client';
-
-export default App;
+export default function MyApp({ Component, pageProps }: any) {
+  return <Component {...pageProps} />
+}

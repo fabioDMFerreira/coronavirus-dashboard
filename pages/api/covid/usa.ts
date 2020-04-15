@@ -1,9 +1,9 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 
-import covidRepository from './services/covid.repository';
+import CovidService from '@covid/covid.service';
 
 export default async (_req: NextApiRequest, res: NextApiResponse) => {
-  const data = await covidRepository.getUsaData();
+  const data = await CovidService.getUsaData();
 
   res.end(JSON.stringify(data));
 };

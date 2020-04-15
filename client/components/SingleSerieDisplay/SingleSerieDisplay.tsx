@@ -1,5 +1,4 @@
 import Vote from 'client/components/SingleSerieDisplay/Vote';
-import { calculateGrowthRate, ChartsData } from 'client/services/ChartSerializer';
 import { ColumnSerie, DataType, TimeType } from 'client/types';
 import fetch from 'isomorphic-unfetch';
 import React, { useEffect, useState } from 'react';
@@ -10,7 +9,8 @@ import Select, { ValueType } from 'react-select';
 
 import CountryChart from './ColumnChart';
 import predictVelocity from './predictVelocity';
-
+import calculateGrowthRate from '@utils/calculateGrowthRate';
+import { ChartsData } from '@common/types';
 
 // function formatNumber(num: number) {
 //   return num.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,');

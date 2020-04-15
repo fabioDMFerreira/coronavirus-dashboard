@@ -1,4 +1,3 @@
-import { ChartsData } from 'client/services/ChartSerializer';
 import fetch from 'isomorphic-unfetch';
 import React, { Fragment, useState } from 'react';
 import Spinner from 'react-bootstrap/Spinner';
@@ -6,12 +5,10 @@ import useSWR from 'swr';
 
 import UsaRegionMultipleSerieContainer from '../containers/UsaRegionMultipleSerieContainer';
 import UsaRegionSingleSerieContainer from '../containers/UsaRegionSingleSerieContainer';
+import { ChartsData } from '@common/types';
 
-export interface UsaProps {
-  show: boolean;
-}
 
-export default ({ show }: UsaProps) => {
+export default () => {
   const [chartsData, setChartsData] = useState<ChartsData>()
   const [pivotData, setPivotData] = useState<any>()
   const [regions, setRegions] = useState<any>()
@@ -27,10 +24,6 @@ export default ({ show }: UsaProps) => {
           setRegions(regions)
         })
   );
-
-  if (!show) {
-    return <Fragment />;
-  }
 
   return (
     <Fragment>

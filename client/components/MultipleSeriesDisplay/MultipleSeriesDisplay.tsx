@@ -1,4 +1,3 @@
-import { ChartsData } from 'client/services/ChartSerializer';
 import { DataType } from 'client/types';
 import React, { useEffect, useState } from 'react';
 import Button from 'react-bootstrap/Button';
@@ -9,6 +8,7 @@ import Select from 'react-select';
 
 import AreaChart from '../AreaChart';
 import PivotTable from './PivotTable';
+import { ChartsData } from '@common/types';
 
 export const parseChartsDataToHighchartsFormat = (chartsData: ChartsData, dataType: DataType, groupSerie: string) => {
   let data: any = {};
@@ -194,7 +194,7 @@ export default ({
 
   return (
     <Container fluid>
-      <div className="pt-3 pb-3">
+      <div className="pt-3 pb-3 pl-3 pr-3" style={{ backgroundColor: '#eee' }}>
         <div className="mb-3">
           <div className="radio">
             <label>

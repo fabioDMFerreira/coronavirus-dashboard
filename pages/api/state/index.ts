@@ -1,8 +1,8 @@
+import State from '@db/models/State.model';
 import withErrorHandler from '@middlewares/withErrorHandler';
 import { NextApiRequest, NextApiResponse } from 'next';
 
-import hash from '../hash';
-import State from './State.model';
+import hash from '@utils/hash';
 
 export const stateHandler = async (req: NextApiRequest, res: NextApiResponse) => {
   if (req.method === 'POST') {

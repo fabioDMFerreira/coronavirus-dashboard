@@ -1,7 +1,6 @@
+import Vote from '@db/models/Vote.model';
 import withErrorHandler from '@middlewares/withErrorHandler';
 import { NextApiRequest, NextApiResponse } from 'next';
-
-import Vote from './Vote.model';
 
 export default withErrorHandler(async (req: NextApiRequest, res: NextApiResponse) => {
   if (req.method === 'POST') {

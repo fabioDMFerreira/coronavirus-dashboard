@@ -54,6 +54,9 @@
   },
   "scripts": {
     "test": "jest",
+    "test:update": "jest --coverage --updateSnapshot",
+    "test:watch": "jest --watch",
+    "coverage": "jest --coverage && open ./coverage/lcov-report/index.html",
     "dev": "next dev",
     "build": "next build",
     "start": "next start -p $PORT",
@@ -79,6 +82,7 @@
     "@babel/preset-env": "^7.9.5",
     "@babel/preset-react": "^7.9.4",
     "@babel/preset-typescript": "^7.9.0",
+    "@types/test-listen": "^1.1.0",
     "@typescript-eslint/eslint-plugin": "^2.27.0",
     "@typescript-eslint/parser": "^2.27.0",
     "babel-jest": "^25.3.0",
@@ -90,6 +94,9 @@
     "eslint-plugin-react": "^7.19.0",
     "eslint-plugin-react-hooks": "^2.5.1",
     "eslint-plugin-simple-import-sort": "^5.0.2",
-    "jest": "^25.3.0"
+    "jest": "^25.3.0",
+    "test-listen": "^1.1.0",
+    "ts-jest": "^25.3.1",
+    "tsconfig-paths-jest": "0.0.1"
   }
 }

@@ -1,7 +1,6 @@
+import Subscription from '@db/models/Subscription.model';
 import withErrorHandler from '@middlewares/withErrorHandler';
 import { NextApiRequest, NextApiResponse } from 'next';
-
-import Subscription from './Subscription.model';
 
 export default withErrorHandler(async (req: NextApiRequest, res: NextApiResponse) => {
   if (req.method === 'POST') {

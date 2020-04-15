@@ -22,8 +22,14 @@ function App() {
       <Header tab={tab} setTab={changeTab} />
 
       <div className="mt-4 mb-5">
-        <Country show={tab === 'country'} />
-        <Usa show={tab == 'usa'} />
+        {
+          tab === 'country' &&
+          <Country />
+        }
+        {
+          tab === 'usa' &&
+          <Usa />
+        }
       </div>
 
       <UrlHandler />
