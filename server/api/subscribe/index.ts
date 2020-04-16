@@ -1,8 +1,7 @@
 import Subscription from '@db/models/Subscription.model';
-import withErrorHandler from '@middlewares/withErrorHandler';
-import { NextApiRequest, NextApiResponse } from 'next';
+import { Request, Response } from 'express';
 
-export default withErrorHandler(async (req: NextApiRequest, res: NextApiResponse) => {
+export default async (req: Request, res: Response) => {
   if (req.method === 'POST') {
     if (!req.body.email) {
       res.status(400);
@@ -16,4 +15,4 @@ export default withErrorHandler(async (req: NextApiRequest, res: NextApiResponse
   }
 
   res.end();
-});
+};

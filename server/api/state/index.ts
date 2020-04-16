@@ -1,10 +1,8 @@
 import State from '@db/models/State.model';
-import withErrorHandler from '@middlewares/withErrorHandler';
-import { NextApiRequest, NextApiResponse } from 'next';
-
 import hash from '@utils/hash';
+import { Request, Response } from 'express';
 
-export const stateHandler = async (req: NextApiRequest, res: NextApiResponse) => {
+export default async (req: Request, res: Response) => {
   if (req.method === 'POST') {
     if (!req.body.state) {
       res.status(400);
@@ -34,5 +32,3 @@ export const stateHandler = async (req: NextApiRequest, res: NextApiResponse) =>
 
   res.end();
 }
-
-export default withErrorHandler(stateHandler);

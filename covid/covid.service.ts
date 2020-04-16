@@ -1,11 +1,10 @@
 import fetch from 'isomorphic-unfetch';
 
+import covidRepository, { CovidRepositoryId } from './covid.repository';
 import serializeCountriesData from './serializeCountriesData';
 import serializeUsaData from './serializeUsaData';
-import covidRepository, { CovidRepositoryId } from './covid.repository';
 
-const validateDate = (date: Date) => Math.abs(new Date().getTime() - date.getTime()) / 36e5 < 1
-
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const saveInCache = (name: CovidRepositoryId) => async (data: any) => {
   await covidRepository.set(name, data);
 
@@ -13,11 +12,7 @@ const saveInCache = (name: CovidRepositoryId) => async (data: any) => {
 }
 
 const getFromCache = async (name: CovidRepositoryId) => {
-  const covidData = await covidRepository.get(name)
-
-  if (covidData && validateDate(covidData.createdAt)) {
-    return covidData.data;
-  }
+  return covidRepository.get(name)
 }
 
 export default {

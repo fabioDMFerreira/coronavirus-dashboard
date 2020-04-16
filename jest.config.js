@@ -1,3 +1,5 @@
+// eslint-disable-file
+
 const { defaults: tsjPreset } = require('ts-jest/presets');
 const tsconfig = require("./tsconfig.json")
 const moduleNameMapper = require("tsconfig-paths-jest")(tsconfig)

@@ -1,8 +1,7 @@
-import getUtcDate from '@utils/getUtcDate';
-import calculateGrowthRate from '@utils/calculateGrowthRate';
-import { EventsMap, ChartsData } from '@common/types';
+import { ChartsData,EventsMap } from '@common/types';
 import buildSheetFromCSV from '@utils/buildSheetFromCSV';
-
+import calculateGrowthRate from '@utils/calculateGrowthRate';
+import getUtcDate from '@utils/getUtcDate';
 
 
 export function mapGrowth(arr: [number, number][]) {
@@ -34,8 +33,6 @@ export function makeCumulativeArray(arr: [number, number][]) {
 }
 
 
-
-
 export function calculateSerieGrowthRate(serie: Array<number>) {
   if (serie.length <= 1) {
     return [];
@@ -58,6 +55,7 @@ export
 
 const parseCSSEGISheetToJSON = (headerDates: string[], sheet: string[][]): [EventsMap] => {
   const countriesWithGlobalCounters: any = {};
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const stateRecords: any = {};
 
   const [chartsData] = sheet.reduce(
@@ -108,6 +106,7 @@ const parseCSSEGISheetToJSON = (headerDates: string[], sheet: string[][]): [Even
     const recordsGroup = stateRecords[country];
 
     if (countriesWithGlobalCounters[country]) {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       recordsGroup.forEach((record: any) => {
         chartsData[record.state] = record.occurrences;
       });
@@ -115,6 +114,7 @@ const parseCSSEGISheetToJSON = (headerDates: string[], sheet: string[][]): [Even
       const emptyArray = headerDates.map((time) => ([getUtcDate(time), 0]));
 
       chartsData[country] = recordsGroup.slice(0).reduce(
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         (total: any, recordGroup: any) => total.map(([time, value]: any, index: number) => [time, value + recordGroup.occurrences[index][1]]), emptyArray,
       );
     }

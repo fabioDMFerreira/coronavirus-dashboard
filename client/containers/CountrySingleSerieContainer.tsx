@@ -1,10 +1,10 @@
+import { ChartsData } from '@common/types';
 import React, { useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import SingleSerieChart from '../components/SingleSerieDisplay/SingleSerieDisplay';
 import { setCountryDataType, setCountryFilter, setCountryTimeType } from '../redux/actions';
 import { getCountry, getCountryDataType, getCountryTimeType } from '../redux/selectors';
-import { ChartsData } from '@common/types';
 
 export interface CountrySingleSerieContainer {
   chartsData: ChartsData;

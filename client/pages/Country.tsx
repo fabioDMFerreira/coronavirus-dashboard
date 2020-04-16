@@ -1,3 +1,4 @@
+import { ChartsData } from '@common/types';
 import fetch from 'isomorphic-unfetch';
 import React, { Fragment, useState } from 'react';
 import Spinner from 'react-bootstrap/Spinner';
@@ -5,7 +6,6 @@ import useSWR from 'swr';
 
 import CountryMulipleSerieContainer from '../containers/CountryMulipleSerieContainer';
 import CountrySingleSerieContainer from '../containers/CountrySingleSerieContainer';
-import { ChartsData } from '@common/types';
 
 export default () => {
   const [chartsData, setChartsData] = useState<ChartsData>()

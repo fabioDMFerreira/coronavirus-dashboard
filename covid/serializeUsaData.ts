@@ -1,10 +1,11 @@
+import { ChartsData,EventsMap } from '@common/types';
+import buildSheetFromCSV from '@utils/buildSheetFromCSV';
+import getUtcDate from '@utils/getUtcDate';
+
 import {
   makeCumulativeArray,
   mapGrowth,
 } from './chartSerializer';
-import getUtcDate from '@utils/getUtcDate';
-import { EventsMap, ChartsData } from '@common/types';
-import buildSheetFromCSV from '@utils/buildSheetFromCSV';
 
 
 const serializeOccurrencesData =

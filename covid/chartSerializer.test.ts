@@ -1,14 +1,15 @@
+import getUtcDate from '@utils/getUtcDate';
+
+import {
+  calculateSerieGrowthRate,
+  makeCumulativeArray,
+  mapGrowth,
+  parseCSSEGIData,
+} from './chartSerializer';
 import CSSEGITotalCasesData from './fixtures/CSSEGITotalCasesData';
 import CSSEGITotalCasesDataWithStates from './fixtures/CSSEGITotalCasesData-with-states';
 import CSSEGITotalDeathsData from './fixtures/CSSEGITotalDeathsData';
 import CSSEGITotalDeathsDataWithStates from './fixtures/CSSEGITotalDeathsData-with-states';
-import {
-  calculateSerieGrowthRate,
-  parseCSSEGIData,
-  makeCumulativeArray,
-  mapGrowth,
-} from './chartSerializer';
-import getUtcDate from '@utils/getUtcDate';
 
 describe('ChartSerializer', () => {
 

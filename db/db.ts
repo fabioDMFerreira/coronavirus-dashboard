@@ -1,12 +1,16 @@
-import * as mongoose from 'mongoose';
+import mongoose from 'mongoose';
 
-if (mongoose.connection.readyState === 0) {
-  mongoose.connect(process.env.MONGO_URI || "", { useNewUrlParser: true, useUnifiedTopology: true })
-}
 
 export default {
+  connect: function () {
+    if (!mongoose.connection || mongoose.connection.readyState === 0) {
+      mongoose.connect(process.env.MONGO_URI || "", { useNewUrlParser: true, useUnifiedTopology: true })
+    }
+  },
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  register: (model: string, schema: any) => {
+  register: function (model: string, schema: any) {
+    this.connect();
+
     let mongooseModel = mongoose.connection.models[model];
 
     if (!mongooseModel) {

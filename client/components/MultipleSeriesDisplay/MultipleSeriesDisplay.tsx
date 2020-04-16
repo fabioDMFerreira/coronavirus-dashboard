@@ -1,3 +1,4 @@
+import { ChartsData } from '@common/types';
 import { DataType } from 'client/types';
 import React, { useEffect, useState } from 'react';
 import Button from 'react-bootstrap/Button';
@@ -8,7 +9,6 @@ import Select from 'react-select';
 
 import AreaChart from '../AreaChart';
 import PivotTable from './PivotTable';
-import { ChartsData } from '@common/types';
 
 export const parseChartsDataToHighchartsFormat = (chartsData: ChartsData, dataType: DataType, groupSerie: string) => {
   let data: any = {};
@@ -87,7 +87,7 @@ interface MultipleSeriesDisplayProps {
   seriesType: 'Countries' | 'Regions';
 
   filter: any;
-  setFilter: (filter: any) => void
+  setFilter: (filter: any) => void;
 }
 
 export default ({

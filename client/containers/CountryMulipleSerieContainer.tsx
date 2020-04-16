@@ -1,11 +1,11 @@
+import { ChartsData } from '@common/types';
 import React, { useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import MultipleSeriesDisplay from '../components/MultipleSeriesDisplay/MultipleSeriesDisplay';
-import { setAllCountriesDataType, setAllCountriesSelected, setAllCountriesFilter } from '../redux/actions';
-import { getAllCountriesDataType, getAllCountriesSelected, getAllCountriesFilter } from '../redux/selectors';
+import { setAllCountriesDataType, setAllCountriesFilter,setAllCountriesSelected } from '../redux/actions';
+import { getAllCountriesDataType, getAllCountriesFilter,getAllCountriesSelected } from '../redux/selectors';
 import { DataType } from '../types';
-import { ChartsData } from '@common/types';
 
 interface CountriesComparisonContainerProps {
   chartsData: ChartsData;

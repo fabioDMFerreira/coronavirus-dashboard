@@ -1,0 +1,37 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "module": "commonjs",
+    "outDir": "dist",
+    "target": "es2017",
+    "isolatedModules": false,
+    "noEmit": false,
+    "baseUrl": ".",
+    "paths": {
+      "@middlewares/*": [
+        "./middlewares/*"
+      ],
+      "@components/*": [
+        "./client/components/*"
+      ],
+      "@db/*": [
+        "./db/*"
+      ],
+      "@covid/*": [
+        "./covid/*"
+      ],
+      "@utils/*": [
+        "./utils/*"
+      ],
+      "@common/*": [
+        "common/*"
+      ],
+      "node_modules/*": [
+        "./node_modules/*"
+      ]
+    }
+  },
+  "include": [
+    "server/**/*.ts"
+  ]
+}

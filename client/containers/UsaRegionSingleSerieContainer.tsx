@@ -1,10 +1,10 @@
+import { ChartsData } from '@common/types';
 import React, { useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import SingleSerieChart from '../components/SingleSerieDisplay/SingleSerieDisplay';
 import { setRegionDataType, setRegionFilter, setRegionTimeType } from '../redux/actions';
 import { getRegion, getRegionDataType, getRegionTimeType } from '../redux/selectors';
-import { ChartsData } from '@common/types';
 
 interface UsaRegionSingleSerieContainerProps {
   chartsData: ChartsData;

@@ -1,10 +1,10 @@
+import RouterNavbar from '@components/RouterNavbar';
 import fetch from 'isomorphic-unfetch';
 import React, { Fragment, useState } from 'react';
 import { useStore } from 'react-redux';
 
 import AffixWrapper from '../components/AffixWrapper';
 import SubscribeModal from '../components/SubscribeModal';
-import RouterNavbar from '@components/RouterNavbar';
 
 export interface RouterHeaderProps {
 }

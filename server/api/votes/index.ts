@@ -1,11 +1,10 @@
 import Vote from '@db/models/Vote.model';
-import withErrorHandler from '@middlewares/withErrorHandler';
-import { NextApiRequest, NextApiResponse } from 'next';
+import { Request, Response } from 'express';
 
-export default withErrorHandler(async (req: NextApiRequest, res: NextApiResponse) => {
+export default async (req: Request, res: Response) => {
   if (req.method === 'POST') {
     if (!req.body.state) {
-      res.status(400);
+      res.status(404);
     } else {
       const ip = req.headers['x-forwarded-for'] || '';
 
@@ -18,4 +17,4 @@ export default withErrorHandler(async (req: NextApiRequest, res: NextApiResponse
   }
 
   res.end();
-});
+};

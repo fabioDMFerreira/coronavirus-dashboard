@@ -1,13 +1,16 @@
 
 import CovidDataModal from '@db/models/CovidData.model';
+import mcache from 'memory-cache';
 
 export type CovidRepositoryId = 'COUNTRIES_DATA' | 'USA_REGIONS_DATA';
 
 export default {
   get: (key: CovidRepositoryId) => {
-    return CovidDataModal.findOne({ name: key });
+    return mcache.get(key)
   },
-  set: (key: CovidRepositoryId, data: any) => {
-    return CovidDataModal.findOneAndUpdate({ name: key }, { createdAt: new Date(), data }, { upsert: true });
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  set: async (key: CovidRepositoryId, data: any) => {
+    await CovidDataModal.findOneAndUpdate({ name: key }, { createdAt: new Date(), data }, { upsert: true });
+    mcache.put(key, data, 3600)
   }
 }

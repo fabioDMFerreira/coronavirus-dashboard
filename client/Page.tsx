@@ -1,10 +1,10 @@
 import React from 'react';
-
-import GoogleAnalyticsTracker from './components/GoogleAnalyticsTracker';
-import UrlHandler from './containers/UrlHandler';
-import RouterHeader from './containers/RouterHeader';
 import { Provider } from 'react-redux';
 import { PersistGate } from 'redux-persist/integration/react'
+
+import GoogleAnalyticsTracker from './components/GoogleAnalyticsTracker';
+import RouterHeader from './containers/RouterHeader';
+import UrlHandler from './containers/UrlHandler';
 import { persistor, store } from './redux/store';
 
 
