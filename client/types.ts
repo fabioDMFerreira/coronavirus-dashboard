@@ -47,12 +47,14 @@ export interface ReduxReducerState {
   countryTimeType: TimeType;
   allCountriesDataType: DataType;
   allCountriesSelected: any;
+  allCountriesFilter: any;
 
   region: { label: string; value: string };
   regionDataType: DataType;
   regionTimeType: TimeType;
   allRegionsDataType: DataType;
   allRegionsSelected: any;
+  allRegionsFilter: any;
 
   tab: 'country' | 'usa';
 }

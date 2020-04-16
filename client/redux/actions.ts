@@ -15,7 +15,9 @@ import {
   SET_REGION_DATA_TYPE,
   SET_REGION_FILTER,
   SET_REGION_TIME_TYPE,
-  SET_TAB
+  SET_TAB,
+  SET_ALL_COUNTRIES_FILTER,
+  SET_ALL_REGIONS_FILTER
 } from './types';
 
 export const resetState = (payload: ReduxReducerState) => ({
@@ -55,6 +57,11 @@ export const setAllCountriesSelected = (payload: any) => ({
   payload,
 });
 
+export const setAllCountriesFilter = (payload: any) => ({
+  type: SET_ALL_COUNTRIES_FILTER,
+  payload,
+});
+
 /** Region Actions */
 
 export const setRegionFilter = (payload: { label: string; value: string }) => ({
@@ -83,6 +90,11 @@ export const setAllRegionsDataType = (payload: DataType) => ({
   payload,
 });
 
+export const setAllRegionsFilter = (payload: any) => ({
+  type: SET_ALL_REGIONS_FILTER,
+  payload,
+});
+
 type actions =
   ReturnType<typeof setTab> |
   ReturnType<typeof resetState> |
@@ -92,12 +104,13 @@ type actions =
   ReturnType<typeof setCountryTimeType> |
   ReturnType<typeof setAllCountriesSelected> |
   ReturnType<typeof setAllCountriesDataType> |
+  ReturnType<typeof setAllCountriesFilter> |
   //
   ReturnType<typeof setRegionFilter> |
   ReturnType<typeof setRegionDataType> |
   ReturnType<typeof setRegionTimeType> |
   ReturnType<typeof setAllRegionsSelected> |
-  ReturnType<typeof setAllRegionsDataType>;
-
+  ReturnType<typeof setAllRegionsDataType> |
+  ReturnType<typeof setAllRegionsFilter>;
 
 export default actions;

@@ -85,6 +85,9 @@ interface MultipleSeriesDisplayProps {
 
   groupSerie: 'World' | 'USA';
   seriesType: 'Countries' | 'Regions';
+
+  filter: any;
+  setFilter: (filter: any) => void
 }
 
 export default ({
@@ -97,14 +100,19 @@ export default ({
   selectSeries,
   groupSerie,
   seriesType,
+  filter,
+  setFilter
 }: MultipleSeriesDisplayProps) => {
 
   const [chartAllCountries, setChartAllCountries] = useState<any>(null);
 
-  const [allCountriesCharSeries, setAllCountriesChartSeries] = useState<any>([]);
-  const [allCountriesFilter, setAllCountriesFilter] = useState<any>(getInitialFilters(chartsData));
+  const [allCountriesChartSeries, setAllCountriesChartSeries] = useState<any>([]);
 
   useEffect(() => {
+    if (!filter || !Object.keys(filter).length) {
+      setFilter(getInitialFilters(chartsData));
+    }
+
     if (seriesSelected) {
       const allVisibleCountries = seriesSelected.reduce((final: any, option: any) => {
         final[option.value] = true;
@@ -120,7 +128,7 @@ export default ({
           return final;
         }, {});
 
-      setAllCountriesFilter(tableFilter);
+      setFilter(tableFilter);
 
       if (chartAllCountries) {
         chartAllCountries.series.forEach((serie: any) => {
@@ -144,7 +152,7 @@ export default ({
           return final;
         }, {});
 
-      setAllCountriesFilter(tableFilter);
+      setFilter(tableFilter);
 
       if (chartAllCountries) {
         chartAllCountries.series.forEach((serie: any) => {
@@ -163,8 +171,8 @@ export default ({
   }, [chartAllCountries, chartsData.totalCases, seriesSelected]);
 
   useEffect(() => {
-    const allCountriesCharSeries = parseChartsDataToHighchartsFormat(chartsData, dataType, groupSerie);
-    setAllCountriesChartSeries(allCountriesCharSeries);
+    const allCountriesChartSeries = parseChartsDataToHighchartsFormat(chartsData, dataType, groupSerie);
+    setAllCountriesChartSeries(allCountriesChartSeries);
   }, [chartAllCountries, chartsData, dataType]);
 
   useEffect(() => {
@@ -223,7 +231,7 @@ export default ({
           <Col xs={12}>
             <AreaChart
               chartCallback={setChartAllCountries}
-              series={allCountriesCharSeries}
+              series={allCountriesChartSeries}
               options={{ legend: false }}
             />
           </Col>
@@ -256,8 +264,8 @@ export default ({
             <div style={{ minHeight: 250 }} className="mb-5">
               <PivotTable
                 vals={dataType === DataType.TOTAL_CASES ? ['New Cases'] : ['New Deaths']}
-                onChangeFilter={setAllCountriesFilter}
-                filter={allCountriesFilter}
+                onChangeFilter={setFilter}
+                filter={filter}
                 data={pivotData}
               />
             </div>

@@ -7,6 +7,7 @@ export const getCountryDataType = (state: ReduxReducerState) => state.countryDat
 export const getCountryTimeType = (state: ReduxReducerState) => state.countryTimeType;
 export const getAllCountriesDataType = (state: ReduxReducerState) => state.allCountriesDataType;
 export const getAllCountriesSelected = (state: ReduxReducerState) => state.allCountriesSelected;
+export const getAllCountriesFilter = (state:ReduxReducerState) => state.allCountriesFilter;
 
 //
 export const getRegion = (state: ReduxReducerState) => state.region;
@@ -14,3 +15,4 @@ export const getRegionDataType = (state: ReduxReducerState) => state.regionDataT
 export const getRegionTimeType = (state: ReduxReducerState) => state.regionTimeType;
 export const getAllRegionsDataType = (state: ReduxReducerState) => state.allRegionsDataType;
 export const getAllRegionsSelected = (state: ReduxReducerState) => state.allRegionsSelected;
+export const getAllRegionsFilter = (state:ReduxReducerState) => state.allRegionsFilter;

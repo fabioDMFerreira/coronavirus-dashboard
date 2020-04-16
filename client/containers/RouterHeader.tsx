@@ -23,7 +23,7 @@ export default ({ }: RouterHeaderProps) => {
         body: JSON.stringify({ state: store.getState() }),
       }).then((res) => res.text());
 
-      const url = `${window.location.protocol}//${window.location.host}?view=${hash}`;
+      const url = `${window.location.protocol}//${window.location.host}${window.location.pathname}?view=${hash}`;
       window.location.href = `https://twitter.com/intent/tweet?text=Check here the coronavirus growth&url=${url}`;
     } catch (err) {
 

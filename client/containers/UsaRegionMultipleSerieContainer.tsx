@@ -2,8 +2,8 @@ import React, { useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import MultipleSeriesDisplay from '../components/MultipleSeriesDisplay/MultipleSeriesDisplay';
-import { setAllRegionsDataType, setAllRegionsSelected } from '../redux/actions';
-import { getAllRegionsDataType, getAllRegionsSelected } from '../redux/selectors';
+import { setAllRegionsDataType, setAllRegionsSelected, setAllRegionsFilter } from '../redux/actions';
+import { getAllRegionsDataType, getAllRegionsSelected, getAllRegionsFilter } from '../redux/selectors';
 import { DataType } from '../types';
 import { ChartsData } from '@common/types';
 
@@ -32,6 +32,10 @@ export default ({ chartsData, regions, pivotData }: CountriesComparisonContainer
     dispatch(setAllRegionsSelected(value));
   }, [dispatch]);
 
+  const filter = useSelector(getAllRegionsFilter);
+  const setFilter = useCallback((value: any) => {
+    dispatch(setAllRegionsFilter(value));
+  }, [dispatch]);
 
   return (
     <MultipleSeriesDisplay
@@ -47,6 +51,9 @@ export default ({ chartsData, regions, pivotData }: CountriesComparisonContainer
 
       groupSerie={"USA"}
       seriesType={"Regions"}
+
+      filter={filter}
+      setFilter={setFilter}
     />
   );
 };

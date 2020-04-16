@@ -13,10 +13,12 @@ import {
   SET_REGION_FILTER,
   SET_REGION_TIME_TYPE,
   SET_TAB,
+  SET_ALL_COUNTRIES_FILTER,
+  SET_ALL_REGIONS_FILTER,
 } from './types';
 
 
-const initialState = {
+const initialState: ReduxReducerState = {
   country: {
     label: 'World',
     value: 'World'
@@ -25,6 +27,7 @@ const initialState = {
   countryTimeType: TimeType.DAILY,
   allCountriesDataType: DataType.TOTAL_CASES,
   allCountriesSelected: [],
+  allCountriesFilter: {},
 
   region: {
     label: 'USA',
@@ -34,6 +37,7 @@ const initialState = {
   regionTimeType: TimeType.DAILY,
   allRegionsDataType: DataType.TOTAL_CASES,
   allRegionsSelected: [],
+  allRegionsFilter: {},
 
   tab: 'country'
 };
@@ -43,7 +47,7 @@ const setState = (state: ReduxReducerState, key: keyof ReduxReducerState, value:
   [key]: value,
 });
 
-export default (state: any = initialState, action: actions) => {
+export default (state: ReduxReducerState = initialState, action: actions) => {
   switch (action.type) {
     case SET_TAB: {
       return setState(state, 'tab', action.payload)
@@ -67,6 +71,9 @@ export default (state: any = initialState, action: actions) => {
     case SET_ALL_COUNTRIES_SELECTED: {
       return setState(state, 'allCountriesSelected', action.payload);
     }
+    case SET_ALL_COUNTRIES_FILTER: {
+      return setState(state, 'allCountriesFilter', action.payload);
+    }
     //
     case SET_REGION_DATA_TYPE: {
       return setState(state, 'regionDataType', action.payload);
@@ -82,6 +89,9 @@ export default (state: any = initialState, action: actions) => {
     }
     case SET_ALL_REGIONS_SELECTED: {
       return setState(state, 'allRegionsSelected', action.payload)
+    }
+    case SET_ALL_REGIONS_FILTER: {
+      return setState(state, 'allRegionsFilter', action.payload);
     }
   }
 

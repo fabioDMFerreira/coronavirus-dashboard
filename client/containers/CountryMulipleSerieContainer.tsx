@@ -2,8 +2,8 @@ import React, { useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import MultipleSeriesDisplay from '../components/MultipleSeriesDisplay/MultipleSeriesDisplay';
-import { setAllCountriesDataType, setAllCountriesSelected } from '../redux/actions';
-import { getAllCountriesDataType, getAllCountriesSelected } from '../redux/selectors';
+import { setAllCountriesDataType, setAllCountriesSelected, setAllCountriesFilter } from '../redux/actions';
+import { getAllCountriesDataType, getAllCountriesSelected, getAllCountriesFilter } from '../redux/selectors';
 import { DataType } from '../types';
 import { ChartsData } from '@common/types';
 
@@ -16,7 +16,6 @@ interface CountriesComparisonContainerProps {
 
 export default ({ chartsData, countries, pivotData }: CountriesComparisonContainerProps) => {
   const dispatch = useDispatch();
-
 
   const dataType = useSelector(getAllCountriesDataType);
   const setDataType = useCallback((value: DataType) => {
@@ -32,6 +31,10 @@ export default ({ chartsData, countries, pivotData }: CountriesComparisonContain
     dispatch(setAllCountriesSelected(value));
   }, [dispatch]);
 
+  const countriesFilter = useSelector(getAllCountriesFilter);
+  const setCountriesFilter = useCallback((value: any) => {
+    dispatch(setAllCountriesFilter(value));
+  }, [dispatch]);
 
   return (
     <MultipleSeriesDisplay
@@ -47,6 +50,9 @@ export default ({ chartsData, countries, pivotData }: CountriesComparisonContain
 
       groupSerie="World"
       seriesType="Countries"
+
+      filter={countriesFilter}
+      setFilter={setCountriesFilter}
     />
   );
 };
