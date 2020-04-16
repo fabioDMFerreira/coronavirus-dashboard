@@ -1,3 +1,4 @@
+import bodyParser from 'body-parser'
 import compression from 'compression'
 import express from 'express'
 import morgan from 'morgan'
@@ -13,6 +14,7 @@ const handle = app.getRequestHandler()
 app.prepare().then(() => {
   const server = express()
 
+  server.use(bodyParser.json())
   server.use(compression())
   server.use(morgan(':method :url :response-time'));
 

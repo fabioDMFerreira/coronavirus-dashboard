@@ -1,8 +1,8 @@
 import { ChartsData } from '@common/types';
 import { setCountyDataType, setCountyFilter, setCountyTimeType } from 'client/redux/actions';
-import { getCounty, getCountyDataType,getCountyTimeType } from 'client/redux/selectors';
+import { getCounty, getCountyDataType, getCountyTimeType, getRegion } from 'client/redux/selectors';
 import React,
-{ useCallback,useEffect } from 'react';
+{ useCallback, useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import SingleSerieChart from '../components/SingleSerieDisplay/SingleSerieDisplay';
@@ -15,6 +15,8 @@ interface UsaCountiesSingleSerieContainerProps {
 export default ({ chartsData, counties }: UsaCountiesSingleSerieContainerProps) => {
   const dispatch = useDispatch();
 
+  const region = useSelector(getRegion);
+
   const county = useSelector(getCounty);
   const setCounty = useCallback((value: any) => { dispatch(setCountyFilter(value)); }, [dispatch]);
 
@@ -24,11 +26,17 @@ export default ({ chartsData, counties }: UsaCountiesSingleSerieContainerProps) 
   const timeType = useSelector(getCountyTimeType);
   const setTimeType = useCallback((value: any) => { dispatch(setCountyTimeType(value)); }, [dispatch]);
 
+  const firstUpdate = useRef(true);
 
   useEffect(() => {
+    if (firstUpdate.current) {
+      firstUpdate.current = false;
+      return;
+    }
+    console.log('region changed');
     const selected = Object.keys(chartsData.totalCases)[0];
     setCounty({ label: selected, value: selected });
-  }, [chartsData])
+  }, [region])
 
   return (
     <SingleSerieChart

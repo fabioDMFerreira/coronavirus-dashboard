@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import Col from 'react-bootstrap/Col';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
@@ -9,13 +9,15 @@ export default ({ title, children }: any) => (
       <Col xs={12}>
         {
           title &&
-          <h2>{title}</h2>
+          <Fragment>
+            <h2> {title}</h2>
+            <hr />
+          </Fragment>
         }
-        <hr />
         {
           children
         }
       </Col>
     </Row>
-  </Container>
+  </Container >
 )
