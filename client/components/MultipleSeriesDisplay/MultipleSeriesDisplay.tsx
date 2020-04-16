@@ -83,8 +83,8 @@ interface MultipleSeriesDisplayProps {
   seriesSelected: any;
   selectSeries: (value: any) => void;
 
-  groupSerie: 'World' | 'USA';
-  seriesType: 'Countries' | 'Regions';
+  groupSerie: 'World' | 'USA' | string;
+  seriesType: 'Countries' | 'Regions' | 'Counties';
 
   filter: any;
   setFilter: (filter: any) => void;
@@ -202,7 +202,7 @@ export default ({
 
   return (
     <Container fluid>
-      <div className="pt-3 pb-3 pl-3 pr-3" style={{ backgroundColor: '#eee' }}>
+      <div className="pt-3 pb-3 pl-3 pr-3">
         <div className="mb-3">
           <div className="radio">
             <label>

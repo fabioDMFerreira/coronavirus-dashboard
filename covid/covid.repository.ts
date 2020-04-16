@@ -2,7 +2,7 @@
 import CovidDataModal from '@db/models/CovidData.model';
 import mcache from 'memory-cache';
 
-export type CovidRepositoryId = 'COUNTRIES_DATA' | 'USA_REGIONS_DATA';
+export type CovidRepositoryId = 'COUNTRIES_DATA' | 'USA_REGIONS_DATA' | string;
 
 export default {
   get: (key: CovidRepositoryId) => {

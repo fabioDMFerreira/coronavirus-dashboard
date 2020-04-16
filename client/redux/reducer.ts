@@ -2,6 +2,9 @@ import { DataType, ReduxReducerState, TimeType } from '../types';
 import actions from './actions';
 import {
   RESET_STATE,
+  SET_ALL_COUNTIES_DATA_TYPE,
+  SET_ALL_COUNTIES_FILTER,
+  SET_ALL_COUNTIES_SELECTED,
   SET_ALL_COUNTRIES_DATA_TYPE,
   SET_ALL_COUNTRIES_FILTER,
   SET_ALL_COUNTRIES_SELECTED,
@@ -11,6 +14,9 @@ import {
   SET_COUNTRY_DATA_TYPE,
   SET_COUNTRY_FILTER,
   SET_COUNTRY_TIME_TYPE,
+  SET_COUNTY_DATA_TYPE,
+  SET_COUNTY_FILTER,
+  SET_COUNTY_TIME_TYPE,
   SET_REGION_DATA_TYPE,
   SET_REGION_FILTER,
   SET_REGION_TIME_TYPE,
@@ -39,6 +45,18 @@ const initialState: ReduxReducerState = {
   allRegionsSelected: [],
   allRegionsFilter: {},
 
+  county: {
+    singleSerie: {
+      dataType: DataType.TOTAL_CASES,
+      timeType: TimeType.DAILY,
+    },
+    multipleSeries: {
+      dataType: DataType.TOTAL_CASES,
+      selected: [],
+      filter: {}
+    }
+  },
+
   tab: 'country'
 };
 
@@ -46,6 +64,17 @@ const setState = (state: ReduxReducerState, key: keyof ReduxReducerState, value:
   ...state,
   [key]: value,
 });
+
+const setChartState = (state: ReduxReducerState, stateKey: keyof ReduxReducerState, chartKey: "singleSerie" | "multipleSeries", key: any, value: any) => ({
+  ...state,
+  [stateKey]: {
+    ...state[stateKey],
+    [chartKey]: {
+      ...state[stateKey][chartKey],
+      [key]: value
+    }
+  }
+})
 
 export default (state: ReduxReducerState = initialState, action: actions) => {
   switch (action.type) {
@@ -92,6 +121,25 @@ export default (state: ReduxReducerState = initialState, action: actions) => {
     }
     case SET_ALL_REGIONS_FILTER: {
       return setState(state, 'allRegionsFilter', action.payload);
+    }
+    //
+    case SET_COUNTY_DATA_TYPE: {
+      return setChartState(state, "county", "singleSerie", "dataType", action.payload)
+    }
+    case SET_COUNTY_TIME_TYPE: {
+      return setChartState(state, "county", "singleSerie", "timeType", action.payload)
+    }
+    case SET_COUNTY_FILTER: {
+      return setChartState(state, "county", "singleSerie", "selected", action.payload)
+    }
+    case SET_ALL_COUNTIES_DATA_TYPE: {
+      return setChartState(state, "county", "multipleSeries", "dataType", action.payload)
+    }
+    case SET_ALL_COUNTIES_SELECTED: {
+      return setChartState(state, "county", "multipleSeries", "selected", action.payload)
+    }
+    case SET_ALL_COUNTIES_FILTER: {
+      return setChartState(state, "county", "multipleSeries", "filter", action.payload)
     }
   }
 

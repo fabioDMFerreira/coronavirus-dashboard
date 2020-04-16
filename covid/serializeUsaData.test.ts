@@ -1,6 +1,6 @@
 import buildSheetFromCSV from '@utils/buildSheetFromCSV';
 
-import serializeUsaData, { parseSheetToJSON, serializeChartsData } from './serializeUsaData';
+import { aggregateDataPerRegion, serializeChartsData, serializeUsaData } from './serializeUsaData';
 
 const newYorkCases = `UID,iso2,iso3,code3,FIPS,Admin2,Province_State,Country_Region,Lat,Long_,Combined_Key,1/22/20,1/23/20,1/24/20,1/25/20,1/26/20,1/27/20,1/28/20,1/29/20,1/30/20,1/31/20,2/1/20,2/2/20,2/3/20,2/4/20,2/5/20,2/6/20,2/7/20,2/8/20,2/9/20,2/10/20,2/11/20,2/12/20,2/13/20,2/14/20,2/15/20,2/16/20,2/17/20,2/18/20,2/19/20,2/20/20,2/21/20,2/22/20,2/23/20,2/24/20,2/25/20,2/26/20,2/27/20,2/28/20,2/29/20,3/1/20,3/2/20,3/3/20,3/4/20,3/5/20,3/6/20,3/7/20,3/8/20,3/9/20,3/10/20,3/11/20,3/12/20,3/13/20,3/14/20,3/15/20,3/16/20,3/17/20,3/18/20,3/19/20,3/20/20,3/21/20,3/22/20,3/23/20,3/24/20,3/25/20,3/26/20,3/27/20,3/28/20,3/29/20,3/30/20,3/31/20,4/1/20,4/2/20,4/3/20,4/4/20,4/5/20,4/6/20,4/7/20,4/8/20,4/9/20
 84036001,US,USA,840,36001.0,Albany,New York,US,42.60060306,-73.97723916,"Albany, New York, US",0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,2,7,7,15,25,36,43,70,88,123,127,146,152,171,187,195,205,217,226,240,253,267,293,305,319,333,342,379
@@ -138,7 +138,7 @@ describe('Check New York data', () => {
 
       const tcHeaderDates = totalCasesSheet[0].slice(11);
 
-      const totalCases = parseSheetToJSON(tcHeaderDates, totalCasesSheet.slice(1), 11);
+      const totalCases = aggregateDataPerRegion(tcHeaderDates, totalCasesSheet.slice(1), 11);
 
       expect(Object.keys(totalCases)).toEqual(["New York"])
 
@@ -149,12 +149,12 @@ describe('Check New York data', () => {
       }
     })
 
-    it('serializeChartsData should return the same data of parseSheetToJSON', async () => {
+    it('serializeChartsData should return the same data of aggregateDataPerRegion', async () => {
       const totalCasesSheet: string[][] = await buildSheetFromCSV(newYorkCases);
       const tcHeaderDates = totalCasesSheet[0].slice(11);
-      const expected = parseSheetToJSON(tcHeaderDates, totalCasesSheet.slice(1), 11);
+      const expected = aggregateDataPerRegion(tcHeaderDates, totalCasesSheet.slice(1), 11);
 
-      const actual = await serializeChartsData(newYorkCases, newYorkDeaths);
+      const actual = await serializeChartsData(newYorkCases, newYorkDeaths, aggregateDataPerRegion);
 
       const nyCases = actual.totalCases["New York"].map(([, cases]) => cases);
 
@@ -165,14 +165,14 @@ describe('Check New York data', () => {
       expect(actual.totalCases["New York"]).toEqual(expected["New York"]);
     })
 
-    it('serializeUsaData should return the same data of parseSheetToJSON', async () => {
+    it('serializeUsaData should return the same data of aggregateDataPerRegion', async () => {
       const totalCasesSheet: string[][] = await buildSheetFromCSV(newYorkCases);
       const tcHeaderDates = totalCasesSheet[0].slice(11);
-      const expected = parseSheetToJSON(tcHeaderDates, totalCasesSheet.slice(1), 11);
+      const expected = aggregateDataPerRegion(tcHeaderDates, totalCasesSheet.slice(1), 11);
 
       const actual = await serializeUsaData([newYorkCases, newYorkDeaths]);
 
-      const nyCases = actual[0].totalCases["New York"].map(([, cases]) => cases);
+      const nyCases = actual[0].totalCases["New York"].map(([, cases]: any) => cases);
 
       for (let i = 0; i < nyCases.length - 2; i++) {
         expect(nyCases[i]).toBeLessThanOrEqual(nyCases[i + 1])
@@ -188,7 +188,7 @@ describe('Check New York data', () => {
 
       const tdHeaderDates = totalDeathsSheet[0].slice(12);
 
-      const totalDeaths = parseSheetToJSON(tdHeaderDates, totalDeathsSheet.slice(1), 12);
+      const totalDeaths = aggregateDataPerRegion(tdHeaderDates, totalDeathsSheet.slice(1), 12);
 
       expect(Object.keys(totalDeaths)).toEqual(["New York"])
 
@@ -199,12 +199,12 @@ describe('Check New York data', () => {
       }
     })
 
-    it('serializeChartsData should return the same data of parseSheetToJSON', async () => {
+    it('serializeChartsData should return the same data of aggregateDataPerRegion', async () => {
       const totalDeathsSheet: string[][] = await buildSheetFromCSV(newYorkDeaths);
       const tcHeaderDates = totalDeathsSheet[0].slice(12);
-      const expected = parseSheetToJSON(tcHeaderDates, totalDeathsSheet.slice(1), 12);
+      const expected = aggregateDataPerRegion(tcHeaderDates, totalDeathsSheet.slice(1), 12);
 
-      const actual = await serializeChartsData(newYorkCases, newYorkDeaths);
+      const actual = await serializeChartsData(newYorkCases, newYorkDeaths, aggregateDataPerRegion);
 
       const nyCases = actual.totalDeaths["New York"].map(([, cases]) => cases);
 
@@ -215,14 +215,14 @@ describe('Check New York data', () => {
       expect(actual.totalDeaths["New York"]).toEqual(expected["New York"]);
     })
 
-    it('serializeUsaData should return the same data of parseSheetToJSON', async () => {
+    it('serializeUsaData should return the same data of aggregateDataPerRegion', async () => {
       const totalDeathsSheet: string[][] = await buildSheetFromCSV(newYorkDeaths);
       const tcHeaderDates = totalDeathsSheet[0].slice(12);
-      const expected = parseSheetToJSON(tcHeaderDates, totalDeathsSheet.slice(1), 12);
+      const expected = aggregateDataPerRegion(tcHeaderDates, totalDeathsSheet.slice(1), 12);
 
       const actual = await serializeUsaData([newYorkCases, newYorkDeaths]);
 
-      const nyCases = actual[0].totalDeaths["New York"].map(([, cases]) => cases);
+      const nyCases = actual[0].totalDeaths["New York"].map(([, cases]: any) => cases);
 
       for (let i = 0; i < nyCases.length - 2; i++) {
         expect(nyCases[i]).toBeLessThanOrEqual(nyCases[i + 1])

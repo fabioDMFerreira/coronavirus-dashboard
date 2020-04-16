@@ -1,4 +1,5 @@
 import { ChartsData } from '@common/types';
+import Section from '@components/Section';
 import fetch from 'isomorphic-unfetch';
 import React, { Fragment, useState } from 'react';
 import Spinner from 'react-bootstrap/Spinner';
@@ -30,14 +31,22 @@ export default () => {
         chartsData && countries &&
         <CountrySingleSerieContainer chartsData={chartsData} countries={countries} />
       }
+
+
       {
         chartsData && pivotData && countries &&
-        <CountryMulipleSerieContainer chartsData={chartsData} countries={countries} pivotData={pivotData} />
+        <Fragment>
+          <Section title="World" />
+          <CountryMulipleSerieContainer chartsData={chartsData} countries={countries} pivotData={pivotData} />
+        </Fragment>
       }
-      {
-        !chartsData
-        && <Spinner animation="grow" />
-      }
-    </Fragment>
+      <Section>
+
+        {
+          !chartsData
+          && <Spinner animation="grow" />
+        }
+      </Section>
+    </Fragment >
   );
 };

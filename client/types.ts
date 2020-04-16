@@ -41,20 +41,38 @@ export interface BubbleData {
   totalDeaths: PackedBubbleData[];
 }
 
+export interface SelectOption {
+  label: string;
+  value: string;
+}
+
 export interface ReduxReducerState {
-  country: { label: string; value: string };
+  country: SelectOption;
   countryDataType: DataType;
   countryTimeType: TimeType;
   allCountriesDataType: DataType;
   allCountriesSelected: any;
   allCountriesFilter: any;
 
-  region: { label: string; value: string };
+  region: SelectOption;
   regionDataType: DataType;
   regionTimeType: TimeType;
   allRegionsDataType: DataType;
   allRegionsSelected: any;
   allRegionsFilter: any;
+
+  county: {
+    singleSerie: {
+      selected?: SelectOption;
+      dataType: DataType;
+      timeType: TimeType;
+    };
+    multipleSeries: {
+      dataType: DataType;
+      selected: SelectOption[];
+      filter: any;
+    };
+  };
 
   tab: 'country' | 'usa';
 }

@@ -154,7 +154,7 @@ interface SelectOption {
 }
 
 export interface SingleSerieChartProps {
-  selectedSerie: SelectOption;
+  selectedSerie: any;
   changeSelectedSerie: (value: ValueType<SelectOption>) => void;
   seriesOptions: string[];
 

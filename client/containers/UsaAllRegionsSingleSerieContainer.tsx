@@ -6,16 +6,16 @@ import SingleSerieChart from '../components/SingleSerieDisplay/SingleSerieDispla
 import { setRegionDataType, setRegionFilter, setRegionTimeType } from '../redux/actions';
 import { getRegion, getRegionDataType, getRegionTimeType } from '../redux/selectors';
 
-interface UsaRegionSingleSerieContainerProps {
+interface UsaAllRegionsSingleSerieContainerProps {
   chartsData: ChartsData;
   regions: string[];
 }
 
-export default ({ chartsData, regions }: UsaRegionSingleSerieContainerProps) => {
+export default ({ chartsData, regions }: UsaAllRegionsSingleSerieContainerProps) => {
   const dispatch = useDispatch();
 
   const region = useSelector(getRegion);
-  const setCountry = useCallback((value: any) => { dispatch(setRegionFilter(value)); }, [dispatch]);
+  const setRegion = useCallback((value: any) => { dispatch(setRegionFilter(value)); }, [dispatch]);
 
   const dataType = useSelector(getRegionDataType);
   const setDataType = useCallback((value: any) => { dispatch(setRegionDataType(value)); }, [dispatch]);
@@ -27,7 +27,7 @@ export default ({ chartsData, regions }: UsaRegionSingleSerieContainerProps) => 
   return (
     <SingleSerieChart
       selectedSerie={region}
-      changeSelectedSerie={setCountry}
+      changeSelectedSerie={setRegion}
       seriesOptions={regions}
 
       dataType={dataType}

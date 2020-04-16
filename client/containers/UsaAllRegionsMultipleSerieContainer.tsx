@@ -7,14 +7,14 @@ import { setAllRegionsDataType, setAllRegionsFilter,setAllRegionsSelected } from
 import { getAllRegionsDataType, getAllRegionsFilter,getAllRegionsSelected } from '../redux/selectors';
 import { DataType } from '../types';
 
-interface CountriesComparisonContainerProps {
+interface UsaAllRegionsMultipleSerieContainerProps {
   chartsData: ChartsData;
   regions: string[];
   pivotData: any;
 }
 
 
-export default ({ chartsData, regions, pivotData }: CountriesComparisonContainerProps) => {
+export default ({ chartsData, regions, pivotData }: UsaAllRegionsMultipleSerieContainerProps) => {
   const dispatch = useDispatch();
 
 
@@ -23,10 +23,6 @@ export default ({ chartsData, regions, pivotData }: CountriesComparisonContainer
     dispatch(setAllRegionsDataType(value));
   }, [dispatch]);
 
-  // const regionsSelected = useSelector((state: ReduxReducerState) => {
-  //   const result = getAllRegionsSelected(state);
-  //   return result || getTopTenCountries(chartsData).map((country) => ({ label: country, value: country }));
-  // });
   const regionsSelected = useSelector(getAllRegionsSelected);
   const setRegionsSelected = useCallback((value: any) => {
     dispatch(setAllRegionsSelected(value));

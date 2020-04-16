@@ -1,19 +1,28 @@
 import fetch from 'isomorphic-unfetch';
 
-import covidRepository, { CovidRepositoryId } from './covid.repository';
+import covidRepository from './covid.repository';
 import serializeCountriesData from './serializeCountriesData';
-import serializeUsaData from './serializeUsaData';
+import { serializeUsaData, serializeUsaRegionData } from './serializeUsaData';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const saveInCache = (name: CovidRepositoryId) => async (data: any) => {
+const saveInCache = (name: string) => async (data: any) => {
   await covidRepository.set(name, data);
 
   return data;
 }
 
-const getFromCache = async (name: CovidRepositoryId) => {
+const getFromCache = async (name: string) => {
   return covidRepository.get(name)
 }
+
+const fetchUsaDataFromCSSEGI = () => Promise.all(
+  [
+    fetch('https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_US.csv')
+      .then((res) => res.text()),
+    fetch('https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_US.csv')
+      .then((res) => res.text())
+  ],
+)
 
 export default {
   getCountriesData: async () => {
@@ -42,14 +51,21 @@ export default {
       return covidData;
     }
 
-    return Promise.all(
-      [
-        fetch('https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_US.csv')
-          .then((res) => res.text()),
-        fetch('https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_US.csv')
-          .then((res) => res.text())
-      ],
-    ).then(serializeUsaData)
+    return fetchUsaDataFromCSSEGI()
+      .then(serializeUsaData)
       .then(saveInCache("USA_REGIONS_DATA"))
+  },
+
+  getUsaRegionData: async (region: string) => {
+
+    const covidData = await getFromCache(region.toUpperCase() + "_REGION_DATA");
+
+    if (covidData) {
+      return covidData;
+    }
+
+    return fetchUsaDataFromCSSEGI()
+      .then(serializeUsaRegionData(region))
+      .then(saveInCache(region.toUpperCase() + "REGION_DATA"))
   }
 };
