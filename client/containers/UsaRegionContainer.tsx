@@ -17,7 +17,7 @@ export default ({ region, show }: UsaCountyContainerProps) => {
 
   const [chartsData, setChartsData] = useState<ChartsData>()
   const [pivotData, setPivotData] = useState<any>()
-  const [regions, setRegions] = useState<any>([])
+  const [counties, setCounties] = useState<any>([])
   const [loading, setLoading] = useState<boolean>(false)
 
   useSWR(
@@ -26,16 +26,26 @@ export default ({ region, show }: UsaCountyContainerProps) => {
       setLoading(true);
       fetch(api)
         .then((res) => res.json())
-        .then(([chartsData, pivotData, regions]) => {
+        .then((chartsData) => {
           setChartsData(chartsData);
-          setPivotData(pivotData);
-          setRegions(regions)
+          setCounties(Object.keys(chartsData.totalCases))
           setLoading(false);
         })
     }
   );
 
-  if (!show || (regions.length === 1 && !loading)) {
+  useSWR(
+    () => '/api/covid/usa/' + region + '/pivotData',
+    api => {
+      fetch(api)
+        .then((res) => res.json())
+        .then((pivotData) => {
+          setPivotData(pivotData);
+        })
+    }
+  )
+
+  if (!show || (counties.length === 1 && !loading)) {
     return <span />
   }
 
@@ -49,12 +59,12 @@ export default ({ region, show }: UsaCountyContainerProps) => {
       </SectionTitle>
 
       {
-        !loading && chartsData && regions &&
-        <UsaCountiesSingleSerieContainer chartsData={chartsData} counties={regions} />
+        !loading && chartsData && counties &&
+        <UsaCountiesSingleSerieContainer chartsData={chartsData} counties={counties} />
       }
       {
         !loading && chartsData && pivotData &&
-        <UsaCountiesMultipleSerieContainer chartsData={chartsData} regions={regions} pivotData={pivotData} region={region} />
+        <UsaCountiesMultipleSerieContainer chartsData={chartsData} counties={counties} pivotData={pivotData} region={region} />
       }
 
     </Fragment>

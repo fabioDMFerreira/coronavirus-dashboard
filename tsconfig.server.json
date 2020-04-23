@@ -20,6 +20,9 @@
       "@covid/*": [
         "./covid/*"
       ],
+      "@votes/*":[
+        "./votes/*"
+      ],
       "@utils/*": [
         "./utils/*"
       ],

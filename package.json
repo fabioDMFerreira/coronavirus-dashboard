@@ -64,7 +64,7 @@
     "test:update": "jest --coverage --updateSnapshot",
     "test:watch": "jest --watch",
     "coverage": "jest --coverage && open ./coverage/lcov-report/index.html",
-    "dev": "nodemon",
+    "dev": "nodemon -e ts,js,tsx,jsx",
     "build": "next build && tsc --project tsconfig.server.json && tscpaths -p tsconfig.server.json -s . -o ./dist",
     "start": "cross-env NODE_ENV=production node dist/server/index.js",
     "lint": "eslint  . --ext .js,.jsx,.ts,.tsx --fix"

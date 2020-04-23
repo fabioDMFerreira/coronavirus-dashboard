@@ -18,10 +18,19 @@ export default () => {
     (api) =>
       fetch(api)
         .then((res) => res.json())
-        .then(([chartsData, pivotData, countries]) => {
+        .then((chartsData) => {
           setChartsData(chartsData);
+          setCountries(Object.keys(chartsData.totalCases))
+        })
+  );
+
+  useSWR(
+    '/api/covid/countries/pivotData',
+    (api) =>
+      fetch(api)
+        .then((res) => res.json())
+        .then((pivotData) => {
           setPivotData(pivotData);
-          setCountries(countries)
         })
   );
 
@@ -35,15 +44,15 @@ export default () => {
 
       {
         chartsData && pivotData && countries &&
-        <Fragment>
+        <div className="mt-5">
           <Section title="World" />
           <CountryMulipleSerieContainer chartsData={chartsData} countries={countries} pivotData={pivotData} />
-        </Fragment>
+        </div>
       }
       <Section>
 
         {
-          !chartsData
+          (!chartsData || !pivotData)
           && <Spinner animation="grow" />
         }
       </Section>

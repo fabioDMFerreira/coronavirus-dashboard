@@ -25,10 +25,19 @@ export default () => {
     (api) =>
       fetch(api)
         .then((res) => res.json())
-        .then(([chartsData, pivotData, regions]) => {
+        .then((chartsData) => {
           setChartsData(chartsData);
+          setRegions(Object.keys(chartsData.totalCases));
+        })
+  );
+
+  useSWR(
+    '/api/covid/usa/pivotData',
+    (api) =>
+      fetch(api)
+        .then((res) => res.json())
+        .then((pivotData) => {
           setPivotData(pivotData);
-          setRegions(regions)
         })
   );
 
@@ -50,7 +59,7 @@ export default () => {
         <UsaRegionContainer show={!!chartsData} region={region.value} />
       }
       {
-        !chartsData
+        (!chartsData || !pivotData)
         && <Spinner animation="grow" />
       }
     </Fragment>

@@ -1,6 +1,5 @@
 import React from 'react';
 import Button from 'react-bootstrap/Button';
-import Container from 'react-bootstrap/Container';
 import Form from 'react-bootstrap/Form';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
@@ -17,28 +16,26 @@ export interface NavbarProps {
 
 export default ({ tweet, tabSelected, selectTab, openSubscribeModal }: NavbarProps) => (
   <Navbar bg="dark" variant="dark">
-    <Container fluid>
-      <Navbar.Brand href="#home">Covid-19 Growth</Navbar.Brand>
-      <Navbar.Collapse>
-        <Nav.Item>
-          <Button variant="link" className={tabSelected === "country" ? 'active' : ''} onClick={() => selectTab("country")}>All Countries</Button>
-        </Nav.Item>
-        <Nav.Item>
-          <Button variant="link" className={tabSelected === "usa" ? 'active' : ''} onClick={() => selectTab("usa")}>USA</Button>
-        </Nav.Item>
-      </Navbar.Collapse>
-      <Form inline>
-        <Button className="mr-2" variant="primary" onClick={tweet}>
-          <TwitterIcon />
-          {' '}
+    <Navbar.Brand href="#home">Covid-19 Growth</Navbar.Brand>
+    <Navbar.Collapse>
+      <Nav.Item>
+        <Button variant="link" className={tabSelected === "country" ? 'active' : ''} onClick={() => selectTab("country")}>All Countries</Button>
+      </Nav.Item>
+      <Nav.Item>
+        <Button variant="link" className={tabSelected === "usa" ? 'active' : ''} onClick={() => selectTab("usa")}>USA</Button>
+      </Nav.Item>
+    </Navbar.Collapse>
+    <Form inline>
+      <Button className="mr-2" variant="primary" onClick={tweet}>
+        <TwitterIcon />
+        {' '}
   Tweet
-        </Button>
-        <Button variant="warning" onClick={openSubscribeModal}>
-          <BellIcon />
-          {' '}
+      </Button>
+      <Button variant="warning" onClick={openSubscribeModal}>
+        <BellIcon />
+        {' '}
   Subscribe
-        </Button>
-      </Form>
-    </Container>
+      </Button>
+    </Form>
   </Navbar>
 )

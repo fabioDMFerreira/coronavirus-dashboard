@@ -1,18 +1,20 @@
-import Vote from '@db/models/Vote.model';
 import { Request, Response } from 'express';
+import votesService from 'votes/votes.service';
 
 export default async (req: Request, res: Response) => {
   if (req.method === 'POST') {
     if (!req.body.state) {
       res.status(404);
     } else {
-      const ip = req.headers['x-forwarded-for'] || '';
+      let ip = req.headers['x-forwarded-for']
 
-      const vote = await Vote.findOne({ ip, state: req.body.state })
-
-      if (!vote) {
-        await Vote.create({ type: !!req.body.type, state: req.body.state, ip });
+      if (ip instanceof Array) {
+        ip = ip[0]
+      } else {
+        ip = ip || '';
       }
+
+      await votesService.createVote(ip, req.body.state, !!req.body.type)
     }
   }
 

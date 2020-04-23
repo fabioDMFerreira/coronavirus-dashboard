@@ -11,10 +11,16 @@ interface ChartProps {
   onSerieShow?: (country: string) => void;
   onSerieHide?: (country: string) => void;
   options?: { legend?: boolean };
+  onTimespanChange?: any;
 }
 
 export default ({
-  series, chartCallback, onSerieShow, onSerieHide, options,
+  series,
+  chartCallback,
+  onSerieShow,
+  onSerieHide,
+  options,
+  onTimespanChange = () => { }
 }: ChartProps) => (
   <HighchartsReact
     highcharts={Highcharts}
@@ -88,6 +94,9 @@ export default ({
         xAxis: {
           type: 'datetime',
           plotLines: [],
+          events: {
+            afterSetExtremes: onTimespanChange
+          }
         },
         yAxis: { // Primary yAxis
           title: '',

@@ -19,7 +19,7 @@ import { DataType } from '../types';
 
 interface UsaCountiesMultipleSerieContainerProps {
   chartsData: ChartsData;
-  regions: string[];
+  counties: string[];
   pivotData: any;
   region: string;
 }
@@ -27,11 +27,11 @@ interface UsaCountiesMultipleSerieContainerProps {
 
 export default ({
   chartsData,
-  regions,
+  counties,
   pivotData,
-  region }: UsaCountiesMultipleSerieContainerProps) => {
+  region
+}: UsaCountiesMultipleSerieContainerProps) => {
   const dispatch = useDispatch();
-
 
   const dataType = useSelector(getAllCountiesDataType);
   const setDataType = useCallback((value: DataType) => {
@@ -53,7 +53,7 @@ export default ({
       dataType={dataType}
       changeDataType={setDataType}
 
-      seriesOptions={regions}
+      seriesOptions={counties}
       seriesSelected={regionsSelected}
       selectSeries={setRegionsSelected}
 

@@ -1,9 +1,13 @@
 import { DataType, DataTypeLabels, TimeType, TimeTypeLabels } from 'client/types';
-import React from 'react';
-// import ProgressBar from 'react-bootstrap/ProgressBar'
+import React, { Fragment } from 'react';
+import ProgressBar from 'react-bootstrap/ProgressBar'
+import Spinner from 'react-bootstrap/Spinner';
 import Table from 'react-bootstrap/Table'
 
+import usePullSurveyResultsHook from './usePullSurveyResultsHook';
 import VoteController, { VoteControllerProps } from './VoteController';
+
+const PULL_SURVEY_RESULTS = false;
 
 export interface VoteProps extends VoteControllerProps {
   actualValue: number;
@@ -28,6 +32,8 @@ const Vote = ({
 
   const predictedGrowthRate = ((nextPredictedValue - actualValue) / actualValue) * 100;
 
+  const [loadingSurveyResults, upSurveyResults, downSurveyResults] = usePullSurveyResultsHook(dataType, timeType, serieName, PULL_SURVEY_RESULTS);
+
   return (
     <div>
       <Table bordered>
@@ -47,17 +53,37 @@ const Vote = ({
           </tr>
           <tr>
             <th>Do you think the value will go higher or lower?</th>
-            <td><VoteController
-              voteUp={voteUp}
-              voteDown={voteDown}
-              completed={completed} /></td>
+            <td>
+              <VoteController
+                voteUp={voteUp}
+                voteDown={voteDown}
+                completed={completed}
+              />
+              {
+                PULL_SURVEY_RESULTS &&
+                <Fragment>
+                  {
+                    !loadingSurveyResults &&
+                    <div className="mt-3">
+                      <small>
+                        Survey results
+                      </small>
+                      <ProgressBar className="mt-1">
+                        <ProgressBar variant="success" label={`${upSurveyResults}%`} now={upSurveyResults || 50} key={1} />
+                        <ProgressBar variant="danger" label={`${downSurveyResults}%`} now={downSurveyResults || 50} key={2} />
+                      </ProgressBar>
+                    </div>
+                  }
+                  {
+                    loadingSurveyResults &&
+                    <Spinner animation="grow" />
+                  }
+                </Fragment>
+              }
+            </td>
           </tr>
         </tbody>
       </Table>
-      {/* <ProgressBar>
-        <ProgressBar variant="success" now={50} key={1} />
-        <ProgressBar variant="danger" now={50} key={2} />
-      </ProgressBar> */}
     </div>
   )
 }

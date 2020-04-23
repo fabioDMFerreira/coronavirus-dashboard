@@ -7,12 +7,12 @@ import {
 
 export default async ([totalDeathsCsv, totalCasesCsv]: any) => {
   let chartsData: ChartsData = { totalCases: {}, totalDeaths: {} };
-  let pivotData = [['Date', 'Location', 'New Cases', 'New Deaths', 'Total Cases', 'Total Deaths']];
 
   if (totalCasesCsv && totalDeathsCsv) {
     [chartsData] = await parseCSSEGIData(totalCasesCsv, totalDeathsCsv);
 
     if (chartsData && chartsData.newCases && chartsData.newDeaths) {
+
       const World: any = {
         totalCases: {}, totalDeaths: {}, newCases: {}, newDeaths: {},
       };
@@ -29,21 +29,10 @@ export default async ([totalDeathsCsv, totalCasesCsv]: any) => {
             const [date, newCases] = countryNewCases[countryNewCasesSize - i];
             const newDeaths = countryNewDeathsSize - i >= 0 ? countryNewDeaths[countryNewDeathsSize - i][1] : 0;
 
-            const entry: any = [
-              new Date(date),
-              country,
-              newCases,
-              newDeaths,
-            ];
-
-            pivotData.push(entry);
-
             World.newCases[date] = (World.newCases[date] || 0) + newCases;
             World.newDeaths[date] = (World.newDeaths[date] || 0) + newDeaths;
           }
         });
-
-      pivotData = [pivotData[0], ...pivotData.slice(1).reverse()];
 
       World.newCases = Object.entries(World.newCases).map(([time, value]) => ([+time, value])).sort((a: any, b: any) => a[0] - b[0]);
       World.newDeaths = Object.entries(World.newDeaths).map(([time, value]) => ([+time, value])).sort((a: any, b: any) => a[0] - b[0]);
@@ -55,5 +44,5 @@ export default async ([totalDeathsCsv, totalCasesCsv]: any) => {
     }
   }
 
-  return [chartsData, pivotData, Object.keys(chartsData.totalCases)];
+  return chartsData;
 }

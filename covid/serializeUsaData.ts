@@ -88,12 +88,10 @@ export const serializeChartsData = async (totalCasesCsv: string, totalDeathsCsv:
   };
 }
 
-const serializePivotData = (newCases: any, newDeaths: any) => {
+export const buildTotalNewCasesAndTotalNewDeaths = (newCases: any, newDeaths: any) => {
   const aggregator: any = {
     totalCases: {}, totalDeaths: {}, newCases: {}, newDeaths: {},
   };
-
-  let pivotData: any = [['Date', 'Location', 'New Cases', 'New Deaths', 'Total Cases', 'Total Deaths']];
 
   Object.keys(newCases)
     .forEach((region) => {
@@ -118,59 +116,46 @@ const serializePivotData = (newCases: any, newDeaths: any) => {
         }
         aggregator.newDeaths[deathsDate] = (aggregator.newDeaths[deathsDate] || 0) + newDeaths;
       }
-
-      pivotData = [...pivotData, ...Object.values(datesMapper)];
     });
 
-  pivotData = [pivotData[0], ...pivotData.slice(1)];
 
   aggregator.newCases = Object.entries(aggregator.newCases).map(([time, value]) => ([+time, value])).sort((a: any, b: any) => a[0] - b[0]);
   aggregator.newDeaths = Object.entries(aggregator.newDeaths).map(([time, value]) => ([+time, value])).sort((a: any, b: any) => a[0] - b[0]);
 
-  return [pivotData, aggregator];
+  return aggregator;
 }
 
 
-export const serializeUsaData = async ([totalCasesCsv, totalDeathsCsv]: [string, string]): Promise<[ChartsData, any, string[]]> => {
+export const serializeUsaData = async ([totalCasesCsv, totalDeathsCsv]: [string, string]): Promise<ChartsData> => {
   let chartsData: ChartsData = { totalCases: {}, totalDeaths: {} };
-  let pivotData: any;
 
   if (totalCasesCsv && totalDeathsCsv) {
     chartsData = await serializeChartsData(totalCasesCsv, totalDeathsCsv, aggregateDataPerRegion);
 
     if (chartsData && chartsData.newCases && chartsData.newDeaths) {
 
-      const [pivotDataSerialized, aggregator] = serializePivotData(chartsData.newCases, chartsData.newDeaths);
+      const total = buildTotalNewCasesAndTotalNewDeaths(chartsData.newCases, chartsData.newDeaths);
 
-      pivotData = pivotDataSerialized;
 
-      chartsData.newCases.USA = aggregator.newCases;
-      chartsData.newDeaths.USA = aggregator.newDeaths;
-      chartsData.totalCases.USA = makeCumulativeArray(aggregator.newCases);
-      chartsData.totalDeaths.USA = makeCumulativeArray(aggregator.newDeaths);
+      chartsData.newCases.USA = total.newCases;
+      chartsData.newDeaths.USA = total.newDeaths;
+      chartsData.totalCases.USA = makeCumulativeArray(total.newCases);
+      chartsData.totalDeaths.USA = makeCumulativeArray(total.newDeaths);
 
     }
   }
 
-  return [chartsData, pivotData, Object.keys(chartsData.totalCases)];
+  return chartsData;
 }
 
 export const serializeUsaRegionData = (region: string) => {
-  return async([totalCasesCsv, totalDeathsCsv]: [string, string]) => {
+  return async ([totalCasesCsv, totalDeathsCsv]: [string, string]) => {
     let chartsData: ChartsData = { totalCases: {}, totalDeaths: {} };
-    let pivotData: any;
 
     if (totalCasesCsv && totalDeathsCsv) {
       chartsData = await serializeChartsData(totalCasesCsv, totalDeathsCsv, aggregateRegionData(region));
-
-      if (chartsData && chartsData.newCases && chartsData.newDeaths) {
-
-        const [pivotDataSerialized] = serializePivotData(chartsData.newCases, chartsData.newDeaths);
-
-        pivotData = pivotDataSerialized;
-      }
     }
 
-    return [chartsData, pivotData, Object.keys(chartsData.totalCases)];
+    return chartsData;
   }
 }

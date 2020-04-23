@@ -54,3 +54,9 @@ small {
 .btn-link.vote-down {
   color: red
 }
+
+.pvtUi {
+  display: block;
+  width: 100%;
+  overflow: scroll;
+}

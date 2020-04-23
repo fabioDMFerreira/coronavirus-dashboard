@@ -2,18 +2,13 @@
   "watch": [
     "server/**/*.ts",
     "pages/**/*.ts",
-    "components/**/*.ts",
-    "middlewares/**/*.ts",
     "covid/**/*.ts",
-    "utils/**/*.ts"
+    "votes/**/*.ts",
+    "utils/**/*.ts",
+    "client/**/*.ts"
   ],
   "ignore": [
-    "server/**/*.test.ts",
-    "pages/**/*.test.ts",
-    "components/**/*.test.ts",
-    "middlewares/**/*.test.ts",
-    "covid/**/*.test.ts",
-    "utils/**/*.test.ts"
+    "*.test.ts"
   ],
   "exec": "ts-node -r tsconfig-paths/register --project tsconfig.server.json ./server/index.ts"
 }

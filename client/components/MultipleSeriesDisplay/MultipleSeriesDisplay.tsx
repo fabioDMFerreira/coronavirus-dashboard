@@ -8,7 +8,9 @@ import Row from 'react-bootstrap/Row';
 import Select from 'react-select';
 
 import AreaChart from '../AreaChart';
+// import getTimespanRangeWeeks from './getTimespanRangeWeeks';
 import PivotTable from './PivotTable';
+
 
 export const parseChartsDataToHighchartsFormat = (chartsData: ChartsData, dataType: DataType, groupSerie: string) => {
   let data: any = {};
@@ -110,7 +112,9 @@ export default ({
 
   useEffect(() => {
     if (!filter || !Object.keys(filter).length) {
-      setFilter(getInitialFilters(chartsData));
+      setFilter({
+        Location: getInitialFilters(chartsData)
+      });
     }
 
     if (seriesSelected) {
@@ -128,7 +132,10 @@ export default ({
           return final;
         }, {});
 
-      setFilter(tableFilter);
+      setFilter({
+        ...filter,
+        Location: tableFilter
+      });
 
       if (chartAllCountries) {
         chartAllCountries.series.forEach((serie: any) => {
@@ -152,7 +159,10 @@ export default ({
           return final;
         }, {});
 
-      setFilter(tableFilter);
+      setFilter({
+        ...filter,
+        Location: tableFilter
+      });
 
       if (chartAllCountries) {
         chartAllCountries.series.forEach((serie: any) => {
@@ -200,6 +210,30 @@ export default ({
     selectSeries([]);
   };
 
+  // const changeTimespanFilter =
+  //    (min: number, max: number, dataMin: number, dataMax: number) => {
+  //     const weeksShouldBeDisplayed = getTimespanRangeWeeks(min, max);
+  //     const allWeeks = getTimespanRangeWeeks(dataMin, dataMax);
+
+  //     const newFilter = { ...filter };
+
+  //     const WeekFilter = allWeeks
+  //       .filter(week => !weeksShouldBeDisplayed.includes(week))
+  //       .reduce((filter: any, week: string) => {
+  //         filter[week] = true;
+  //         return filter;
+  //       }, {})
+
+  //     newFilter.Week = WeekFilter;
+
+  //     setFilter(newFilter);
+  //   }
+
+  const changeTimespan = () => {
+    // console.log('set extremes', obj);
+    // changeTimespanFilter(obj.min, obj.max, obj.dataMin, obj.dataMax);
+  }
+
   return (
     <Container fluid>
       <div className="pt-3 pb-3 pl-3 pr-3">
@@ -233,10 +267,11 @@ export default ({
               chartCallback={setChartAllCountries}
               series={allCountriesChartSeries}
               options={{ legend: false }}
+              onTimespanChange={changeTimespan}
             />
           </Col>
         </Row>
-        <div className="mb-3">
+        <div className="mb-3 mt-3">
           <Select
             value={seriesSelected}
             options={seriesOptions.map((option) => ({ label: option, value: option })).filter(({ value }) => value !== groupSerie)}
@@ -248,13 +283,13 @@ export default ({
         <Row>
           <Col xs={12}>
             <div className="mb-3">
-              <Button size="sm" onClick={showTopTenSeries}>Show Top Ten {seriesType}</Button>
+              <Button className="mb-3" size="sm" onClick={showTopTenSeries}>Show Top Ten {seriesType}</Button>
               {' '}
-              <Button size="sm" onClick={showTopTwentySeries}>Show Top Twenty {seriesType}</Button>
+              <Button className="mb-3" size="sm" onClick={showTopTwentySeries}>Show Top Twenty {seriesType}</Button>
               {' '}
-              <Button size="sm" onClick={showAllSeries}>Show All {seriesType}</Button>
+              <Button className="mb-3" size="sm" onClick={showAllSeries}>Show All {seriesType}</Button>
               {' '}
-              <Button size="sm" onClick={hideAllSeries}>Hide all {seriesType}</Button>
+              <Button className="mb-3" size="sm" onClick={hideAllSeries}>Hide all {seriesType}</Button>
             </div>
           </Col>
         </Row>

@@ -1,7 +1,6 @@
 import { useRouter } from 'next/router'
 import React from 'react';
 import Button from 'react-bootstrap/Button';
-import Container from 'react-bootstrap/Container';
 import Form from 'react-bootstrap/Form';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
@@ -22,18 +21,19 @@ export default ({ tweet, openSubscribeModal }: RouterNavbarProps) => {
   }
 
   return (
-    <Navbar bg="dark" variant="dark">
-      <Container fluid>
-        <Navbar.Brand href="#home">Covid-19 Growth</Navbar.Brand>
-        <Navbar.Collapse>
+    <Navbar bg="dark" expand="lg" variant="dark">
+      <Navbar.Brand href="#home">Covid-19 Growth</Navbar.Brand>
+      <Navbar.Toggle aria-controls="responsive-navbar-nav" />
+      <Navbar.Collapse id="responsive-navbar-nav">
+        <Nav className="mr-auto mt-3 mt-md-0">
           <Nav.Item>
             <Button variant="link" onClick={changeRoute('/countries')} className={router.pathname === '/countries' ? 'active' : ''}>All Countries</Button>
           </Nav.Item>
           <Nav.Item>
             <Button variant="link" onClick={changeRoute('/usa')} className={router.pathname === '/usa' ? 'active' : ''} >USA</Button>
           </Nav.Item>
-        </Navbar.Collapse>
-        <Form inline>
+        </Nav>
+        <Form inline className="mt-3 mt-md-0">
           <Button className="mr-2" variant="primary" onClick={tweet}>
             <TwitterIcon />
             {' '}
@@ -45,7 +45,8 @@ export default ({ tweet, openSubscribeModal }: RouterNavbarProps) => {
     Subscribe
           </Button>
         </Form>
-      </Container >
+      </Navbar.Collapse>
+
     </Navbar >
   )
 }

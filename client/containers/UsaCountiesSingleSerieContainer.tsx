@@ -29,11 +29,10 @@ export default ({ chartsData, counties }: UsaCountiesSingleSerieContainerProps) 
   const firstUpdate = useRef(true);
 
   useEffect(() => {
-    if (firstUpdate.current) {
+    if (firstUpdate.current && county) {
       firstUpdate.current = false;
       return;
     }
-    console.log('region changed');
     const selected = Object.keys(chartsData.totalCases)[0];
     setCounty({ label: selected, value: selected });
   }, [region])

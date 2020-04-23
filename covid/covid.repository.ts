@@ -10,7 +10,7 @@ export default {
   },
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   set: async (key: CovidRepositoryId, data: any) => {
-    await CovidDataModal.findOneAndUpdate({ name: key }, { createdAt: new Date(), data }, { upsert: true });
+    CovidDataModal.findOneAndUpdate({ name: key }, { createdAt: new Date(), data }, { upsert: true });
     mcache.put(key, data, 3600)
   }
 }

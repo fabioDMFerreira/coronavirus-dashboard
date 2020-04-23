@@ -218,7 +218,7 @@ export default ({
         state: {
           timeType,
           dataType,
-          country: selectedSerie.value
+          resource: selectedSerie.value
         }
       }),
     })
@@ -245,7 +245,7 @@ export default ({
   return (
     <Container fluid>
       <Row className="pb-3">
-        <Col xs={5}>
+        <Col xs={12} md={5} className="mt-3 mt-md-0">
           <Select
             value={selectedSerie}
             options={seriesOptions.map((option) => ({ label: option, value: option }))}
@@ -253,7 +253,7 @@ export default ({
             onChange={changeSelectedSerie}
           />
         </Col>
-        <Col xs={5}>
+        <Col xs={12} md={5} className="mt-3 mt-md-0">
           <div className="radio">
             <label>
               <input
@@ -299,7 +299,7 @@ export default ({
             </label>
           </div>
         </Col>
-        <Col xs={2}>
+        <Col xs={12} md={2} className="mt-3 mt-md-0">
           <div className="radio">
             <label>
               <input
@@ -331,7 +331,7 @@ export default ({
         </Col>
         {
           actualValue > 0 && nextPredictedValue > 0 &&
-          <Col xs={12} md={3}>
+          <Col xs={12} md={3} className="mt-3 mt-md-0">
             <Vote
               actualValue={actualValue}
               nextPredictedValue={nextPredictedValue}
