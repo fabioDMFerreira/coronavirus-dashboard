@@ -7,7 +7,7 @@ import Table from 'react-bootstrap/Table'
 import usePullSurveyResultsHook from './usePullSurveyResultsHook';
 import VoteController, { VoteControllerProps } from './VoteController';
 
-const PULL_SURVEY_RESULTS = true;
+const PULL_SURVEY_RESULTS = false;
 
 export interface VoteProps extends VoteControllerProps {
   actualValue: number;
