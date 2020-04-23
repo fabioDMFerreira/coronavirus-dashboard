@@ -4,8 +4,8 @@ import countries from './covid/countries';
 import countriesPivotData from './covid/countries/pivotData';
 import usa from './covid/usa';
 import usaPivotData from './covid/usa/pivotData';
-import usaRegion from './covid/usa/region/index';
-import usaRegionPivotData from './covid/usa/region/pivotData';
+import usaRegion from './covid/usa/regions/index';
+import usaRegionPivotData from './covid/usa/regions/pivotData';
 import state from './state';
 import subscribe from './subscribe';
 import votes from './votes';
@@ -16,8 +16,8 @@ const router = Router();
 router.get('/covid/countries', countries);
 router.get('/covid/countries/pivotData', countriesPivotData);
 router.get('/covid/usa/pivotData', usaPivotData);
-router.get('/covid/usa/:region', usaRegion);
-router.get('/covid/usa/:region/pivotData', usaRegionPivotData)
+router.get('/covid/usa/regions/:region', usaRegion);
+router.get('/covid/usa/regions/:region/pivotData', usaRegionPivotData)
 router.get('/covid/usa', usa);
 
 router.all('/state', state)

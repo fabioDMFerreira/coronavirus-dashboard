@@ -111,7 +111,21 @@ export default (state: ReduxReducerState = initialState, action: actions) => {
       return setState(state, 'regionTimeType', action.payload);
     }
     case SET_REGION_FILTER: {
-      return setState(state, 'region', action.payload);
+      return {
+        ...state,
+        region: action.payload,
+        county: {
+          singleSerie: {
+            dataType: DataType.TOTAL_CASES,
+            timeType: TimeType.DAILY
+          },
+          multipleSeries: {
+            dataType: DataType.TOTAL_CASES,
+            selected: null,
+            filter: { Location: {} }
+          }
+        }
+      }
     }
     case SET_ALL_REGIONS_DATA_TYPE: {
       return setState(state, 'allRegionsDataType', action.payload);

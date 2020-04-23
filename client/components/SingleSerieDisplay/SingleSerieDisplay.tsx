@@ -195,6 +195,11 @@ export default ({
       return;
     }
 
+    if(!selectedSerie || !(selectedSerie.value in chartsData.totalCases)){
+      const selected = Object.keys(chartsData.totalCases)[0];
+      changeSelectedSerie({ label: selected, value: selected });
+    }
+
     if (!selectedSerie || !selectedSerie.value || !chartsData.totalDeaths[selectedSerie.value] || !chartsData.totalCases[selectedSerie.value]) {
       return;
     }
@@ -330,7 +335,7 @@ export default ({
           {/* <small>* The growth rate is tracked after two weeks ago from now.</small> */}
         </Col>
         {
-          actualValue > 0 && nextPredictedValue > 0 &&
+          selectedSerie && actualValue > 0 && nextPredictedValue > 0 &&
           <Col xs={12} md={3} className="mt-3 mt-md-0">
             <Vote
               actualValue={actualValue}
