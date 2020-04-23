@@ -1,5 +1,5 @@
+import votesService from '@votes/votes.service';
 import { Request, Response } from 'express';
-import votesService from 'votes/votes.service';
 
 export default async (req: Request, res: Response) => {
   if (req.method === 'POST') {
