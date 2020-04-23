@@ -3,10 +3,9 @@ import Section from '@components/Section';
 import UsaRegionContainer from 'client/containers/UsaRegionContainer';
 import { getRegion } from 'client/redux/selectors';
 import fetch from 'isomorphic-unfetch';
-import React, { Fragment, useState } from 'react';
+import React, { Fragment, useEffect,useState } from 'react';
 import Spinner from 'react-bootstrap/Spinner';
 import { useSelector } from 'react-redux';
-import useSWR from 'swr';
 
 import UsaRegionMultipleSerieContainer from '../containers/UsaAllRegionsMultipleSerieContainer';
 import UsaRegionSingleSerieContainer from '../containers/UsaAllRegionsSingleSerieContainer';
@@ -20,26 +19,20 @@ export default () => {
   const [pivotData, setPivotData] = useState<any>()
   const [regions, setRegions] = useState<any>()
 
-  useSWR(
-    '/api/covid/usa',
-    (api) =>
-      fetch(api)
-        .then((res) => res.json())
-        .then((chartsData) => {
-          setChartsData(chartsData);
-          setRegions(Object.keys(chartsData.totalCases));
-        })
-  );
+  useEffect(() => {
+    fetch('/api/covid/usa')
+      .then((res) => res.json())
+      .then((chartsData) => {
+        setChartsData(chartsData);
+        setRegions(Object.keys(chartsData.totalCases));
+      })
 
-  useSWR(
-    '/api/covid/usa/pivotData',
-    (api) =>
-      fetch(api)
-        .then((res) => res.json())
-        .then((pivotData) => {
-          setPivotData(pivotData);
-        })
-  );
+    fetch('/api/covid/usa/pivotData')
+      .then((res) => res.json())
+      .then((pivotData) => {
+        setPivotData(pivotData);
+      })
+  }, []);
 
   return (
     <Fragment>

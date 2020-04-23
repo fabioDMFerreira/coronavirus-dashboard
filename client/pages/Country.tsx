@@ -1,9 +1,8 @@
 import { ChartsData } from '@common/types';
 import Section from '@components/Section';
 import fetch from 'isomorphic-unfetch';
-import React, { Fragment, useState } from 'react';
+import React, { Fragment, useEffect,useState } from 'react';
 import Spinner from 'react-bootstrap/Spinner';
-import useSWR from 'swr';
 
 import CountryMulipleSerieContainer from '../containers/CountryMulipleSerieContainer';
 import CountrySingleSerieContainer from '../containers/CountrySingleSerieContainer';
@@ -13,25 +12,21 @@ export default () => {
   const [pivotData, setPivotData] = useState<any>()
   const [countries, setCountries] = useState<any>()
 
-  useSWR(
-    '/api/covid/countries',
-    (api) =>
-      fetch(api)
+  useEffect(
+    () => {
+      fetch('/api/covid/countries')
         .then((res) => res.json())
         .then((chartsData) => {
           setChartsData(chartsData);
           setCountries(Object.keys(chartsData.totalCases))
         })
-  );
 
-  useSWR(
-    '/api/covid/countries/pivotData',
-    (api) =>
-      fetch(api)
+      fetch('/api/covid/countries/pivotData')
         .then((res) => res.json())
         .then((pivotData) => {
           setPivotData(pivotData);
         })
+    }, []
   );
 
   return (

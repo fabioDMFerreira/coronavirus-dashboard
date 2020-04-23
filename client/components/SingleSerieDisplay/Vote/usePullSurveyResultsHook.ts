@@ -1,6 +1,6 @@
 import { DataType, TimeType } from "client/types";
 import fetch from "node-fetch";
-import useSWR from "swr";
+import { useEffect, useState } from 'react';
 
 export default (dataType: DataType, timeType: TimeType, serieName: string, enabled: boolean): [boolean, number, number] => {
 
@@ -8,16 +8,36 @@ export default (dataType: DataType, timeType: TimeType, serieName: string, enabl
     return [false, 50, 50];
   }
 
-  const { data, error } = useSWR(
-    () => `/api/votes/results?dataType=${dataType}&timeType=${timeType}&resource=${serieName}`,
-    (api) => fetch(api).then(res => res.json())
+  const [upVotes, setUpVotes] = useState(50);
+  const [downVotes, setDownVotes] = useState(50);
+  const [error, setError] = useState<undefined | Error>();
+  const [loading, setLoading] = useState(false);
+
+  useEffect(
+    () => {
+      setError(undefined);
+      setLoading(true);
+
+      fetch(`/api/votes/results?dataType=${dataType}&timeType=${timeType}&resource=${serieName}`)
+        .then(res => res.json())
+        .then(data => {
+          setUpVotes(data.up);
+          setDownVotes(data.down);
+        })
+        .catch(err => {
+          setError(err);
+        })
+        .then(() => {
+          setLoading(false);
+        })
+    }, [dataType, timeType, serieName]
   )
 
   if (error) {
     return [false, 50, 50];
-  } else if (!data) {
+  } else if (!loading) {
     return [true, 50, 50];
   } else {
-    return [false, data.up, data.down];
+    return [false, upVotes, downVotes];
   }
 }

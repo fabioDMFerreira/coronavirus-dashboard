@@ -1,9 +1,8 @@
 import { ChartsData } from '@common/types';
 import SectionTitle from '@components/Section';
 import fetch from 'isomorphic-unfetch';
-import React, { Fragment, useState } from 'react';
+import React, { Fragment, useEffect,useState } from 'react';
 import Spinner from 'react-bootstrap/Spinner';
-import useSWR from 'swr';
 
 import UsaCountiesMultipleSerieContainer from './UsaCountiesMultipleSerieContainer';
 import UsaCountiesSingleSerieContainer from './UsaCountiesSingleSerieContainer';
@@ -20,30 +19,27 @@ export default ({ region, show }: UsaCountyContainerProps) => {
   const [counties, setCounties] = useState<any>([])
   const [loading, setLoading] = useState<boolean>(false)
 
-  useSWR(
-    () => '/api/covid/usa/' + region,
-    (api) => {
-      setLoading(true);
-      fetch(api)
-        .then((res) => res.json())
-        .then((chartsData) => {
-          setChartsData(chartsData);
-          setCounties(Object.keys(chartsData.totalCases))
-          setLoading(false);
-        })
-    }
-  );
+  useEffect(() => {
+    setLoading(true);
 
-  useSWR(
-    () => '/api/covid/usa/' + region + '/pivotData',
-    api => {
-      fetch(api)
+    Promise.all([
+      () =>
+        fetch('/api/covid/usa/' + region)
+          .then((res) => res.json())
+          .then((chartsData) => {
+            setChartsData(chartsData);
+            setCounties(Object.keys(chartsData.totalCases))
+            setLoading(false);
+          }),
+      () => fetch('/api/covid/usa/' + region + '/pivotData')
         .then((res) => res.json())
         .then((pivotData) => {
           setPivotData(pivotData);
         })
-    }
-  )
+    ]).then(() => {
+      setLoading(false)
+    })
+  }, [region])
 
   if (!show || (counties.length === 1 && !loading)) {
     return <span />
