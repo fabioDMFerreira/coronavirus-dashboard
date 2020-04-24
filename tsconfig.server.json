@@ -20,7 +20,7 @@
       "@covid/*": [
         "./covid/*"
       ],
-      "@votes/*":[
+      "@votes/*": [
         "./votes/*"
       ],
       "@utils/*": [
@@ -28,6 +28,9 @@
       ],
       "@common/*": [
         "common/*"
+      ],
+      "@chainsaw/*": [
+        "chainsaw/*"
       ],
       "node_modules/*": [
         "./node_modules/*"

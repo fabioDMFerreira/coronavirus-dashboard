@@ -1,5 +1,5 @@
+import Chainsaw from '@chainsaw/Chainsaw';
 import bodyParser from 'body-parser';
-import Chainsaw from 'chainsaw/Chainsaw';
 import compression from 'compression';
 import express from 'express';
 import morgan from 'morgan';
