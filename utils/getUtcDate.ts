@@ -6,4 +6,4 @@ export default (date: string): number => {
   }
 
   return 0;
-}
+};

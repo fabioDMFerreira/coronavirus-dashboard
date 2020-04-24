@@ -5,7 +5,8 @@
     "covid/**/*.ts",
     "votes/**/*.ts",
     "utils/**/*.ts",
-    "client/**/*.ts"
+    "client/**/*.ts",
+    "chainsaw/**/*.ts"
   ],
   "ignore": [
     "*.test.ts"

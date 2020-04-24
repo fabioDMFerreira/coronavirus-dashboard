@@ -1,6 +1,6 @@
 import { ChartsData } from '@common/types';
 import Section from '@components/Section';
-import UsaRegionContainer from 'client/containers/UsaRegionContainer';
+import UsaRegionContainer from 'client/containers/UsaRegionContainer/UsaRegionContainer';
 import { getRegion } from 'client/redux/selectors';
 import fetch from 'isomorphic-unfetch';
 import React, { Fragment, useEffect,useState } from 'react';
@@ -15,9 +15,9 @@ export default () => {
 
   const region = useSelector(getRegion);
 
-  const [chartsData, setChartsData] = useState<ChartsData>()
-  const [pivotData, setPivotData] = useState<any>()
-  const [regions, setRegions] = useState<any>()
+  const [chartsData, setChartsData] = useState<ChartsData>();
+  const [pivotData, setPivotData] = useState<any>();
+  const [regions, setRegions] = useState<any>();
 
   useEffect(() => {
     fetch('/api/covid/usa')
@@ -25,13 +25,13 @@ export default () => {
       .then((chartsData) => {
         setChartsData(chartsData);
         setRegions(Object.keys(chartsData.totalCases));
-      })
+      });
 
     fetch('/api/covid/usa/pivotData')
       .then((res) => res.json())
       .then((pivotData) => {
         setPivotData(pivotData);
-      })
+      });
   }, []);
 
   return (
@@ -41,7 +41,7 @@ export default () => {
         <UsaRegionSingleSerieContainer chartsData={chartsData} regions={regions} />
       }
       {
-        (region.value === 'USA' || !region) && chartsData && pivotData && regions &&
+        (!region || region.value === 'USA') && chartsData && pivotData && regions &&
         <Fragment>
           <Section title="USA" />
           <UsaRegionMultipleSerieContainer chartsData={chartsData} regions={regions} pivotData={pivotData} />
@@ -57,4 +57,4 @@ export default () => {
       }
     </Fragment>
   );
-}
+};

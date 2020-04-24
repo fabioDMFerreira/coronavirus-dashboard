@@ -8,11 +8,17 @@ import {
   SET_ALL_COUNTRIES_DATA_TYPE,
   SET_ALL_COUNTRIES_FILTER,
   SET_ALL_COUNTRIES_SELECTED,
+  SET_ALL_COUNTRY_REGIONS_DATA_TYPE,
+  SET_ALL_COUNTRY_REGIONS_FILTER,
+  SET_ALL_COUNTRY_REGIONS_SELECTED,
   SET_ALL_REGIONS_DATA_TYPE,
   SET_ALL_REGIONS_FILTER,
   SET_ALL_REGIONS_SELECTED,
   SET_COUNTRY_DATA_TYPE,
   SET_COUNTRY_FILTER,
+  SET_COUNTRY_REGION_DATA_TYPE,
+  SET_COUNTRY_REGION_FILTER,
+  SET_COUNTRY_REGION_TIME_TYPE,
   SET_COUNTRY_TIME_TYPE,
   SET_COUNTY_DATA_TYPE,
   SET_COUNTY_FILTER,
@@ -57,6 +63,18 @@ const initialState: ReduxReducerState = {
     }
   },
 
+  countryRegion: {
+    singleSerie: {
+      dataType: DataType.TOTAL_CASES,
+      timeType: TimeType.DAILY,
+    },
+    multipleSeries: {
+      dataType: DataType.TOTAL_CASES,
+      selected: [],
+      filter: {}
+    }
+  },
+
   tab: 'country'
 };
 
@@ -74,19 +92,33 @@ const setChartState = (state: ReduxReducerState, stateKey: keyof ReduxReducerSta
       [key]: value
     }
   }
-})
+});
 
 export default (state: ReduxReducerState = initialState, action: actions) => {
   switch (action.type) {
     case SET_TAB: {
-      return setState(state, 'tab', action.payload)
+      return setState(state, 'tab', action.payload);
     }
     case RESET_STATE: {
       return action.payload || initialState;
     }
     //
     case SET_COUNTRY_FILTER: {
-      return setState(state, 'country', action.payload);
+      return {
+        ...state,
+        country: action.payload,
+        countryRegion: {
+          singleSerie: {
+            dataType: DataType.TOTAL_CASES,
+            timeType: TimeType.DAILY
+          },
+          multipleSeries: {
+            dataType: DataType.TOTAL_CASES,
+            selected: null,
+            filter: { Location: {} }
+          }
+        }
+      };
     }
     case SET_COUNTRY_DATA_TYPE: {
       return setState(state, 'countryDataType', action.payload);
@@ -125,35 +157,54 @@ export default (state: ReduxReducerState = initialState, action: actions) => {
             filter: { Location: {} }
           }
         }
-      }
+      };
     }
     case SET_ALL_REGIONS_DATA_TYPE: {
       return setState(state, 'allRegionsDataType', action.payload);
     }
     case SET_ALL_REGIONS_SELECTED: {
-      return setState(state, 'allRegionsSelected', action.payload)
+      return setState(state, 'allRegionsSelected', action.payload);
     }
     case SET_ALL_REGIONS_FILTER: {
       return setState(state, 'allRegionsFilter', action.payload);
     }
     //
     case SET_COUNTY_DATA_TYPE: {
-      return setChartState(state, "county", "singleSerie", "dataType", action.payload)
+      return setChartState(state, "county", "singleSerie", "dataType", action.payload);
     }
     case SET_COUNTY_TIME_TYPE: {
-      return setChartState(state, "county", "singleSerie", "timeType", action.payload)
+      return setChartState(state, "county", "singleSerie", "timeType", action.payload);
     }
     case SET_COUNTY_FILTER: {
-      return setChartState(state, "county", "singleSerie", "selected", action.payload)
+      return setChartState(state, "county", "singleSerie", "selected", action.payload);
     }
     case SET_ALL_COUNTIES_DATA_TYPE: {
-      return setChartState(state, "county", "multipleSeries", "dataType", action.payload)
+      return setChartState(state, "county", "multipleSeries", "dataType", action.payload);
     }
     case SET_ALL_COUNTIES_SELECTED: {
-      return setChartState(state, "county", "multipleSeries", "selected", action.payload)
+      return setChartState(state, "county", "multipleSeries", "selected", action.payload);
     }
     case SET_ALL_COUNTIES_FILTER: {
-      return setChartState(state, "county", "multipleSeries", "filter", action.payload)
+      return setChartState(state, "county", "multipleSeries", "filter", action.payload);
+    }
+    //
+    case SET_COUNTRY_REGION_DATA_TYPE: {
+      return setChartState(state, "countryRegion", "singleSerie", "dataType", action.payload);
+    }
+    case SET_COUNTRY_REGION_TIME_TYPE: {
+      return setChartState(state, "countryRegion", "singleSerie", "timeType", action.payload);
+    }
+    case SET_COUNTRY_REGION_FILTER: {
+      return setChartState(state, "countryRegion", "singleSerie", "selected", action.payload);
+    }
+    case SET_ALL_COUNTRY_REGIONS_DATA_TYPE: {
+      return setChartState(state, "countryRegion", "multipleSeries", "dataType", action.payload);
+    }
+    case SET_ALL_COUNTRY_REGIONS_SELECTED: {
+      return setChartState(state, "countryRegion", "multipleSeries", "selected", action.payload);
+    }
+    case SET_ALL_COUNTRY_REGIONS_FILTER: {
+      return setChartState(state, "countryRegion", "multipleSeries", "filter", action.payload);
     }
   }
 

@@ -15,12 +15,12 @@ export const DataTypeLabels = {
   [DataType.TOTAL_DEATHS]: 'Total Deaths',
   [DataType.NEW_CASES]: 'New Cases',
   [DataType.NEW_DEATHS]: 'New Deaths',
-}
+};
 
 export const TimeTypeLabels = {
   [TimeType.DAILY]: 'Daily',
   [TimeType.WEEKLY]: 'Weekly',
-}
+};
 
 export interface ColumnSerie {
   type: 'column';
@@ -62,6 +62,19 @@ export interface ReduxReducerState {
   allRegionsFilter: any;
 
   county: {
+    singleSerie: {
+      selected?: SelectOption;
+      dataType: DataType;
+      timeType: TimeType;
+    };
+    multipleSeries: {
+      dataType: DataType;
+      selected: SelectOption[];
+      filter: any;
+    };
+  };
+
+  countryRegion: {
     singleSerie: {
       selected?: SelectOption;
       dataType: DataType;

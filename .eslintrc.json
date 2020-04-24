@@ -37,6 +37,7 @@
         "sort-imports": 0,
         "simple-import-sort/sort": "error",
         "no-multiple-empty-lines": "error",
-        "@typescript-eslint/explicit-function-return-type": 0
+        "@typescript-eslint/explicit-function-return-type": 0,
+        "semi": "warn"
     }
 }

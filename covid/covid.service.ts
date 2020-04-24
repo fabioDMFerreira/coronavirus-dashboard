@@ -1,3 +1,7 @@
+import { AvailableCountriesRegions } from '@common/availableCountriesRegions';
+
+import getCountryRegionsChartData from './countries/getCountryRegionsChartData';
+import getCountryRegionsPivotData from './countries/getCountryRegionsPivotData';
 import covidProxy from './covid.proxy';
 
 export default {
@@ -23,5 +27,13 @@ export default {
 
   getUsaRegionPivotData: async (region: string) => {
     return covidProxy.getUsaRegionPivotData(region);
+  },
+
+  getCountryRegionsChartData: async (country: AvailableCountriesRegions) => {
+    return getCountryRegionsChartData(country);
+  },
+
+  getCountryRegionsPivotData: async (country: "spain") => {
+    return getCountryRegionsPivotData(country);
   }
 };
