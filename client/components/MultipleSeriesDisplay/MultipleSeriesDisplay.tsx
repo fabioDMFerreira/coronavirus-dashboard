@@ -190,17 +190,17 @@ export default ({
       const seriesSelected = getTopCountries(chartsData, 10, groupSerie).map((country) => ({ label: country, value: country }));
       selectSeries(seriesSelected);
     }
-  }, [])
+  }, []);
 
   const showTopTenSeries = () => {
-    const seriesSelected = getTopCountries(chartsData, 10, groupSerie).map((country) => ({ label: country, value: country }))
+    const seriesSelected = getTopCountries(chartsData, 10, groupSerie).map((country) => ({ label: country, value: country }));
     selectSeries(seriesSelected);
   };
 
   const showTopTwentySeries = () => {
-    const seriesSelected = getTopCountries(chartsData, 20, groupSerie).map((country) => ({ label: country, value: country }))
+    const seriesSelected = getTopCountries(chartsData, 20, groupSerie).map((country) => ({ label: country, value: country }));
     selectSeries(seriesSelected);
-  }
+  };
 
   const showAllSeries = () => {
     selectSeries(Object.keys(chartsData.totalCases).map((country) => ({ label: country, value: country })));
@@ -232,7 +232,7 @@ export default ({
   const changeTimespan = () => {
     // console.log('set extremes', obj);
     // changeTimespanFilter(obj.min, obj.max, obj.dataMin, obj.dataMax);
-  }
+  };
 
   return (
     <Container fluid>
@@ -275,7 +275,7 @@ export default ({
           <Select
             value={seriesSelected}
             options={seriesOptions.map((option) => ({ label: option, value: option })).filter(({ value }) => value !== groupSerie)}
-            placeholder="Choose a Country"
+            placeholder={`Choose one of the ${seriesType}`}
             onChange={(value: any) => selectSeries(value)}
             isMulti
           />
@@ -308,5 +308,5 @@ export default ({
         }
       </div>
     </Container>
-  )
-}
+  );
+};

@@ -2,6 +2,7 @@ import { ChartsData } from '@common/types';
 
 import { CountryRegionChartSeries } from './serializeCountryRegionChartData';
 
+const sort = (a: any, b: any) => a[0] - b[0];
 
 export default (regionsData: [string, CountryRegionChartSeries][]): ChartsData => {
 
@@ -14,10 +15,10 @@ export default (regionsData: [string, CountryRegionChartSeries][]): ChartsData =
 
   for (let i = 0; i < regionsData.length; i++) {
     const [name, data] = regionsData[i];
-    result.totalCases[name] = data.totalCases.reverse();
-    result.totalDeaths[name] = data.totalDeaths.reverse();
-    result.newCases[name] = data.newCases.reverse();
-    result.newDeaths[name] = data.newDeaths.reverse();
+    result.totalCases[name] = data.totalCases.sort(sort);
+    result.totalDeaths[name] = data.totalDeaths.sort(sort);
+    result.newCases[name] = data.newCases.sort(sort);
+    result.newDeaths[name] = data.newDeaths.sort(sort);
   }
 
   return result;
