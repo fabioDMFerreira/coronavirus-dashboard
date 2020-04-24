@@ -1,11 +1,11 @@
 import { buildNarrativaApiUrl } from '@covid/countries/buildRegionAPIUrls';
-import { fetchRegionData } from '@covid/countries/getCountryRegionsData';
 import CovidCountryRegionData from '@db/models/CovidCountryRegionData.model';
 import hash from '@utils/hash';
 import YYYYMMDD from '@utils/YYYYMMDD';
 import colors from 'colors';
 
 import { getUtcTime } from './../covid/countries/serializeCountryRegionChartData';
+import { fetchRegionData } from './fetchNavarraRegionData';
 import getCountriesRegionsCombinations from './getCountriesRegionsCombinations';
 
 const fetchAllCountryRegionData = async (country: string, region: string) => {

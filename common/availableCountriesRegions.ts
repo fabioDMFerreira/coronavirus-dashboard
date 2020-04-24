@@ -1,4 +1,4 @@
-const availableCountriesRegions = ['spain', 'france'] as const;
+const availableCountriesRegions = ['spain'] as const;
 
 export type AvailableCountriesRegions = typeof availableCountriesRegions[number];
 

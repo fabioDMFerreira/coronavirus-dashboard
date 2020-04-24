@@ -62,7 +62,7 @@ export default ({
       pivotData={pivotData}
 
       groupSerie={country}
-      seriesType={"Counties"}
+      seriesType={"Regions"}
 
       filter={filter}
       setFilter={setFilter}
