@@ -80,7 +80,7 @@ const getCountryChartSeries = (chartsData: ChartsData, dataType: DataType, count
     columnSerie.data = columnSerie.data.filter(timeFilter);
   }
 
-  const growthTimeLimit = timeType === TimeType.WEEKLY ? 8 : 20
+  const growthTimeLimit = timeType === TimeType.WEEKLY ? 8 : 20;
 
   const lineGrowthReducer = serializeGrowthRateReducer(0, columnSerie.data.slice(-growthTimeLimit));
 
@@ -115,11 +115,11 @@ const getCountryChartSeries = (chartsData: ChartsData, dataType: DataType, count
     }
 
     if (indexToCut >= 0) {
-      growthSerie.data = growthSerie.data.slice(indexToCut)
+      growthSerie.data = growthSerie.data.slice(indexToCut);
     }
   }
 
-  const lastFiveResults = columnSerie.data.slice(-5).map(([, value]) => value)
+  const lastFiveResults = columnSerie.data.slice(-5).map(([, value]) => value);
 
   const lastFiveVelocities =
     lastFiveResults
@@ -128,12 +128,12 @@ const getCountryChartSeries = (chartsData: ChartsData, dataType: DataType, count
         return [
           ...final,
           value - lastFiveResults[index]
-        ]
+        ];
       }, []);
 
   const nextVelocity = predictVelocity(lastFiveVelocities);
 
-  const actualValue = columnSerie.data[columnSerie.data.length - 1][1]
+  const actualValue = columnSerie.data[columnSerie.data.length - 1][1];
   const nextPredictedValue = actualValue + Math.ceil(nextVelocity);
 
   return {
@@ -195,9 +195,11 @@ export default ({
       return;
     }
 
-    if(!selectedSerie || !(selectedSerie.value in chartsData.totalCases)){
+    if (!selectedSerie || !(selectedSerie.value in chartsData.totalCases)) {
       const selected = Object.keys(chartsData.totalCases)[0];
-      changeSelectedSerie({ label: selected, value: selected });
+      if (selected) {
+        changeSelectedSerie({ label: selected, value: selected });
+      }
     }
 
     if (!selectedSerie || !selectedSerie.value || !chartsData.totalDeaths[selectedSerie.value] || !chartsData.totalCases[selectedSerie.value]) {
@@ -234,17 +236,17 @@ export default ({
       })
       .catch(_err => {
         // TODO:
-      })
+      });
 
-  }
+  };
 
   const voteUp = () => {
     vote(true);
-  }
+  };
 
   const voteDown = () => {
     vote(false);
-  }
+  };
 
 
   return (
@@ -353,4 +355,4 @@ export default ({
       </Row>
     </Container>
   );
-}
+};

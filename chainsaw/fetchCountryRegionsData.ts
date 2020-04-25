@@ -1,14 +1,14 @@
-import { buildNarrativaApiUrl } from '@covid/countries/buildRegionAPIUrls';
 import CovidCountryRegionData from '@db/models/CovidCountryRegionData.model';
 import hash from '@utils/hash';
 import YYYYMMDD from '@utils/YYYYMMDD';
 import colors from 'colors';
 
-import { getUtcTime } from './../covid/countries/serializeCountryRegionChartData';
+import { getUtcTime } from '../covid/countries/serializeCountryRegionChartData';
+import buildNarrativaApiUrl from './buildNarrativaApiUrl';
 import { fetchRegionData } from './fetchNavarraRegionData';
 import getCountriesRegionsCombinations from './getCountriesRegionsCombinations';
 
-const fetchAllCountryRegionData = async (country: string, region: string) => {
+export const fetchAllCountryRegionData = async (country: string, region: string) => {
   const cursor = new Date();
   let stop = false;
 
@@ -26,7 +26,9 @@ const fetchAllCountryRegionData = async (country: string, region: string) => {
         const apiResult = await fetchRegionData(url);
 
         if (!apiResult || !apiResult.dates || !Object.keys(apiResult.dates).length) {
-          stop = true;
+          if (date !== YYYYMMDD(new Date())) {
+            stop = true;
+          }
           console.log(hash(JSON.stringify(apiResult)));
         } else {
           await CovidCountryRegionData.findOneAndUpdate({
@@ -44,6 +46,7 @@ const fetchAllCountryRegionData = async (country: string, region: string) => {
       }
     } else {
       console.log(colors.cyan(`${country}/${region}/${date} data already existed in db`));
+      stop = true;
     }
 
     cursor.setDate(cursor.getDate() - 1);
@@ -53,10 +56,9 @@ const fetchAllCountryRegionData = async (country: string, region: string) => {
 };
 
 export default async () => {
-  const allCountriesRegions = getCountriesRegionsCombinations();
+  const allCountriesRegions = await getCountriesRegionsCombinations();
 
   await Promise.all(
     allCountriesRegions.map(([country, region]) => fetchAllCountryRegionData(country, region))
   );
-
 };

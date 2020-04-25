@@ -10,6 +10,7 @@ import {
   SET_ALL_COUNTRIES_DATA_TYPE,
   SET_ALL_COUNTRIES_FILTER,
   SET_ALL_COUNTRIES_SELECTED,
+  SET_ALL_COUNTRY_REGIONS_DATA_TYPE,
   SET_ALL_COUNTRY_REGIONS_FILTER,  SET_ALL_COUNTRY_REGIONS_SELECTED,
   SET_ALL_REGIONS_DATA_TYPE,
   SET_ALL_REGIONS_FILTER,
@@ -25,8 +26,7 @@ import {
   SET_REGION_DATA_TYPE,
   SET_REGION_FILTER,
   SET_REGION_TIME_TYPE,
-  SET_TAB
-} from './types';
+  SET_TAB} from './types';
 
 export const resetState = (payload: ReduxReducerState) => ({
   type: RESET_STATE,
@@ -159,7 +159,7 @@ export const setAllCountryRegionsSelected = (payload: any) => ({
 });
 
 export const setAllCountryRegionsDataType = (payload: DataType) => ({
-  type: SET_ALL_COUNTRIES_DATA_TYPE,
+  type: SET_ALL_COUNTRY_REGIONS_DATA_TYPE,
   payload,
 });
 

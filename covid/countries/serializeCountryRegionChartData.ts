@@ -1,6 +1,4 @@
-import { AvailableCountriesRegions } from "@common/availableCountriesRegions";
 import NavarraRegionDataResponse from "@common/NavarraRegionDataApiResponse";
-import capitalize from "@utils/capitalize";
 
 type HighchartsSerie = [number, number][];
 
@@ -22,7 +20,7 @@ export const getUtcTime = (date: string): number => {
 };
 
 
-export default (country: AvailableCountriesRegions, apiData: NavarraRegionDataResponse): CountryRegionChartSeries => {
+export default (apiData: NavarraRegionDataResponse): CountryRegionChartSeries => {
   const data = Object.entries(apiData.dates);
 
   const result: CountryRegionChartSeries = {
@@ -36,7 +34,8 @@ export default (country: AvailableCountriesRegions, apiData: NavarraRegionDataRe
 
     const utcTime = getUtcTime(date);
 
-    const regionData = obj.countries[capitalize(country)].regions[0];
+    const objCountry = Object.keys(obj.countries)[0];
+    const regionData = obj.countries[objCountry].regions[0];
     const totalCases = regionData.today_confirmed;
     const newCases = regionData.today_new_confirmed;
     const totalDeaths = regionData.today_deaths;

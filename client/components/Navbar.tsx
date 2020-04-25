@@ -16,7 +16,7 @@ export interface NavbarProps {
 
 export default ({ tweet, tabSelected, selectTab, openSubscribeModal }: NavbarProps) => (
   <Navbar bg="dark" variant="dark">
-    <Navbar.Brand href="#home">Covid-19 Growth</Navbar.Brand>
+    <Navbar.Brand href="#home">Covid-19</Navbar.Brand>
     <Navbar.Collapse>
       <Nav.Item>
         <Button variant="link" className={tabSelected === "country" ? 'active' : ''} onClick={() => selectTab("country")}>All Countries</Button>
@@ -38,4 +38,4 @@ export default ({ tweet, tabSelected, selectTab, openSubscribeModal }: NavbarPro
       </Button>
     </Form>
   </Navbar>
-)
+);

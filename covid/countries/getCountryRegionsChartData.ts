@@ -9,14 +9,14 @@ export default async (country: AvailableCountriesRegions) => {
 
   const cacheData = await covidRepository.get(`${country}_REGIONS_CHART_DATA`);
 
-  if(cacheData){
+  if (cacheData) {
     return cacheData;
   }
 
   const regionsData = await getCountryRegionsData(country);
 
   const regionsSeries: [string, CountryRegionChartSeries][] = regionsData.map(([name, regionData]) => {
-    return [name, serializeCountryRegionChartData(country, regionData)];
+    return [name, serializeCountryRegionChartData(regionData)];
   });
 
   const aggregator = aggregateCountryRegionsData(regionsSeries);

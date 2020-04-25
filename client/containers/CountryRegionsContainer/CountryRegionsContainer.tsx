@@ -1,3 +1,4 @@
+import { convertToCountryId } from '@common/availableCountriesRegions';
 import { ChartsData } from '@common/types';
 import SectionTitle from '@components/Section';
 import fetch from 'isomorphic-unfetch';
@@ -22,14 +23,14 @@ export default ({ country, show }: CountryRegionsContainerProps) => {
     setLoading(true);
 
     Promise.all([
-      fetch('/api/covid/countries/' + country)
+      fetch('/api/covid/countries/' + convertToCountryId(country))
         .then((res) => res.json())
         .then((chartsData) => {
           setChartsData(chartsData);
           setRegions(Object.keys(chartsData.totalCases));
           setLoading(false);
         }),
-      fetch('/api/covid/countries/' + country + '/pivotData')
+      fetch('/api/covid/countries/' + convertToCountryId(country) + '/pivotData')
         .then((res) => res.json())
         .then((pivotData) => {
           setPivotData(pivotData);

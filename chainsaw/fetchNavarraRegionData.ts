@@ -19,5 +19,5 @@ export const fetchRegionData = (url: string): Promise<NavarraRegionDataResponse>
 
     return res.json();
   }
-  , { retries: 10, });
+  , { retries: 20, minTimeout: 5000, maxTimeout: 60000 });
 };

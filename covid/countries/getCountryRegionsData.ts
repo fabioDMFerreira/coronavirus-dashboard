@@ -1,7 +1,6 @@
 import { AvailableCountriesRegions } from "@common/availableCountriesRegions";
 import NavarraRegionDataResponse from "@common/NavarraRegionDataApiResponse";
 import CovidCountryRegionData from '@db/models/CovidCountryRegionData.model';
-import capitalize from "@utils/capitalize";
 
 export const getRegionDataAggregated = async (country: string, region: string, from?: Date, to?: Date): Promise<[string, NavarraRegionDataResponse]> => {
   let results;
@@ -22,7 +21,8 @@ export const getRegionDataAggregated = async (country: string, region: string, f
     return agg;
   }, response);
 
-  const regionName = aggregator.dates[Object.keys(aggregator.dates)[0]].countries[capitalize(country)].regions[0].name;
+  const aggregatorCountry = Object.keys(aggregator.dates[Object.keys(aggregator.dates)[0]].countries)[0];
+  const regionName = aggregator.dates[Object.keys(aggregator.dates)[0]].countries[aggregatorCountry].regions[0].name;
 
   return[regionName, aggregator];
 };
