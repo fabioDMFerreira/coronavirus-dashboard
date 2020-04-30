@@ -20,7 +20,7 @@ export default () => {
   const [regions, setRegions] = useState<any>();
 
   useEffect(() => {
-    fetch('/api/covid/usa')
+    fetch('/api/covid/usa/chartData')
       .then((res) => res.json())
       .then((chartsData) => {
         setChartsData(chartsData);

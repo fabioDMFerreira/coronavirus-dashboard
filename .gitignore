@@ -28,3 +28,5 @@ yarn-error.log*
 # environment variables
 .env
 .*.env
+
+**/playground.*

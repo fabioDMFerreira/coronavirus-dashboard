@@ -9,7 +9,7 @@ import Spinner from 'react-bootstrap/Spinner';
 import { useSelector } from 'react-redux';
 
 import CountryMulipleSerieContainer from '../containers/CountryMulipleSerieContainer';
-import CountrySingleSerieContainer from '../containers/CountrySingleSerieContainer';
+import CountrySingleSerieContainer from '../containers/CountrySingleSerieContainer/CountrySingleSerieContainer';
 
 export default () => {
 
@@ -21,7 +21,7 @@ export default () => {
 
   useEffect(
     () => {
-      fetch('/api/covid/countries')
+      fetch('/api/covid/countries/chartData')
         .then((res) => res.json())
         .then((chartsData) => {
           setChartsData(chartsData);
@@ -40,7 +40,7 @@ export default () => {
     <Fragment>
       {
         chartsData && countries &&
-        <CountrySingleSerieContainer chartsData={chartsData} countries={countries} />
+        <CountrySingleSerieContainer />
       }
 
       {

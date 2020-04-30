@@ -1,17 +1,33 @@
 import { CronJob } from "cron";
 
-import fetchCountryRegionsData from "./fetchCountryRegionsData";
+import aggregateWorldData from "./aggregateWorldData";
+import fetchJohnsHopkinsData from "./fetchJohnsHopkinsData";
+import fetchNarrativaApiData from "./fetchNarrativaApiData";
+
+const FETCH_DATA_ON_START = true;
 
 class Chainsaw {
 
   constructor() {
-    const job = new CronJob('0 0 16 * * *', fetchCountryRegionsData);
+    const narrativaJob = new CronJob('0 0 16 * * *', fetchNarrativaApiData);
+    const johnsJob = new CronJob('0 0 16 * * *', fetchJohnsHopkinsData);
 
-    job.start();
+    narrativaJob.start();
+    johnsJob.start();
   }
 
   start() {
-    fetchCountryRegionsData();
+    if (FETCH_DATA_ON_START) {
+      Promise.all(
+        [
+          fetchNarrativaApiData(),
+          fetchJohnsHopkinsData()
+        ]
+      )
+        .then(() => {
+          aggregateWorldData();
+        });
+    }
   }
 }
 

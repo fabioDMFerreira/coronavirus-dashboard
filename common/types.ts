@@ -8,3 +8,8 @@ export interface ChartsData {
   newCases?: EventsMap;
   newDeaths?: EventsMap;
 }
+
+export interface SelectOption {
+  label: string;
+  value: string;
+}

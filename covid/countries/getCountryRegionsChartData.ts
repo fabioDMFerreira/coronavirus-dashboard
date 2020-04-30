@@ -3,7 +3,6 @@ import covidRepository from "@covid/covid.repository";
 
 import aggregateCountryRegionsData from "./aggregateCountryRegionsData";
 import getCountryRegionsData from "./getCountryRegionsData";
-import serializeCountryRegionChartData, { CountryRegionChartSeries } from "./serializeCountryRegionChartData";
 
 export default async (country: AvailableCountriesRegions) => {
 
@@ -15,11 +14,7 @@ export default async (country: AvailableCountriesRegions) => {
 
   const regionsData = await getCountryRegionsData(country);
 
-  const regionsSeries: [string, CountryRegionChartSeries][] = regionsData.map(([name, regionData]) => {
-    return [name, serializeCountryRegionChartData(regionData)];
-  });
-
-  const aggregator = aggregateCountryRegionsData(regionsSeries);
+  const aggregator = aggregateCountryRegionsData(regionsData);
 
   covidRepository.set(`${country}_REGIONS_CHART_DATA`, aggregator);
 

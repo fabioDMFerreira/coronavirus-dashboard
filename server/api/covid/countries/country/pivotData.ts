@@ -1,5 +1,5 @@
-import { convertToCountryId,isCountryRegionsAvailable } from '@common/availableCountriesRegions';
-import getCountryRegionsPivotData from '@covid/countries/getCountryRegionsPivotData';
+import convertToCountryId from '@common/convertToCountryId';
+import getCountryPivotData from '@covid/countries/getCountryPivotData';
 import { Request, Response } from 'express';
 
 export default async (req: Request, res: Response) => {
@@ -7,11 +7,12 @@ export default async (req: Request, res: Response) => {
   const country: string =
     typeof (req.params.country) === "string" ? convertToCountryId(req.params.country) : "";
 
-  if (isCountryRegionsAvailable(country)) {
-    const data = await getCountryRegionsPivotData(country);
+  try{
+    const data = await getCountryPivotData(country);
     res.json(data);
-  } else {
-    res.write("false");
+  } catch(err){
+    res.status(400);
+    res.json(err);
   }
 
   return res.end();

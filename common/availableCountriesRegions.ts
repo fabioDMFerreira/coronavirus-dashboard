@@ -1,11 +1,13 @@
+import convertToCountryId from "./convertToCountryId";
+
 const availableCountriesRegions = [
   // 'belgium',
-  'brazil',
+  // 'brazil',
   'canada',
   'china',
   // 'france',
   'germany',
-  'india',
+  // 'india',
   // 'iran',
   // 'ireland',
   'italy',
@@ -20,7 +22,6 @@ const availableCountriesRegions = [
   'united_kingdom'
 ] as const;
 
-export const convertToCountryId = (country: string): any => country.toLowerCase().split(' ').join('_');
 
 export type AvailableCountriesRegions = typeof availableCountriesRegions[number];
 

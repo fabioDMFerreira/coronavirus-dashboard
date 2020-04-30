@@ -1,4 +1,5 @@
-import { convertToCountryId } from '@common/availableCountriesRegions';
+import convertToCountryId from '@common/convertToCountryId';
+import convertToCountryName from '@common/convertToCountryName';
 import { ChartsData } from '@common/types';
 import SectionTitle from '@components/Section';
 import fetch from 'isomorphic-unfetch';
@@ -23,14 +24,14 @@ export default ({ country, show }: CountryRegionsContainerProps) => {
     setLoading(true);
 
     Promise.all([
-      fetch('/api/covid/countries/' + convertToCountryId(country))
+      fetch('/api/covid/countries/' + convertToCountryId(country) + '/regions/chartData')
         .then((res) => res.json())
         .then((chartsData) => {
           setChartsData(chartsData);
-          setRegions(Object.keys(chartsData.totalCases));
+          setRegions(Object.keys(chartsData.totalCases).map(convertToCountryName));
           setLoading(false);
         }),
-      fetch('/api/covid/countries/' + convertToCountryId(country) + '/pivotData')
+      fetch('/api/covid/countries/' + convertToCountryId(country) + '/regions/pivotData')
         .then((res) => res.json())
         .then((pivotData) => {
           setPivotData(pivotData);

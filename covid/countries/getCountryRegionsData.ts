@@ -1,33 +1,37 @@
 import { AvailableCountriesRegions } from "@common/availableCountriesRegions";
-import NavarraRegionDataResponse from "@common/NavarraRegionDataApiResponse";
+import { ChartsData } from "@common/types";
 import CovidCountryRegionData from '@db/models/CovidCountryRegionData.model';
 
-export const getRegionDataAggregated = async (country: string, region: string, from?: Date, to?: Date): Promise<[string, NavarraRegionDataResponse]> => {
+export const getRegionDataAggregated = async (country: string, region: string, from?: Date, to?: Date): Promise<[string, ChartsData]> => {
   let results;
 
   if (from && to) {
-    results = await CovidCountryRegionData.find({ country, region, time: { $gte: from, $lte: to } }, null, { $sort: { time: -1 } });
+    results = await CovidCountryRegionData.find({ country, region, time: { $gte: from, $lte: to } }).sort({ time: 1 });
   } else {
-    results = await CovidCountryRegionData.find({ country, region }, null, { $sort: { time: -1 } });
+    results = await CovidCountryRegionData.find({ country, region }).sort({ time: 1 });
   }
 
-  const response: NavarraRegionDataResponse = { "dates": {} };
+  const defaultResponse = {
+    totalCases: [],
+    newCases: [],
+    totalDeaths: [],
+    newDeaths: []
+  };
 
-  const aggregator: NavarraRegionDataResponse = results.reduce((agg, result) => {
-    const date = Object.keys(result.apiResult.dates)[0];
+  const aggregator: ChartsData = results.reduce((agg, result) => {
 
-    agg.dates[date] = result.apiResult.dates[date];
+    agg.totalCases.push([result.time.getTime(), result.totalCases]);
+    agg.newCases.push([result.time.getTime(), result.newCases]);
+    agg.totalDeaths.push([result.time.getTime(), result.totalDeaths]);
+    agg.newDeaths.push([result.time.getTime(), result.newDeaths]);
 
     return agg;
-  }, response);
+  }, defaultResponse);
 
-  const aggregatorCountry = Object.keys(aggregator.dates[Object.keys(aggregator.dates)[0]].countries)[0];
-  const regionName = aggregator.dates[Object.keys(aggregator.dates)[0]].countries[aggregatorCountry].regions[0].name;
-
-  return[regionName, aggregator];
+  return [region, aggregator];
 };
 
-export default async (country: AvailableCountriesRegions, from?: Date, to?: Date): Promise<[string, NavarraRegionDataResponse][]> => {
+export default async (country: AvailableCountriesRegions, from?: Date, to?: Date): Promise<[string, ChartsData][]> => {
   const regions = await CovidCountryRegionData.distinct('region', { country });
 
   return Promise.all(

@@ -13,7 +13,7 @@ const months = [
   "Oct",
   "Nov",
   "Dec"
-]
+];
 
 const getStartWeekTime = (time: number) => {
   const startDate = new Date(time);
@@ -21,8 +21,8 @@ const getStartWeekTime = (time: number) => {
   const startWeekDate = mod ?
     (Math.floor(startDate.getDate() / 7) * 7) + 1 :
     (Math.floor((startDate.getDate() - 1) / 7) * 7) + 1;
-  return startDate.setDate(startWeekDate || 1)
-}
+  return startDate.setDate(startWeekDate || 1);
+};
 
 export default (startTime: number, endTime: number) => {
   if (startTime > endTime) {
@@ -37,7 +37,7 @@ export default (startTime: number, endTime: number) => {
 
     weeks.push(
       `${months[new Date(cursor).getMonth()]} ${getWeekNumber(cursor)}`
-    )
+    );
 
     cursor = getStartWeekTime(cursor + 604800000);
   }
@@ -49,4 +49,4 @@ export default (startTime: number, endTime: number) => {
   }
 
   return weeks;
-}
+};

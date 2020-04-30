@@ -1,20 +1,5 @@
 import availableCountriesRegions from "@common/availableCountriesRegions";
-// import regions from "@covid/countries/regions";
 import fetch from "node-fetch";
-
-// export const getLocalCountriesRegionsCombinations = () => {
-//   return availableCountriesRegions.map(country => {
-//     const countryRegions = regions[country];
-
-//     return countryRegions.regions.map(
-//       region => {
-//         return [country, region.id];
-//       }
-//     );
-//   }).reduce((final, actual) => {
-//     return final.concat(actual);
-//   }, []);
-// };
 
 export default (): Promise<[string, string][]> => {
   return Promise.all(

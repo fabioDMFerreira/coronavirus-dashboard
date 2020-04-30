@@ -11,6 +11,10 @@ const CovidDataSchema = new Schema({
   time: Date,
   source: String,
   apiResult: Schema.Types.Mixed,
+  totalCases: Number,
+  newCases: Number,
+  totalDeaths: Number,
+  newDeaths: Number,
   createdAt: { type: Date, default: Date.now },
 });
 

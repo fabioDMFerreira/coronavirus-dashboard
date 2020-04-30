@@ -24,7 +24,7 @@ export default ({ region, show }: UsaCountyContainerProps) => {
 
     Promise.all([
 
-      fetch('/api/covid/usa/regions/' + region)
+      fetch('/api/covid/usa/regions/' + region + '/chartData')
         .then((res) => res.json())
         .then((chartsData) => {
           setChartsData(chartsData);
@@ -40,7 +40,7 @@ export default ({ region, show }: UsaCountyContainerProps) => {
       .then(() => {
         setLoading(false);
       })
-      .catch(()=>{
+      .catch(() => {
         setLoading(false);
       });
   };

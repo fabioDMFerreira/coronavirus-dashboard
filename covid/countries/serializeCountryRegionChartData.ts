@@ -1,4 +1,4 @@
-import NavarraRegionDataResponse from "@common/NavarraRegionDataApiResponse";
+import NarrativaApiResponse from "@common/NarrativaApiResponse";
 
 type HighchartsSerie = [number, number][];
 
@@ -20,7 +20,7 @@ export const getUtcTime = (date: string): number => {
 };
 
 
-export default (apiData: NavarraRegionDataResponse): CountryRegionChartSeries => {
+export default (apiData: NarrativaApiResponse): CountryRegionChartSeries => {
   const data = Object.entries(apiData.dates);
 
   const result: CountryRegionChartSeries = {

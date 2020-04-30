@@ -1,11 +1,11 @@
 import spainRegion from "@covid/fixtures/spainRegion";
 
-import NavarraRegionDataResponse from "../../common/NavarraRegionDataApiResponse";
+import NarrativaApiResponse from "../../common/NarrativaApiResponse";
 import serializeCountryRegionChartsData from "./serializeCountryRegionChartData";
 
 describe('serializeCountryRegionChartData', () => {
   it('should return data serialized', () => {
-    const data: NavarraRegionDataResponse = spainRegion;
+    const data: NarrativaApiResponse = spainRegion;
 
     const actual = serializeCountryRegionChartsData(data);
 
