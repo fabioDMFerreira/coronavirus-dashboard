@@ -3,6 +3,8 @@ import CovidCountryData from '@db/models/CovidCountryData.model';
 import YYYYMMDD from '@utils/YYYYMMDD';
 export default async () => {
 
+  await CovidCountryData.deleteMany({ country: 'world' });
+
   const aggregateData = await CovidCountryData
     .aggregate(
       [
@@ -24,8 +26,6 @@ export default async () => {
         }
       ]
     );
-
-  await CovidCountryData.deleteMany({ country: 'world' });
 
   await Promise.all(
     aggregateData.map(data => {

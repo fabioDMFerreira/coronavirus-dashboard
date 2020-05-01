@@ -15,7 +15,6 @@ const fetchCountryData = async (country: string) => {
 
   while (!stop) {
     const date = YYYYMMDD(cursor);
-    console.log('Narrativa', date);
 
     const url = buildCountryNarrativaApiUrl(country, date);
 

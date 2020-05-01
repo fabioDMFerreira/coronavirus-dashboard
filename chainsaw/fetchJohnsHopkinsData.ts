@@ -13,13 +13,15 @@ const fetchCountriesDataFromCSSEGI = () => Promise.all([
     .then((res) => res.text())
 ]);
 
+const SOURCE = "Johns Hopkins";
+
 export default async () => {
   const [data] = await fetchCountriesDataFromCSSEGI()
     .then(([deaths, cases]) => parseCSSEGIData(cases, deaths));
 
   const lastDate = data.totalCases['Portugal'][data.totalCases['Portugal'].length - 1][0];
 
-  const lastDateItem = await CovidCountryData.findOne({ time: new Date(lastDate) });
+  const lastDateItem = await CovidCountryData.findOne({ time: new Date(lastDate), source: SOURCE });
 
   if (lastDateItem) {
     return;
@@ -58,7 +60,7 @@ export default async () => {
               await CovidCountryData.findOneAndUpdate(
                 {
                   country: convertToCountryId(country),
-                  source: "Johns Hopkins",
+                  source: SOURCE,
                   time: new Date(getUtcTime(date)),
                 }, {
                   totalCases,
