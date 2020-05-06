@@ -1,13 +1,13 @@
 import HighchartsReact from 'highcharts-react-official';
 import * as Highcharts from 'highcharts/highstock';
-import React from 'react';
+import React, { forwardRef } from 'react';
 
 interface ChartProps {
   series: any;
   title: string;
 }
 
-export default ({ series, title }: ChartProps) => (
+export default forwardRef(({ series, title }: ChartProps, ref: any) => (
   <HighchartsReact
     highcharts={Highcharts}
     options={
@@ -90,5 +90,6 @@ export default ({ series, title }: ChartProps) => (
     allowChartUpdate
     immutable={false}
     updateArgs={[true, true, true]}
+    ref={ref}
   />
-);
+));

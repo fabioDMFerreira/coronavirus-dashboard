@@ -41,20 +41,34 @@ const buildColumnSerie = (serie: any, dataType: DataType, timeType: TimeType): C
   return columnSerie;
 };
 
-export default (dataType: DataType, timeType: TimeType, selectedSerie: string) => {
+export default (dataType: DataType, timeType: TimeType, selectedSerie: string, chart: any) => {
   const [columnSerie, setColumnSerie] = useState<ColumnSerie>();
+  const [loading, setLoading] = useState<boolean>(false);
 
   useEffect(() => {
     if (!selectedSerie) {
       return;
     }
 
+    setLoading(true);
+
     fetch(`/api/covid/countries/${convertToCountryId(selectedSerie)}/chartData`)
       .then(res => res.json())
       .then(serie => buildColumnSerie(serie, dataType, timeType))
-      .then(setColumnSerie);
+      .then(setColumnSerie)
+      .then(() => {
+        setLoading(false);
+      });
 
   }, [JSON.stringify({ dataType, timeType, selectedSerie })]);
+
+  useEffect(() => {
+    if (chart && chart.current && loading) {
+      chart.current.chart.showLoading();
+    } else if (chart && chart.current) {
+      chart.current.chart.hideLoading();
+    }
+  }, [chart, loading]);
 
   return [columnSerie];
 };

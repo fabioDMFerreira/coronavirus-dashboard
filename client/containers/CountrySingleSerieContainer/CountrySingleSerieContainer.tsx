@@ -4,7 +4,7 @@ import useGrowthAndPredictedValues from '@components/SingleSerieDisplay/useGrowt
 import useVote from '@components/SingleSerieDisplay/useVote';
 import Vote from '@components/SingleSerieDisplay/Vote';
 import fetch from 'node-fetch';
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import Col from 'react-bootstrap/Col';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
@@ -16,6 +16,8 @@ import useLazyCountryColumnSerieBuilder from './useLazyCountryColumnSerieBuilder
 
 
 export default () => {
+
+  const chart = useRef(null);
   const [countries, setCountries] = useState([]);
 
   useEffect(() => {
@@ -35,7 +37,13 @@ export default () => {
   const timeType = useSelector(getCountryTimeType);
   const changeTimeType = useCallback((value: any) => { dispatch(setCountryTimeType(value)); }, [dispatch]);
 
-  const [columnSerie] = useLazyCountryColumnSerieBuilder(dataType, timeType, selectedSerie ? selectedSerie.value : "");
+  const [columnSerie] =
+    useLazyCountryColumnSerieBuilder(
+      dataType,
+      timeType,
+      selectedSerie ? selectedSerie.value : "",
+      chart
+    );
 
   const {
     countryChartSeries,
@@ -64,7 +72,11 @@ export default () => {
       />
       <Row>
         <Col xs={12} md={9}>
-          <ColumnChart series={countryChartSeries} title={countryChartSeries && countryChartSeries.length ? countryChartSeries[0].name : ''} />
+          <ColumnChart
+            series={countryChartSeries}
+            title={countryChartSeries && countryChartSeries.length ? countryChartSeries[0].name : ''}
+            ref={chart}
+          />
         </Col>
         {
           selectedSerie && actualValue > 0 && nextPredictedValue > 0 &&
