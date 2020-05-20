@@ -1,8 +1,7 @@
-import convertToCountryId from '@common/convertToCountryId';
 import { ChartsData, SelectOption } from '@common/types';
 import Vote from 'client/components/SingleSerieDisplay/Vote';
 import { DataType, TimeType } from 'client/types';
-import React, { useEffect } from 'react';
+import React from 'react';
 import Col from 'react-bootstrap/Col';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
@@ -42,17 +41,7 @@ export default ({
   chartsData
 }: SingleSerieChartProps) => {
 
-
-  useEffect(() => {
-    if (chartsData && (!selectedSerie || !(selectedSerie in chartsData.totalCases))) {
-      const selected = Object.keys(chartsData.totalCases)[0];
-      if (selected) {
-        changeSelectedSerie({ label: selected, value: selected });
-      }
-    }
-  }, [chartsData]);
-
-  const [columnSerie] = useChartsDataBuilder(chartsData, dataType, timeType, convertToCountryId(selectedSerie ? selectedSerie.value : ""));
+  const [columnSerie] = useChartsDataBuilder(chartsData, dataType, timeType, selectedSerie ? selectedSerie.value : '');
 
   const {
     countryChartSeries,
@@ -63,7 +52,7 @@ export default ({
   const [voteCompleted, voteUp, voteDown] = useVote({
     timeType,
     dataType,
-    resource:  selectedSerie ? selectedSerie.value : ""
+    resource: selectedSerie ? selectedSerie.value : ""
   });
 
   return (

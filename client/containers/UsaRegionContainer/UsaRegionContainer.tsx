@@ -1,18 +1,25 @@
 import { ChartsData } from '@common/types';
 import SectionTitle from '@components/Section';
+import { setCountyFilter } from 'client/redux/actions';
+import { getUsaCounty } from 'client/redux/selectors';
 import fetch from 'isomorphic-unfetch';
-import React, { Fragment, useEffect, useState } from 'react';
+import React, { Fragment, useCallback,useEffect, useState } from 'react';
 import Spinner from 'react-bootstrap/Spinner';
+import { useDispatch, useSelector } from 'react-redux';
 
 import UsaCountiesMultipleSerieContainer from './UsaCountiesMultipleSerieContainer';
 import UsaCountiesSingleSerieContainer from './UsaCountiesSingleSerieContainer';
 
-interface UsaCountyContainerProps {
+interface UsaRegionContainerProps {
   region: string;
   show: boolean;
 }
 
-export default ({ region, show }: UsaCountyContainerProps) => {
+export default ({ region, show }: UsaRegionContainerProps) => {
+  const dispatch = useDispatch();
+
+  const county = useSelector(getUsaCounty);
+  const setCounty = useCallback((value: any) => { dispatch(setCountyFilter(value)); }, [dispatch]);
 
   const [chartsData, setChartsData] = useState<ChartsData>();
   const [pivotData, setPivotData] = useState<any>();
@@ -29,6 +36,12 @@ export default ({ region, show }: UsaCountyContainerProps) => {
         .then((chartsData) => {
           setChartsData(chartsData);
           setCounties(Object.keys(chartsData.totalCases));
+
+          if (!county) {
+            const option = Object.keys(chartsData.totalCases)[0];
+            setCounty({ label: option, value: option });
+          }
+
           setLoading(false);
         }),
       fetch('/api/covid/usa/regions/' + region + '/pivotData')

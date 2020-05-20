@@ -18,8 +18,8 @@ export const aggregateRegionData = (region: string) => (datesHeaders: string[], 
     (final: EventsMap, row: string[]): EventsMap => {
       if (row && row[0]) {
         const state = row[5];
-        const countryRegion = row[6]
-        const occurrences = row.slice(datesCursor)
+        const countryRegion = row[6];
+        const occurrences = row.slice(datesCursor);
 
         if (state !== 'Unassigned' && countryRegion.toLowerCase() === region.toLowerCase()) {
           final[state] = serializeOccurrencesData(datesHeaders, occurrences);
@@ -38,7 +38,7 @@ export const aggregateDataPerRegion: SheetDataAggregator = (datesHeaders: string
       if (row && row[0]) {
         const state = row[5];
         const region = row[6];
-        const occurrences = row.slice(datesCursor)
+        const occurrences = row.slice(datesCursor);
 
         if (state !== 'Unassigned') {
           if (!final[region]) {
@@ -71,7 +71,7 @@ export const serializeChartsData = async (totalCasesCsv: string, totalDeathsCsv:
     const startDate = Date.UTC(2020, 3, 1);
     totalDeaths["New Jersey"]
       = totalDeaths["New Jersey"]
-        .map(([date, value]) => date > startDate ? [date, value] : [date, 0])
+        .map(([date, value]) => date > startDate ? [date, value] : [date, 0]);
   }
 
   return {
@@ -86,7 +86,7 @@ export const serializeChartsData = async (totalCasesCsv: string, totalDeathsCsv:
       return final;
     }, {}),
   };
-}
+};
 
 export const buildTotalNewCasesAndTotalNewDeaths = (newCases: any, newDeaths: any) => {
   const aggregator: any = {
@@ -123,7 +123,7 @@ export const buildTotalNewCasesAndTotalNewDeaths = (newCases: any, newDeaths: an
   aggregator.newDeaths = Object.entries(aggregator.newDeaths).map(([time, value]) => ([+time, value])).sort((a: any, b: any) => a[0] - b[0]);
 
   return aggregator;
-}
+};
 
 
 export const serializeUsaData = async ([totalCasesCsv, totalDeathsCsv]: [string, string]): Promise<ChartsData> => {
@@ -146,7 +146,7 @@ export const serializeUsaData = async ([totalCasesCsv, totalDeathsCsv]: [string,
   }
 
   return chartsData;
-}
+};
 
 export const serializeUsaRegionData = (region: string) => {
   return async ([totalCasesCsv, totalDeathsCsv]: [string, string]) => {
@@ -157,5 +157,5 @@ export const serializeUsaRegionData = (region: string) => {
     }
 
     return chartsData;
-  }
-}
+  };
+};

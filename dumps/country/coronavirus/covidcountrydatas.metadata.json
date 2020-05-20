@@ -1,1 +1,0 @@
-{"options":{},"indexes":[{"v":{"$numberInt":"2"},"key":{"_id":{"$numberInt":"1"}},"name":"_id_","ns":"coronavirus.covidcountrydatas"}],"uuid":"13b4f04316ad485c8d7bacda87c8a99b"}

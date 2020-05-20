@@ -1,4 +1,3 @@
-import convertToCountryName from "@common/convertToCountryName";
 import { ChartsData } from "@common/types";
 import { ColumnSerie, DataType, TimeType } from "client/types";
 import { useEffect, useState } from "react";
@@ -45,13 +44,11 @@ export default (chartsData: ChartsData, dataType: DataType, timeType: TimeType, 
   const [columnSerie, setColumnSerie] = useState<ColumnSerie>();
 
   useEffect(() => {
-    const serieName = selectedSerie in chartsData.totalCases ? selectedSerie : convertToCountryName(selectedSerie);
-
-    if (!chartsData || !(serieName in chartsData.totalCases)) {
+    if (!chartsData || !(selectedSerie in chartsData.totalCases)) {
       return;
     }
 
-    const columnSerie = buildColumnSerie(chartsData, dataType, timeType, serieName);
+    const columnSerie = buildColumnSerie(chartsData, dataType, timeType, selectedSerie);
 
     setColumnSerie(columnSerie);
   }, [chartsData, dataType, timeType, selectedSerie]);
