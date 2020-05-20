@@ -7,7 +7,7 @@ import colors from 'colors';
 
 import { getUtcTime } from '../covid/countries/serializeCountryRegionChartData';
 import buildCountryNarrativaApiUrl from './buildCountryNarrativaApiUrl';
-import fetchNavarraData from './fetchNarrativaData';
+import fetchNarrativaData from './fetchNarrativaData';
 
 const fetchCountryData = async (country: string) => {
   const cursor = new Date();
@@ -24,7 +24,7 @@ const fetchCountryData = async (country: string) => {
       console.log(colors.magenta(`fetching data ${country}/${date}`));
 
       try {
-        const apiResult = await fetchNavarraData(url);
+        const apiResult = await fetchNarrativaData(url);
 
         if (!apiResult || !apiResult.dates || !Object.keys(apiResult.dates).length) {
           if (date !== YYYYMMDD(new Date())) {
@@ -36,12 +36,14 @@ const fetchCountryData = async (country: string) => {
           const countryName = Object.keys(apiResult.dates[date].countries)[0];
           const countryData = apiResult.dates[date].countries[countryName];
 
+          const currentDate = new Date(getUtcTime(date));
+
           await CovidCountryData.findOneAndUpdate({
             country,
             source: "Narrativa",
-            time: new Date(getUtcTime(date)),
+            time: currentDate,
           }, {
-            date: YYYYMMDD(new Date(getUtcTime(date))),
+            date: YYYYMMDD(currentDate),
             apiResult,
             totalCases: countryData.today_confirmed,
             newCases: countryData.today_new_confirmed,
@@ -83,12 +85,36 @@ const fetchCountryData = async (country: string) => {
 
 };
 
+const fixDBNewCases = async (country: string) => {
+  const countryDataRows = await CovidCountryData.find({
+    country,
+    source: "Narrativa",
+  })
+    .sort({ time: 1 });
+
+  await Promise.all(
+    countryDataRows
+      .slice(1)
+      .map(async (row, index) => {
+        await CovidCountryData
+          .findByIdAndUpdate(row._id, {
+            $set: {
+              newCases: row.totalCases - countryDataRows[index].totalCases,
+              newDeaths: row.totalDeaths - countryDataRows[index].totalDeaths
+            }
+          });
+      })
+  );
+
+};
+
 export default async () => {
   const allCountries = narrativaAvailableCountries;
 
   return Promise.all(
-    allCountries.map(country => {
-      return fetchCountryData(country);
+    allCountries.map(async country => {
+      await fetchCountryData(country);
+      await fixDBNewCases(country);
     })
   );
 };

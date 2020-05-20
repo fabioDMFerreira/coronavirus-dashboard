@@ -11,7 +11,20 @@ type SheetDataAggregator = (datesHeaders: string[], sheet: string[][], datesCurs
 
 const serializeOccurrencesData =
   (headers: string[], values: string[]): [number, number][] =>
-    headers.map((date, index) => ([getUtcDate(date), +values[index]]));
+    headers.map((date, index) => {
+      return [getUtcDate(date), +values[index]];
+    });
+
+export const guaranteeValuesAlwaysIncrease = (values: string[]) => {
+  const newValues = [values[0]];
+
+  for (let i = 1; i < values.length; i++) {
+    const addValue = +values[i] < +newValues[i - 1] ? newValues[i - 1] : values[i];
+    newValues.push(addValue);
+  }
+
+  return newValues;
+};
 
 export const aggregateRegionData = (region: string) => (datesHeaders: string[], sheet: string[][], datesCursor: number): EventsMap => {
   return sheet.reduce(
@@ -19,7 +32,7 @@ export const aggregateRegionData = (region: string) => (datesHeaders: string[], 
       if (row && row[0]) {
         const state = row[5];
         const countryRegion = row[6];
-        const occurrences = row.slice(datesCursor);
+        const occurrences = guaranteeValuesAlwaysIncrease(row.slice(datesCursor));
 
         if (state !== 'Unassigned' && countryRegion.toLowerCase() === region.toLowerCase()) {
           final[state] = serializeOccurrencesData(datesHeaders, occurrences);
@@ -38,7 +51,7 @@ export const aggregateDataPerRegion: SheetDataAggregator = (datesHeaders: string
       if (row && row[0]) {
         const state = row[5];
         const region = row[6];
-        const occurrences = row.slice(datesCursor);
+        const occurrences = guaranteeValuesAlwaysIncrease(row.slice(datesCursor));
 
         if (state !== 'Unassigned') {
           if (!final[region]) {
