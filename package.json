@@ -65,7 +65,7 @@
     "typescript": "^3.7.5"
   },
   "scripts": {
-    "test": "jest",
+    "test": "jest && codecov",
     "test:update": "jest --coverage --updateSnapshot",
     "test:watch": "jest --watch",
     "coverage": "jest --coverage && open ./coverage/lcov-report/index.html",
