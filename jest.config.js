@@ -1,8 +1,8 @@
 // eslint-disable-file
 
 const { defaults: tsjPreset } = require('ts-jest/presets');
-const tsconfig = require("./tsconfig.json")
-const moduleNameMapper = require("tsconfig-paths-jest")(tsconfig)
+const tsconfig = require("./tsconfig.json");
+const moduleNameMapper = require("tsconfig-paths-jest")(tsconfig);
 
 module.exports = {
   ...tsjPreset,
@@ -18,4 +18,6 @@ module.exports = {
       babelConfig: true,
     }
   },
-}
+  "coverageDirectory": "./coverage/",
+  "collectCoverage": true,
+};

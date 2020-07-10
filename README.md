@@ -1,4 +1,6 @@
 Coronavirus Dashboard
+[![Build Status](https://travis-ci.com/fabioDMFerreira/coronavirus-dashboard.svg?branch=master)](https://travis-ci.com/fabioDMFerreira/coronavirus-dashboard)
+[![codecov](https://codecov.io/gh/fabioDMFerreira/coronavirus-dashboard/branch/master/graph/badge.svg)](https://codecov.io/gh/fabioDMFerreira/coronavirus-dashboard)
 ===========
 
 This dashboard displays the evolution of total cases, new cases, total deaths and new deaths in every country and every USA region and county.
