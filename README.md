@@ -1,4 +1,4 @@
-This dashboard displays the evolution of total cases, new cases, total deaths and new deaths in every country and every USA region.
+This dashboard displays the evolution of total cases, new cases, total deaths and new deaths in every country and every USA region and county.
 
 [Demo](https://coronavirus-growth.herokuapp.com/)
 
