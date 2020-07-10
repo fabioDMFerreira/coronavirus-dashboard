@@ -1,8 +1,8 @@
 import { AvailableCountriesRegions } from "@common/availableCountriesRegions";
-import { ChartsData } from "@common/types";
+import { CountryRegionChartSeries } from "@common/types";
 import CovidCountryRegionData from '@db/models/CovidCountryRegionData.model';
 
-export const getRegionDataAggregated = async (country: string, region: string, from?: Date, to?: Date): Promise<[string, ChartsData]> => {
+export const getRegionDataAggregated = async (country: string, region: string, from?: Date, to?: Date): Promise<[string, CountryRegionChartSeries]> => {
   let results;
 
   if (from && to) {
@@ -18,7 +18,7 @@ export const getRegionDataAggregated = async (country: string, region: string, f
     newDeaths: []
   };
 
-  const aggregator: ChartsData = results.reduce((agg, result) => {
+  const aggregator: CountryRegionChartSeries = results.reduce((agg, result) => {
 
     agg.totalCases.push([result.time.getTime(), result.totalCases]);
     agg.newCases.push([result.time.getTime(), result.newCases]);
@@ -31,7 +31,7 @@ export const getRegionDataAggregated = async (country: string, region: string, f
   return [region, aggregator];
 };
 
-export default async (country: AvailableCountriesRegions, from?: Date, to?: Date): Promise<[string, ChartsData][]> => {
+export default async (country: AvailableCountriesRegions, from?: Date, to?: Date): Promise<[string, CountryRegionChartSeries][]> => {
   const regions = await CovidCountryRegionData.distinct('region', { country });
 
   return Promise.all(

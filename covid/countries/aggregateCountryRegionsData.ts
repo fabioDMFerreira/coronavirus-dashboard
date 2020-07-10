@@ -1,7 +1,7 @@
 import convertToCountryName from '@common/convertToCountryName';
-import { ChartsData } from '@common/types';
+import { ChartsData, CountryRegionChartSeries } from '@common/types';
 
-export default (regionsData: [string, ChartsData][]): ChartsData => {
+export default (regionsData: [string, CountryRegionChartSeries][]): ChartsData => {
 
   const result: any = {
     totalCases: {},

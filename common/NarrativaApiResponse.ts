@@ -5,6 +5,7 @@ export default interface NarrativaApiResponse {
         [country: string]: {
           [key: string]: any;
           regions: [{
+            [key: string]: any;
             date: string;
             id: string;
             name: string;
@@ -12,7 +13,6 @@ export default interface NarrativaApiResponse {
             today_new_confirmed: number;
             today_deaths: number;
             today_new_deaths: number;
-            [key: string]: any;
           }];
           today_confirmed: number;
           today_new_confirmed: number;
@@ -24,4 +24,4 @@ export default interface NarrativaApiResponse {
       info: any;
     };
   };
-};
+};;

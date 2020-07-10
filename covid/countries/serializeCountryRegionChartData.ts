@@ -1,13 +1,5 @@
 import NarrativaApiResponse from "@common/NarrativaApiResponse";
-
-type HighchartsSerie = [number, number][];
-
-export interface CountryRegionChartSeries {
-  totalCases: HighchartsSerie;
-  totalDeaths: HighchartsSerie;
-  newDeaths: HighchartsSerie;
-  newCases: HighchartsSerie;
-}
+import { CountryRegionChartSeries } from "@common/types";
 
 export const getUtcTime = (date: string): number => {
   const match = /(\d*)-(\d*)-(\d*)/.exec(date);

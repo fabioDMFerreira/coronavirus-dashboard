@@ -1,6 +1,7 @@
 
+import { CountryRegionChartSeries } from "@common/types";
+
 import aggregateCountryRegionsData from "./aggregateCountryRegionsData";
-import { CountryRegionChartSeries } from "./serializeCountryRegionChartData";
 
 describe('aggregateRegionsData', () => {
   it('should aggregate data', () => {
@@ -17,20 +18,20 @@ describe('aggregateRegionsData', () => {
 
     expect(actual).toEqual({
       "newCases": {
-        "region1": [[1579737600000, 2], [1579824000000, 2]],
-        "region2": [[1579737600000, 2], [1579824000000, 2]]
+        "Region1": [[1579737600000, 2], [1579824000000, 2]],
+        "Region2": [[1579737600000, 2], [1579824000000, 2]]
       },
       "newDeaths": {
-        "region1": [[1579737600000, 1], [1579824000000, 1]],
-        "region2": [[1579737600000, 1], [1579824000000, 1]]
+        "Region1": [[1579737600000, 1], [1579824000000, 1]],
+        "Region2": [[1579737600000, 1], [1579824000000, 1]]
       },
       "totalCases": {
-        "region1": [[1579737600000, 10], [1579824000000, 22]],
-        "region2": [[1579737600000, 10], [1579824000000, 22]]
+        "Region1": [[1579737600000, 10], [1579824000000, 22]],
+        "Region2": [[1579737600000, 10], [1579824000000, 22]]
       },
       "totalDeaths": {
-        "region1": [[1579737600000, 8], [1579824000000, 9]],
-        "region2": [[1579737600000, 8], [1579824000000, 9]]
+        "Region1": [[1579737600000, 8], [1579824000000, 9]],
+        "Region2": [[1579737600000, 8], [1579824000000, 9]]
       }
     });
   });

@@ -1,3 +1,12 @@
+type HighchartsSerie = [number, number][];
+
+export interface CountryRegionChartSeries {
+  totalCases: HighchartsSerie;
+  totalDeaths: HighchartsSerie;
+  newDeaths: HighchartsSerie;
+  newCases: HighchartsSerie;
+}
+
 export interface EventsMap {
   [key: string]: Array<[number, number]>;
 }
