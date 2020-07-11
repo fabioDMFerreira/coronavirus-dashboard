@@ -3,7 +3,7 @@ Coronavirus Dashboard
 [![codecov](https://codecov.io/gh/fabioDMFerreira/coronavirus-dashboard/branch/master/graph/badge.svg)](https://codecov.io/gh/fabioDMFerreira/coronavirus-dashboard)
 ===========
 
-This dashboard displays the evolution of total cases, new cases, total deaths and new deaths in every country and every USA region and county.
+This dashboard displays the evolution of total cases, new cases, total deaths and new deaths in every country, some countries regions and every USA region and county.
 
 [Demo](https://coronavirus-growth.herokuapp.com/)
 
