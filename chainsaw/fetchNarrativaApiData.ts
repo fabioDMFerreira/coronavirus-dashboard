@@ -51,23 +51,21 @@ const fetchCountryData = async (country: string) => {
             newDeaths: countryData.today_new_deaths,
           }, { upsert: true });
 
-          await Promise.all(
-            countryData.regions.map(
-              region => {
-                return CovidCountryRegionData.findOneAndUpdate({
-                  country,
-                  region: region.id,
-                  time: new Date(getUtcTime(region.date)),
-                }, {
-                  date: YYYYMMDD(new Date(region.date)),
-                  totalCases: region.today_confirmed,
-                  newCases: region.today_new_confirmed,
-                  totalDeaths: region.today_deaths,
-                  newDeaths: region.today_new_deaths,
-                }, { upsert: true });
-              }
-            )
-          );
+          for (let i = 0; i < countryData.regions.length; i++) {
+            const region = countryData.regions[i];
+
+            await CovidCountryRegionData.findOneAndUpdate({
+              country,
+              region: region.id,
+              time: new Date(getUtcTime(region.date)),
+            }, {
+              date: YYYYMMDD(new Date(region.date)),
+              totalCases: region.today_confirmed,
+              newCases: region.today_new_confirmed,
+              totalDeaths: region.today_deaths,
+              newDeaths: region.today_new_deaths,
+            }, { upsert: true });
+          }
 
         }
 
