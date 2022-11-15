@@ -46,7 +46,7 @@
     "memory-cache": "^0.2.0",
     "mongoose": "^5.9.7",
     "morgan": "^1.10.0",
-    "next": "^9.3.4",
+    "next": "^12.0.9",
     "next-env": "^1.1.1",
     "normalize-url": "^5.0.0",
     "papaparse": "^5.2.0",
