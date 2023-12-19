@@ -6,7 +6,7 @@
   },
   "private": true,
   "dependencies": {
-    "@testing-library/jest-dom": "^5.11.0",
+    "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^9.5.0",
     "@testing-library/user-event": "^7.2.1",
     "@types/async-retry": "^1.4.1",
@@ -46,7 +46,7 @@
     "memory-cache": "^0.2.0",
     "mongoose": "^5.9.7",
     "morgan": "^1.10.0",
-    "next": "^9.3.4",
+    "next": "^10.0.6",
     "next-env": "^1.1.1",
     "normalize-url": "^5.0.0",
     "papaparse": "^5.2.0",
